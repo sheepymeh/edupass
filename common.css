@@ -58,6 +58,7 @@ strong, h1, h2, h3, h4, h5, h6 {
 	transform: translateY(-20px) scale(.7);
 }
 button, .md-button {
+	font-weight: 500;
 	background-color: #D32F2F;
 	color: #fff;
 	cursor: pointer;
