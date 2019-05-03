@@ -39,7 +39,7 @@ strong, h1, h2, h3, h4, h5, h6 {
 	transform: scaleX(1);
 }
 .md-input ~ span {
-	margin: -32px 0 0 2px;
+	margin: -40px 0 0 2px;
 	display: block;
 	color: #333;
 	opacity: .5;
@@ -53,6 +53,9 @@ strong, h1, h2, h3, h4, h5, h6 {
 }
 .md-input:focus::placeholder {
 	opacity: 0;
+}
+.md-input:focus ~ span, .md-input:not(:placeholder-shown) ~ span {
+	transform: translateY(-20px) scale(.7);
 }
 button {
 	background-color: #D32F2F;
