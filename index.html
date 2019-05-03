@@ -41,7 +41,6 @@
 		#open div {
 			z-index: 1;
 		}
-
 		main div {
 			width: 250px;
 			height: 250px;
@@ -52,6 +51,7 @@
 			margin: auto;
 			margin-bottom: 12px;
 			transition: .1s transform ease-in-out;
+			box-shadow: 0 0 3px rgba(0, 0, 0, .75);
 		}
 		main img {
 			width: 150px;
@@ -136,6 +136,10 @@
 		}
 		document.addEventListener('DOMContentLoaded', () => {
 			const MAIN = document.getElementsByTagName('main')[0];
+			// Sets color of circles by default
+			// for (let links = MAIN.getElementsByTagName('a'), j = links.length - 1; j >= 0; j -= 1) {
+			// 	links[j].getElementsByTagName('div')[0].style.backgroundColor = `#${DESCRIPTIONS[links[j].href.substr(links[j].href.lastIndexOf('/') + 1, links[j].href.lastIndexOf('.') - links[j].href.lastIndexOf('/') - 1)].color}`;
+			// }
 			MAIN.addEventListener('click', e => {
 				e.preventDefault();
 				if (e.target !== e.currentTarget) {
@@ -159,6 +163,7 @@
 					MODAL_DESCRIPTION.innerHTML = MODAL_INFO.description;
 					MODAL_LINK.appendChild(document.createTextNode(MODAL_INFO.button));
 					MODAL_LINK.href = element.href;
+					MODAL_LINK.classList.add('md-button');
 					MODAL_CLOSE.appendChild(document.createTextNode('✕ Close'));
 					MODAL_CLOSE.addEventListener('click', () => {
 						document.body.removeChild(MODAL);
