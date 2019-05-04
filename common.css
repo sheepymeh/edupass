@@ -52,9 +52,15 @@ strong, h1, h2, h3, h4, h5, h6 {
 	transition: .2s transform ease-in-out, .2s color ease-in-out, .2s opacity ease-in-out;
 	transform-origin: top left;
 }
+.md-input svg {
+	transition: .2s fill ease-in-out;
+}
 .md-input:focus ~ span, .md-input:not(:placeholder-shown) ~ span {
 	opacity: 1;
 	color: #D32F2F;
+}
+.md-input:focus ~ span svg, .md-input:not(:placeholder-shown) ~ span svg {
+	fill: #D32F2F;
 }
 .md-input:focus::placeholder {
 	opacity: 0;

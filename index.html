@@ -86,19 +86,19 @@
 <body>
 	<h1>What do you want to do today?</h1>
 	<main>
-		<a href='learning.html'>
+		<a href='learning'>
 			<div><img src='assets/icons/learning.svg'></div>
 			Learn and do homework
 		</a>
-		<a href='school.html'>
+		<a href='school'>
 			<div><img src='assets/icons/school.svg'></div>
 			Manage your school life
 		</a>
-		<a href='library.html'>
+		<a href='library'>
 			<div><img src='assets/icons/library.svg'></div>
 			Check your library account
 		</a>
-		<a href='settings.html'>
+		<a href='settings'>
 			<div><img src='assets/icons/settings.svg'></div>
 			Change your EduPass settings
 		</a>
@@ -156,7 +156,7 @@
 					const MODAL_DESCRIPTION = document.createElement('div');
 					const MODAL_LINK = document.createElement('a');
 					const MODAL_CLOSE = document.createElement('button');
-					const MODAL_INFO = DESCRIPTIONS[element.href.substr(element.href.lastIndexOf('/') + 1, element.href.lastIndexOf('.') - element.href.lastIndexOf('/') - 1)];
+					const MODAL_INFO = DESCRIPTIONS[element.href.substr(element.href.lastIndexOf('/') + 1)];
 
 					MODAL_HEADER.appendChild(document.createTextNode(MODAL_INFO.title));
 					MODAL_SUBHEADER.appendChild(document.createTextNode(MODAL_INFO.subtitle));
