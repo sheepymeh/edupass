@@ -103,18 +103,8 @@
 		form div {
 			margin-top: 12px;
 		}
-		form label {
-			display: block;
-		}
-		form label:before {
-			content: '';
-			border: 2px solid #000;
-			border-radius: 50%;
-			width: 20px;
-			height: 20px;
-			display: inline-block;
-			vertical-align: middle;
-			cursor: pointer;
+		#selected {
+			background-color: #ccc;
 		}
 	</style>
 </head>
@@ -134,43 +124,117 @@
 			</div>
 		</header>
 		<div id='table-container'>
-			<div id='list'>
-				<div data-id='12345'>
-					<div>title title title title title title</div>
-					<div>09:37 12 May</div>
-					<div>poster</div>
-				</div>
-				<div data-id='12345'>
-					<div>title title title title title title</div>
-					<div>09:37 12 May</div>
-					<div>poster</div>
-				</div>
-			</div>
+			<div id='list'></div>
 			<div id='message'>
 				<div>
 					<h1>title title title title title title</h1>
 					<div>09:37:21 12 May 2019, from POSTER NAME</div>
 				</div>
-				<details>
-					<summary>Form <img src='../assets/icons/clock.svg'> 5 minutes</summary>
-					<form>
-						<div>
-							<p>Question 1: question question question question question question question question question question question question question question question question question question question question question question question</p>
-							<input id='search' class='md-input' placeholder=' '>
-							<div></div>
-							<span>Your Answer to Question 1</span>
-						</div>
-						<div>
-							<p>Question 2: mcq question question question question question question question question question question question question question question question question question question question question question question question</p>
-							<label><input type='radio' name='1' value='1'>1</label>
-							<label><input type='radio' name='1' value='2'>2</label>
-							<label><input type='radio' name='1' value='3'>3</label>
-							<label><input type='radio' name='1' value='4'>4</label>
-						</div>
-					</form>
-				</details>
 			</div>
 		</div>
 	</main>
+	<script src='https://cdn.jsdelivr.net/npm/showdown@1.9.0/dist/showdown.min.js'></script>
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+			const MESSAGES_LIST = document.getElementById('list');
+			const MESSAGE_VIEWER = document.getElementById('message');
+
+			// some fetching
+			const MESSAGES_OBJECT = {
+				12345: {
+					title: 'A Certain Dumb Cunt',
+					time: 1557460095000,
+					poster: 'Misaka Mikoto'
+				},
+				12346: {
+					title: 'A Certain Scientific Railgun Book Review',
+					time: 1557461095000,
+					poster: 'Jeron the Big Gay'
+				}
+			};
+
+			for (const MESSAGE of Object.keys(MESSAGES_OBJECT)) {
+				const PARENT = document.createElement('div');
+				const TITLE = document.createElement('div');
+				const TIME = document.createElement('div');
+				const POSTER = document.createElement('div');
+				TITLE.appendChild(document.createTextNode(MESSAGES_OBJECT[MESSAGE].title));
+				TIME.appendChild(document.createTextNode(MESSAGES_OBJECT[MESSAGE].time));
+				POSTER.appendChild(document.createTextNode(MESSAGES_OBJECT[MESSAGE].poster));
+				PARENT.appendChild(TITLE);
+				PARENT.appendChild(TIME);
+				PARENT.appendChild(POSTER);
+				PARENT.dataset.id = MESSAGE;
+				MESSAGES_LIST.appendChild(PARENT);
+			}
+
+			MESSAGES_LIST.addEventListener('click', e => {
+				e.preventDefault();
+				if (e.target !== e.currentTarget) {
+					if (document.getElementById('selected')) document.getElementById('selected').removeAttribute('id');
+					let element = e.target;
+					while (element.parentElement !== MESSAGES_LIST) element = element.parentElement;
+					element.id = 'selected';
+					const MESSAGE_ID = element.dataset.id;
+					// set "MESSAGE" to markdown of message
+					const MESSAGE = {
+						text: `insert markdown`,
+						form: [
+							{
+								question: 'Short Open Ended Question',
+								type: 'short-oe'
+							},
+							{
+								question: 'Long Open Ended Question',
+								type: 'long-oe'
+							},
+							{
+								question: 'MCQ Question',
+								type: 'mcq',
+								options: [
+									'Option 1',
+									'Option 2',
+									'Option 3',
+									'Option 4',
+									'Option 5'
+								]
+							}
+						]
+					};
+					const TIMESTAMP = new Date(MESSAGES_OBJECT[MESSAGE_ID].time);
+					while (MESSAGE_VIEWER.hasChildNodes()) MESSAGE_VIEWER.removeChild(MESSAGE_VIEWER.lastChild);
+					const MESSAGE_HEADER = document.createElement('div');
+					const MESSAGE_TITLE = document.createElement('h1');
+					const MESSAGE_TIME_POSTER = document.createElement('div');
+					MESSAGE_TITLE.appendChild(document.createTextNode(MESSAGES_OBJECT[MESSAGE_ID].title));
+					MESSAGE_TIME_POSTER.appendChild(document.createTextNode(`Posted at ${TIMESTAMP.getDate()}/${TIMESTAMP.getMonth() + 1}/${TIMESTAMP.getFullYear()}, by ${MESSAGES_OBJECT[MESSAGE_ID].poster}`));
+					MESSAGE_HEADER.appendChild(MESSAGE_TITLE);
+					MESSAGE_HEADER.appendChild(MESSAGE_TIME_POSTER);
+					MESSAGE_VIEWER.appendChild(MESSAGE_HEADER);
+
+					const MD_TO_HTML = new showdown.Converter({
+						prefixHeaderId: 'message-header-',
+						strikethrough: true,
+						tables: true
+					});
+					MESSAGE_VIEWER.innerHTML += MD_TO_HTML.makeHtml(MESSAGE.text);
+
+					const FORM_PARENT = document.createElement('details');
+					const FORM_HEADER = document.createElement('summary');
+					const FORM = document.createElement('form');
+					let formTime = 0;
+					MESSAGE.form.forEach(question => {
+						const QUESTION_PARENT = document.createElement('div');
+						const QUESTION = document.createElement('p');
+						switch (question.type) {
+							case 'mcq':
+								
+						}
+					});
+				}
+				e.stopPropagation();
+			});
+		});
+	</script>
 </body>
 </html>
