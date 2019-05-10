@@ -32,14 +32,15 @@
 		main a:hover {
 			box-shadow: 0 3px 12px rgba(0, 0, 0, .3);
 		}
-		main a:hover div, #open div {
+		main a:hover div, .open div {
 			transform: scale(1.05);
 		}
-		main a:hover img, #open img {
+		main a:hover img, .open img {
 			transform: scale(1.2);
 		}
-		#open div {
+		.open div {
 			z-index: 1;
+			position: relative;
 		}
 		main div {
 			width: 250px;
@@ -146,7 +147,7 @@
 				if (e.target !== e.currentTarget) {
 					let element = e.target;
 					while (element.parentElement !== MAIN) element = element.parentElement;
-					element.id = 'open';
+					element.classList.add('open');
 					const IMAGE_DIV = element.getElementsByTagName('div')[0];
 					const BOUNDING_RECT = IMAGE_DIV.getBoundingClientRect();
 					IMAGE_DIV.style.transform = `translate(-${BOUNDING_RECT.x - 20}px, -${BOUNDING_RECT.y - 20}px) scale(1.05)`;
@@ -168,6 +169,7 @@
 					MODAL_CLOSE.appendChild(document.createTextNode('✕ Close'));
 					MODAL_CLOSE.addEventListener('click', () => {
 						document.body.removeChild(MODAL);
+						IMAGE_DIV.style.position = 'initial';
 						element.removeAttribute('class');
 						IMAGE_DIV.removeAttribute('style');
 					});

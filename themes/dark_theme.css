@@ -1,6 +1,6 @@
 body {
     text-align: center;
-    background-color: #0b0e14;
+    background-color: #ccc;
 }
 h1 {
     color: #ccc;
@@ -12,7 +12,7 @@ main {
     width: 100%;
     max-width: 1600px;
     margin: auto;
-    background-color: #0b0e14;
+    background-color: #ccc;
 }
 main a {
     display: inline-block;
