@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset='utf-8'>
+	<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+	<title>EduPass | Template</title>
+	<meta name='viewport' content='width=device-width, initial-scale=1'>
+	<link rel='icon' type='image/svg+xml' href='logo.svg'>
+	<link href='https://fonts.googleapis.com/css?family=Roboto:400,400i,500,500i' rel='stylesheet'>
+	<link rel='stylesheet' type='text/css' media='screen' href='../common.css'>
+	<link rel='stylesheet' type='text/css' media='screen' href='../layout.css'>
+	<style>
+        main a {
+			display: inline-block;
+			text-decoration: none;
+			color: #000;
+			border-radius: 12px;
+			box-shadow: 0 2px 5px rgba(0, 0, 0, .3);
+			padding: 12px;
+			
+			will-change: box-shadow;
+			width: 273px;
+			margin: 12px;
+		}
+		main a:hover {
+			box-shadow: 0 3px 12px rgba(0, 0, 0, .3);
+        }
+        main a:hover div, #open div {
+            transition: width .5s, height .5s, transform .5s;
+        }
+		main a:hover div, #open div {
+			transform: scale(1.05);
+		}
+		main a:hover img, #open img {
+			transform: scale(1.2);
+		}
+	</style>
+</head>
+<body>
+	<main>
+        <h1>Library accounts</h1>
+        <a href = "school" style="width: calc(50% - 40px)">
+            <div style="text-align:center">
+                <img src = "logos/0806.png" style = "height: 200px"/>
+            </div>
+            <div style="text-align:center">School account</div>
+        </a>
+        <a href = "nlb" style="width: calc(50% - 40px)">
+            <div style="text-align: center">
+                <img src = "logos/nlb-logo.png"/>
+            </div>
+            <div style="text-align: center">NLB</div>
+        </a>
+	</main>
+</body>
+</html>
