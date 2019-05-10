@@ -9,7 +9,7 @@ const cookie = {
 		const cookies = document.cookie.split(';');
 		for (let i = cookies.length - 1; i >= 0; i -= 1) {
 			const cookie = cookies[i].trim();
-			if (cookie.includes(name)) return cookie.substring(name.length, cookie.length)
+			if (cookie.includes(name)) return cookie.substring(name.length, cookie.length);
 		}
 		return false;
 	},
