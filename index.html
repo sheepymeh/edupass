@@ -6,8 +6,8 @@
 	<title>EduPass</title>
 	<meta name='viewport' content='width=device-width, initial-scale=1'>
 	<link rel='icon' type='image/svg+xml' href='logo.svg'>
-	<link href='https://fonts.googleapis.com/css?family=Roboto:400,400i,500,500i' rel='stylesheet'>
-	<link rel='stylesheet' type='text/css' media='screen' href='common.css'>
+	<link href='https://fonts.googleapis.com/css?family=Roboto:400,400i,500,500i|Roboto+Condensed' rel='stylesheet'>
+	<link rel='stylesheet' type='text/css' media='screen' href='themes/common.css'>	
 	<style>
 		body {
 			text-align: center;
@@ -32,14 +32,15 @@
 		main a:hover {
 			box-shadow: 0 3px 12px rgba(0, 0, 0, .3);
 		}
-		main a:hover div, #open div {
+		main a:hover div, .open div {
 			transform: scale(1.05);
 		}
-		main a:hover img, #open img {
+		main a:hover img, .open img {
 			transform: scale(1.2);
 		}
-		#open div {
+		.open div {
 			z-index: 1;
+			position: relative;
 		}
 		main div {
 			width: 250px;
@@ -57,7 +58,7 @@
 			width: 150px;
 			transition: .1s transform ease-in-out;
 		}
-		#modal {
+		.modal {
 			width: calc(100% - 85px);
 			height: calc(100% - 85px);
 			border-radius: 24px;
@@ -68,20 +69,21 @@
 			padding: 16px 36px 36px 300px;
 			overflow-y: auto;
 		}
-		#modal h1 {
+		.modal h1 {
 			margin-bottom: 0;
 		}
-		#modal h2 {
+		.modal h2 {
 			margin-top: 6px;
 			color: #888;
 			font-style: italic;
 		}
-		#modal button {
+		.modal button {
 			position: absolute;
 			top: 12px;
 			right: 16px;
 		}
 	</style>
+	<link rel='stylesheet' type='text/css' href='themes/dark_theme.css'>
 </head>
 <body>
 	<h1>What do you want to do today?</h1>
@@ -110,28 +112,28 @@
 				subtitle: 'Learn and do your teachers\' homework online',
 				description: `insert html description here`,
 				button: 'Learn Now',
-				color: 'bff'
+				color: 'ff9191'
 			},
 			school: {
 				title: 'School Management',
 				subtitle: 'Access school services online',
 				description: `insert html description here`,
 				button: 'Access Services',
-				color: 'bbf'
+				color: 'bbffff'
 			},
 			library: {
 				title: 'Library Services',
 				subtitle: 'Check your library account and get reading recommendations',
 				description: `insert html description here`,
 				button: 'Check Now',
-				color: 'fbb'
+				color: 'fff987'
 			},
 			settings: {
 				title: "Settings",
 				subtitle: "Make EduPass yours",
 				description: `insert html description here`,
 				button: "Customize",
-				color: "bfb"
+				color: "9df9ac"
 			},
 		}
 		document.addEventListener('DOMContentLoaded', () => {
@@ -145,7 +147,7 @@
 				if (e.target !== e.currentTarget) {
 					let element = e.target;
 					while (element.parentElement !== MAIN) element = element.parentElement;
-					element.id = 'open';
+					element.classList.add('open');
 					const IMAGE_DIV = element.getElementsByTagName('div')[0];
 					const BOUNDING_RECT = IMAGE_DIV.getBoundingClientRect();
 					IMAGE_DIV.style.transform = `translate(-${BOUNDING_RECT.x - 20}px, -${BOUNDING_RECT.y - 20}px) scale(1.05)`;
@@ -167,11 +169,12 @@
 					MODAL_CLOSE.appendChild(document.createTextNode('✕ Close'));
 					MODAL_CLOSE.addEventListener('click', () => {
 						document.body.removeChild(MODAL);
-						element.removeAttribute('id');
+						IMAGE_DIV.style.position = 'initial';
+						element.removeAttribute('class');
 						IMAGE_DIV.removeAttribute('style');
 					});
 
-					MODAL.id = 'modal';
+					MODAL.classList.add('modal');
 					MODAL.style.backgroundColor = `#${MODAL_INFO.color}`;
 					MODAL.appendChild(MODAL_HEADER);
 					MODAL.appendChild(MODAL_SUBHEADER);

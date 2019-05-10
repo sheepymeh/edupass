@@ -1,0 +1,81 @@
+body {
+    text-align: center;
+    background-color: #ccc;
+}
+h1 {
+    color: #ccc;
+}
+img {
+    filter: invert(100%);
+}
+main {
+    width: 100%;
+    max-width: 1600px;
+    margin: auto;
+    background-color: #ccc;
+}
+main a {
+    display: inline-block;
+    text-decoration: none;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, .3);
+    padding: 24px;
+    transition: .15s box-shadow ease-in-out;
+    will-change: box-shadow;
+    width: 298px;
+    margin: 12px;
+}
+main a:hover {
+    box-shadow: 0 3px 12px rgba(0, 0, 0, .3);
+}
+main a:hover div, #open div {
+    transform: scale(1.05);
+}
+main a:hover img, #open img {
+    transform: scale(1.2);
+}
+#open div {
+    z-index: 1;
+}
+main div {
+    width: 250px;
+    height: 250px;
+    text-align: center;
+    padding-top: 50px;
+    border-radius: 50%;
+    background-color: #000;
+    margin: auto;
+    margin-bottom: 12px;
+    transition: .1s transform ease-in-out;
+    box-shadow: 0 0 3px rgba(0, 0, 0, .75);
+}
+main img {
+    width: 150px;
+    transition: .1s transform ease-in-out;
+}
+.modal {
+    width: calc(100% - 85px);
+    height: calc(100% - 85px);
+    border-radius: 24px;
+    position: fixed;
+    top: 60px;
+    left: 60px;
+    text-align: left;
+    padding: 16px 36px 36px 300px;
+    overflow-y: auto;
+}
+.modal h1 {
+    margin-bottom: 0;
+    color: #0b0e14;
+}
+.modal h2 {
+    margin-top: 6px;
+    color: #515151;
+    font-style: italic;
+}
+.modal button {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+}
