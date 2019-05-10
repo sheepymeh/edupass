@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset='utf-8'>
+	<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+	<title>EduPass</title>
+	<meta name='viewport' content='width=device-width, initial-scale=1'>
+	<link rel='icon' type='image/svg+xml' href='logo.svg'>
+	<link href='https://fonts.googleapis.com/css?family=Roboto:400,400i,500,500i|Roboto+Condensed' rel='stylesheet'>
+	<link rel='stylesheet' type='text/css' media='screen' href='themes/common.css'>	
+	<style>
+		body {
+			text-align: center;
+		}
+		main {
+			width: 100%;
+			max-width: 1300px;
+			margin: auto;
+		}
+		main a {
+			display: inline-block;
+			text-decoration: none;
+			color: #000;
+			border-radius: 12px;
+			box-shadow: 0 2px 5px rgba(0, 0, 0, .3);
+			padding: 12px;
+			transition: .15s box-shadow ease-in-out;
+			will-change: box-shadow;
+			width: 274px;
+			margin: 12px;
+		}
+		main a:hover {
+			box-shadow: 0 3px 12px rgba(0, 0, 0, .3);
+		}
+		main a:hover div, #open div {
+			transform: scale(1.05);
+		}
+		main a:hover img, #open img {
+			transform: scale(1.2);
+		}
+		#open div {
+			z-index: 1;
+		}
+		main div {
+			width: 250px;
+			height: 250px;
+			text-align: center;
+			padding-top: 50px;
+			border-radius: 50%;
+			background-color: #ccc;
+			margin: auto;
+			margin-bottom: 12px;
+			transition: .1s transform ease-in-out;
+			box-shadow: 0 0 3px rgba(0, 0, 0, .75);
+		}
+		main img {
+			width: 150px;
+			transition: .1s transform ease-in-out;
+		}
+		.modal {
+			width: calc(100% - 85px);
+			height: calc(100% - 85px);
+			border-radius: 24px;
+			position: fixed;
+			top: 60px;
+			left: 60px;
+			text-align: left;
+			padding: 16px 36px 36px 300px;
+			overflow-y: auto;
+		}
+		.modal h1 {
+			margin-bottom: 0;
+		}
+		.modal h2 {
+			margin-top: 6px;
+			color: #888;
+			font-style: italic;
+		}
+		.modal button {
+			position: absolute;
+			top: 12px;
+			right: 16px;
+		}
+	</style>
+	<link rel='stylesheet' type='text/css' href='themes/dark_theme.css'>
+</head>
+<body>
+	<h1>What do you want to do today?</h1>
+	<main>
+		<a href='learning'>
+			<div><img src='assets/icons/learning.svg'></div>
+			Learn and do homework
+		</a>
+		<a href='school'>
+			<div><img src='assets/icons/school.svg'></div>
+			Manage your school life
+		</a>
+		<a href='library'>
+			<div><img src='assets/icons/library.svg'></div>
+			Check your library account
+		</a>
+		<a href='settings'>
+			<div><img src='assets/icons/settings.svg'></div>
+			Change your EduPass settings
+		</a>
+	</main>
+	<script>
+		const DESCRIPTIONS = {
+			learning: {
+				title: 'Learning Platforms',
+				subtitle: 'Learn and do your teachers\' homework online',
+				description: `insert html description here`,
+				button: 'Learn Now',
+				color: 'ff9191'
+			},
+			school: {
+				title: 'School Management',
+				subtitle: 'Access school services online',
+				description: `insert html description here`,
+				button: 'Access Services',
+				color: 'bbffff'
+			},
+			library: {
+				title: 'Library Services',
+				subtitle: 'Check your library account and get reading recommendations',
+				description: `insert html description here`,
+				button: 'Check Now',
+				color: 'fff987'
+			},
+			settings: {
+				title: "Settings",
+				subtitle: "Make EduPass yours",
+				description: `insert html description here`,
+				button: "Customize",
+				color: "9df9ac"
+			},
+		}
+		document.addEventListener('DOMContentLoaded', () => {
+			const MAIN = document.getElementsByTagName('main')[0];
+			// Sets color of circles by default
+			// for (let links = MAIN.getElementsByTagName('a'), j = links.length - 1; j >= 0; j -= 1) {
+			// 	links[j].getElementsByTagName('div')[0].style.backgroundColor = `#${DESCRIPTIONS[links[j].href.substr(links[j].href.lastIndexOf('/') + 1, links[j].href.lastIndexOf('.') - links[j].href.lastIndexOf('/') - 1)].color}`;
+			// }
+			MAIN.addEventListener('click', e => {
+				e.preventDefault();
+				if (e.target !== e.currentTarget) {
+					let element = e.target;
+					while (element.parentElement !== MAIN) element = element.parentElement;
+					element.id = 'open';
+					const IMAGE_DIV = element.getElementsByTagName('div')[0];
+					const BOUNDING_RECT = IMAGE_DIV.getBoundingClientRect();
+					IMAGE_DIV.style.transform = `translate(-${BOUNDING_RECT.x - 20}px, -${BOUNDING_RECT.y - 20}px) scale(1.05)`;
+
+					const MODAL = document.createElement('div');
+					const MODAL_HEADER = document.createElement('h1');
+					const MODAL_SUBHEADER = document.createElement('h2');
+					const MODAL_DESCRIPTION = document.createElement('div');
+					const MODAL_LINK = document.createElement('a');
+					const MODAL_CLOSE = document.createElement('button');
+					const MODAL_INFO = DESCRIPTIONS[element.href.substr(element.href.lastIndexOf('/') + 1)];
+
+					MODAL_HEADER.appendChild(document.createTextNode(MODAL_INFO.title));
+					MODAL_SUBHEADER.appendChild(document.createTextNode(MODAL_INFO.subtitle));
+					MODAL_DESCRIPTION.innerHTML = MODAL_INFO.description;
+					MODAL_LINK.appendChild(document.createTextNode(MODAL_INFO.button));
+					MODAL_LINK.href = element.href;
+					MODAL_LINK.classList.add('md-button');
+					MODAL_CLOSE.appendChild(document.createTextNode('✕ Close'));
+					MODAL_CLOSE.addEventListener('click', () => {
+						document.body.removeChild(MODAL);
+						element.removeAttribute('class');
+						IMAGE_DIV.removeAttribute('style');
+					});
+
+					MODAL.classList.add('modal');
+					MODAL.style.backgroundColor = `#${MODAL_INFO.color}`;
+					MODAL.appendChild(MODAL_HEADER);
+					MODAL.appendChild(MODAL_SUBHEADER);
+					MODAL.appendChild(MODAL_DESCRIPTION);
+					MODAL.appendChild(MODAL_LINK);
+					MODAL.appendChild(MODAL_CLOSE);
+
+					document.body.appendChild(MODAL);
+				}
+				else e.stopPropagation();
+			});
+		});
+	</script>
+</body>
+</html>

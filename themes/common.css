@@ -1,0 +1,90 @@
+html, body {
+	height: 100%;
+}
+*, *:before, *:after {
+	box-sizing: border-box;
+}
+body {
+	font: 24px/1.5 Roboto, sans-serif;
+	padding: 0;
+	margin: 0;
+	color: #212121;
+	touch-action: manipulation;
+}
+img {
+	vertical-align: middle;
+}
+strong, h1, h2, h3, h4, h5, h6 {
+	font-weight: 400;
+	font-family: 'Roboto Condensed', sans-serif;
+	margin: 0;
+	line-height: inherit;
+}
+
+.md-input {
+	border-radius: 0;
+	width: 100%;
+	display: block;
+	border: none;
+	border-bottom: 1px solid #ccc;
+	font: inherit;
+	outline: none;
+}
+.md-input + div {
+	margin-top: -2px;
+	height: 2px;
+	width: 100%;
+	background-color: #D32F2F;
+	transform: scaleX(0);
+	opacity: 0;
+	transition: .2s opacity ease-in-out, 0s .2s transform ease-in-out;
+}
+.md-input:focus + div {
+	transition: .2s transform ease-in-out;
+	opacity: 1;
+	transform: scaleX(1);
+}
+.md-input ~ span {
+	margin: -40px 0 0 2px;
+	display: block;
+	color: #333;
+	opacity: .5;
+	pointer-events: none;
+	transition: .2s transform ease-in-out, .2s color ease-in-out, .2s opacity ease-in-out;
+	transform-origin: top left;
+}
+.md-input svg {
+	transition: .2s fill ease-in-out;
+}
+.md-input:focus ~ span, .md-input:not(:placeholder-shown) ~ span {
+	opacity: 1;
+	color: #D32F2F;
+}
+.md-input:focus ~ span svg, .md-input:not(:placeholder-shown) ~ span svg {
+	fill: #D32F2F;
+}
+.md-input:focus::placeholder {
+	opacity: 0;
+}
+.md-input:focus ~ span, .md-input:not(:placeholder-shown) ~ span {
+	transform: translateY(-20px) scale(.7);
+}
+button, .md-button {
+	font-weight: 500;
+	background-color: #D32F2F;
+	color: #fff;
+	cursor: pointer;
+	border: none;
+	outline: none;
+	padding: 8px 24px;
+	margin: 3px 0;
+	display: inline-block;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, .5);
+	font: inherit;
+	border-radius: 4px;
+	font-size: 20px;
+	text-decoration: none;
+}
+input, button {
+	-webkit-appearance: none;
+}
