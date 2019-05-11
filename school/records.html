@@ -125,13 +125,23 @@
 					else tags[TAG] = competition.tags[TAG];
 				}
 			});
+			let backgroundColors = [];
+			let hoverBackgroundColors = [];
+			for (let i = Object.keys(tags).length - 1; i >= 0; i -= 1) {
+				const HS = `hsl(${360 * Math.random()}, ${50 + 30 * Math.random()}%,`;
+				const L = 70 + 20 * Math.random();
+				backgroundColors.push(`${HS} ${L}%)`);
+				hoverBackgroundColors.push(`${HS} ${L - 10}%`);
+			}
 			const CHART = new Chart('aptitude-chart', {
 				type: 'doughnut',
 				data: {
 					labels: Object.keys(tags),
 					datasets: [{
 						label: 'Aptitude',
-						data: Object.values(tags)
+						data: Object.values(tags),
+						backgroundColor: backgroundColors,
+						hoverBackgroundColor: hoverBackgroundColors
 					}]
 				},
 				options: {
