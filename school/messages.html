@@ -6,7 +6,7 @@
 	<title>EduPass | Messages</title>
 	<meta name='viewport' content='width=device-width, initial-scale=1'>
 	<link rel='icon' type='image/svg+xml' href='logo.svg'>
-	<link href='https://fonts.googleapis.com/css?family=Roboto:400,400i,500,500i' rel='stylesheet'>
+	<link href='https://fonts.googleapis.com/css?family=Roboto:400,400i,500,500i|Roboto+Condensed:700' rel='stylesheet'>
 	<link rel='stylesheet' type='text/css' media='screen' href='../common.css'>
 	<link rel='stylesheet' type='text/css' media='screen' href='../layout.css'>
 	<link rel='stylesheet' type='text/css' href='../themes/messages/dark_theme.css'>
@@ -61,7 +61,8 @@
 			clear: both;
 		}
 		#list > div > div:first-child {
-			font-weight: 500;
+			font-family: 'Roboto Condensed', Roboto, sans-serif;
+			font-weight: 700;
 			white-space: nowrap;
 			overflow: hidden;
 			text-overflow: ellipsis;
@@ -132,23 +133,22 @@
 	</main>
 	<script src='https://cdn.jsdelivr.net/npm/showdown@1.9.0/dist/showdown.min.js'></script>
 	<script>
+		// some fetching
+		const MESSAGES_OBJECT = {
+			12345: {
+				title: 'A Certain Dumb Dumb',
+				time: 1557460095000,
+				poster: 'Misaka Mikoto'
+			},
+			12346: {
+				title: 'A Certain Scientific Railgun Book Review',
+				time: 1557461095000,
+				poster: 'Jeron'
+			}
+		};
 		document.addEventListener('DOMContentLoaded', () => {
 			const MESSAGES_LIST = document.getElementById('list');
 			const MESSAGE_VIEWER = document.getElementById('message');
-
-			// some fetching
-			const MESSAGES_OBJECT = {
-				12345: {
-					title: 'A Certain Dumb Cunt',
-					time: 1557460095000,
-					poster: 'Misaka Mikoto'
-				},
-				12346: {
-					title: 'A Certain Scientific Railgun Book Review',
-					time: 1557461095000,
-					poster: 'Jeron the Big Gay'
-				}
-			};
 
 			for (const MESSAGE of Object.keys(MESSAGES_OBJECT)) {
 				const PARENT = document.createElement('div');
@@ -193,6 +193,16 @@
 									'Option 5'
 								]
 							}
+						],
+						attachments: [
+							{
+								name: 'A Certain Magical Index Volume 10000.epub',
+								link: 'link/to/s3'
+							},
+							{
+								name: 'Lange Schwarze Socken.jpg',
+								link: 'link/to/s3'
+							}
 						]
 					};
 					const TIMESTAMP = new Date(MESSAGES_OBJECT[MESSAGE_ID].time);
@@ -213,53 +223,74 @@
 					});
 					MESSAGE_VIEWER.innerHTML += MD_TO_HTML.makeHtml(MESSAGE.text);
 
-					const FORM_PARENT = document.createElement('details');
-					const FORM_HEADER = document.createElement('summary');
-					const FORM = document.createElement('form');
-					FORM_PARENT.appendChild(FORM);
-					let formTime = 0;
-					MESSAGE.form.forEach((question, qnIndex) => {
-						const QUESTION_PARENT = document.createElement('div');
-						const QUESTION = document.createElement('p');
-						QUESTION.appendChild(document.createTextNode(question.question));
-						QUESTION_PARENT.appendChild(QUESTION);
-						switch (question.type) {
-							case 'mcq':
-								formTime += 1;
-								question.options.forEach((option, optIndex) => {
-									const OPTION_INPUT = document.createElement('input');
-									OPTION_INPUT.type = 'radio';
-									OPTION_INPUT.name = qnIndex;
-									OPTION_INPUT.id = `q${qnIndex}-${optIndex}`;
-									OPTION_INPUT.value = option;
+					if (MESSAGE.form) {
+						console.info(1);
+						const FORM_PARENT = document.createElement('details');
+						const FORM_HEADER = document.createElement('summary');
+						const FORM = document.createElement('form');
+						FORM_PARENT.appendChild(FORM);
+						let formTime = 0;
+						MESSAGE.form.forEach((question, qnIndex) => {
+							console.info(2);
+							const QUESTION_PARENT = document.createElement('div');
+							const QUESTION = document.createElement('p');
+							QUESTION.appendChild(document.createTextNode(question.question));
+							QUESTION_PARENT.appendChild(QUESTION);
+							switch (question.type) {
+								case 'mcq':
+									formTime += 1;
+									question.options.forEach((option, optIndex) => {
+										const OPTION_INPUT = document.createElement('input');
+										OPTION_INPUT.type = 'radio';
+										OPTION_INPUT.name = qnIndex;
+										OPTION_INPUT.id = `q${qnIndex}-${optIndex}`;
+										OPTION_INPUT.value = option;
 
-									const OPTION_LABEL = document.createElement('label');
-									OPTION_LABEL.setAttribute('for', `q${qnIndex}-${optIndex}`);
-									OPTION_LABEL.appendChild(document.createTextNode(option));
+										const OPTION_LABEL = document.createElement('label');
+										OPTION_LABEL.setAttribute('for', `q${qnIndex}-${optIndex}`);
+										OPTION_LABEL.appendChild(document.createTextNode(option));
 
-									QUESTION_PARENT.appendChild(OPTION_INPUT);
-									QUESTION_PARENT.appendChild(OPTION_LABEL);
-								});
-								break;
-							case 'oe':
-								formTime += 2;
-								const INPUT = document.createElement('input');
-								INPUT.classList.add('md-input');
-								INPUT.placeholder = ' ';
-								const INPUT_AFTER = document.createElement('div');
-								const INPUT_PLACEHOLDER = document.createElement('span');
-								INPUT_PLACEHOLDER.appendChild(document.createTextNode(`Your answer for question ${qnIndex + 1}`));
+										QUESTION_PARENT.appendChild(OPTION_INPUT);
+										QUESTION_PARENT.appendChild(OPTION_LABEL);
+									});
+									console.info('3a');
+									break;
+								case 'oe':
+									formTime += 2;
+									const INPUT = document.createElement('input');
+									INPUT.classList.add('md-input');
+									INPUT.placeholder = ' ';
+									const INPUT_AFTER = document.createElement('div');
+									const INPUT_PLACEHOLDER = document.createElement('span');
+									INPUT_PLACEHOLDER.appendChild(document.createTextNode(`Your answer for question ${qnIndex + 1}`));
 
-								QUESTION_PARENT.appendChild(INPUT);
-								QUESTION_PARENT.appendChild(INPUT_AFTER);
-								QUESTION_PARENT.appendChild(INPUT_PLACEHOLDER);
-						}
-						FORM.appendChild(QUESTION_PARENT);
-					});
-					FORM_HEADER.innerHTML = `Form <img src='../assets/icons/clock.svg'> ${formTime} minutes`;
-					FORM_PARENT.appendChild(FORM_HEADER);
-					FORM_PARENT.appendChild(FORM);
-					MESSAGE_VIEWER.appendChild(FORM_PARENT);
+									QUESTION_PARENT.appendChild(INPUT);
+									QUESTION_PARENT.appendChild(INPUT_AFTER);
+									QUESTION_PARENT.appendChild(INPUT_PLACEHOLDER);
+									console.info('3b');
+									break;
+							}
+							FORM.appendChild(QUESTION_PARENT);
+						});
+						FORM_HEADER.innerHTML = `Form <img src='../assets/icons/clock.svg'> ${formTime} minutes`;
+						FORM_PARENT.appendChild(FORM_HEADER);
+						FORM_PARENT.appendChild(FORM);
+						MESSAGE_VIEWER.appendChild(FORM_PARENT);
+					}
+					if (MESSAGE.attachments) {
+						const ATTACHMENTS_PARENT = document.createElement('details');
+						const ATTACHMENTS_HEADER = document.createElement('summary');
+						ATTACHMENTS_HEADER.appendChild(document.createTextNode(`${MESSAGE.attachments.length} attachment${MESSAGE.attachments.length == 1 ? '' : 's'}`));
+						ATTACHMENTS_PARENT.appendChild(ATTACHMENTS_HEADER);
+						MESSAGE.attachments.forEach(attachment => {
+							const ATTACHMENT = document.createElement('a');
+							ATTACHMENT.href = attachment.link;
+							ATTACHMENT.appendChild(document.createTextNode(attachment.name));
+							ATTACHMENT.classList.add('bubble-link');
+							ATTACHMENTS_PARENT.appendChild(ATTACHMENT);
+						});
+						MESSAGE_VIEWER.appendChild(ATTACHMENTS_PARENT);
+					}
 				}
 				e.stopPropagation();
 			});

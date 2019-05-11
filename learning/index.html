@@ -3,72 +3,48 @@
 <head>
 	<meta charset='utf-8'>
 	<meta http-equiv='X-UA-Compatible' content='IE=edge'>
-	<title>EduPass | Template</title>
+	<title>EduPass | Courses</title>
 	<meta name='viewport' content='width=device-width, initial-scale=1'>
 	<link rel='icon' type='image/svg+xml' href='logo.svg'>
-	<link href='https://fonts.googleapis.com/css?family=Roboto:400,400i,500,500i' rel='stylesheet'>
+	<link href='https://fonts.googleapis.com/css?family=Roboto:400,400i,500,500i|Roboto+Condensed:700' rel='stylesheet'>
 	<link rel='stylesheet' type='text/css' media='screen' href='../common.css'>
 	<link rel='stylesheet' type='text/css' media='screen' href='../layout.css'>
 	<style>
-	#course-table{
-		width:100%;
-		display:flex;
-		flex-wrap:wrap;
+	#course-table {
+		width: 100%;
+		display: flex;
+		flex-wrap: wrap;
 	}
-	.course-generic{
-		height:200px;
-		width:325px;
-		background-color:grey;
-		margin:5px;
-		float:left;
-		font-size:28px;
+	.course-generic {
+		height: 200px;
+		width: 325px;
+		background-color: #ccc;
+		margin: 5px;
+		float: left;
+		font-size: 28px;
+		padding: 8px;
+		border-radius: 12px;
+		cursor: pointer;
 	}
-	.teacher{
-	font-size:16px;	
+	.teacher {
+		font-size: 20px;
 	}
-	.assignments{
-		font-size:12px;
-		border-radius: 10px 10px 10px 10px;
-		height:calc(20%-12px);
-		white-space:nowrap;
-		width:80%;
-		background-color:red;
-		color:white;
-		text-align:center;
+	.assignments {
+		font-size: 16px;
+		font-weight: 500;
+		border-radius: 16px;
+		height: 30px;
+		line-height: 30px;
+		white-space: nowrap;
+		max-width: 90%;
+		background-color: red;
+		color: white;
+		text-align: center;
 	}
 	</style>
-	<script type="text/javascript">
-		function generateCourses(){
-		const DATA = [
-			{
-				coursename: "Physics",
-				teacher: "Chia Kok Pin",
-				assignments: 1
-			},
-			{
-				coursename: "Ingerlisc",
-				teacher: "Jeyalatha Balasingam",
-				assignments: 0
-			},
-			{
-				coursename:"Meth hur dur i am useless",
-				teacher:"Chua Boon Woo",
-				assignments:761879892
-			}
-		];
-		DATA.forEach(course=>{
-			if(course.assignments>0){
-			document.getElementById("course-table").innerHTML+=`<div class="course-generic"> ${course.coursename} <div class="teacher"> ${course.teacher}</div><div class="assignments">${course.assignments} outstanding assignments</div></div>`;
-			}else{
-				document.getElementById("course-table").innerHTML+=`<div class="course-generic"> ${course.coursename} <div class="teacher"> ${course.teacher}</div></div>`;
-			}
-			});
-
-		}
-		</script>
 	<title>EduPass | Learning Platform</title>
 </head>
-<body onload=generateCourses()>
+<body>
 	<nav>
 		<a><img src='../assets/icons/learning.svg'>Placeholder</a>
 		<a><img src='../assets/icons/learning.svg'>Potato Alistair</a>
@@ -78,5 +54,66 @@
 		<div id="course-table">
 		</div>
 	</main>
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+			const COURSES = [
+				{
+					id: 123,
+					name: "Physics",
+					teacher: "Chia Kok Pin",
+					assignments: 1
+				},
+				{
+					id: 124,
+					name: "Ingerlisc",
+					teacher: "Jeyalatha Balasingam",
+					assignments: 0
+				},
+				{
+					id: 125,
+					name: "Meth hur dur i am useless",
+					teacher: "Chua Boon Woo",
+					assignments: 761879892
+				}
+			];
+			const COURSE_TABLE = document.getElementById('course-table');
+			COURSES.forEach(course => {
+				const PARENT = document.createElement('div');
+				PARENT.classList.add('course-generic');
+				PARENT.appendChild(document.createTextNode(course.name));
+				PARENT.dataset.id = course.id;
+
+				const TEACHER = document.createElement('div');
+				TEACHER.classList.add('teacher');
+				TEACHER.appendChild(document.createTextNode(course.teacher));
+				PARENT.appendChild(TEACHER);
+
+				if (course.assignments > 0) {
+					const ASSIGNMENTS = document.createElement('div');
+					ASSIGNMENTS.classList.add('assignments');
+					ASSIGNMENTS.appendChild(document.createTextNode(`${course.assignments} outstanding assignment${course.assignments == 1 ? '' : 's'}`));
+					ASSIGNMENTS.addEventListener('mouseover', () => {
+						// uh
+						ASSIGNMENTS.addEventListener('mouseout', () => {
+							// close above
+						});
+					});
+					PARENT.appendChild(ASSIGNMENTS);
+				}
+
+				COURSE_TABLE.appendChild(PARENT);
+			});
+			// performant event listener for multiple elements
+			// see https://www.kirupa.com/html5/handling_events_for_many_elements.htm
+			COURSE_TABLE.addEventListener('click', e => {
+				e.preventDefault();
+				if (e.target !== e.currentTarget) {
+					let element = e.target;
+					while (element.parentElement !== COURSE_TABLE) element = element.parentElement;
+				}
+				e.stopPropagation();
+			});
+		});
+		</script>
 </body>
 </html>

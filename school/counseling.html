@@ -6,9 +6,33 @@
 	<title>EduPass | Counseling</title>
 	<meta name='viewport' content='width=device-width, initial-scale=1'>
 	<link rel='icon' type='image/svg+xml' href='logo.svg'>
-	<link href='https://fonts.googleapis.com/css?family=Roboto:400,400i,500,500i' rel='stylesheet'>
+	<link href='https://fonts.googleapis.com/css?family=Roboto:400,400i,500,500i|Roboto+Condensed:700' rel='stylesheet'>
 	<link rel='stylesheet' type='text/css' media='screen' href='../common.css'>
 	<link rel='stylesheet' type='text/css' media='screen' href='../layout.css'>
+	<style>
+		#chatbox {
+			display: flex;
+			flex-direction: column;
+		}
+		.message {
+			max-width: 70%;
+			box-shadow: 0 1px 1px rgba(0, 0, 0, .5);
+			padding: 6px 8px;
+			border-radius: 24px;
+			color: #fff;
+		}
+		.message-from {
+			background-color: #0dd24d;
+			align-self: flex-end;
+			border-bottom-right-radius: 0;
+		}
+		.message-to {
+			/* this looks really bad */
+			background-color: #1288fc;
+			align-self: flex-start;
+			border-bottom-left-radius: 0;
+		}
+	</style>
 	<link rel='stylesheet' type='text/css' href='../themes/messages/dark_theme.css'>
 </head>
 <body>
@@ -18,8 +42,15 @@
 		<a href='counseling.html'><img src='../assets/icons/counseling.svg'>Counseling</a>
 	</nav>
 	<main>
-		<h1>School Services</h1>
-		<h2>Choose one of the services on the left</h2>
+		<h1>Counseling</h1>
+		<section id='chatbox'>
+			<div class='message message-from'>Message from</div>
+			<div class='message message-to'>Message to</div>
+			<div class='message message-from'>Message from</div>
+			<div class='message message-to'>Message to</div>
+			<div class='message message-from'>Message from</div>
+			<div class='message message-to'>Message to</div>
+		</section>
 	</main>
 </body>
 </html>
