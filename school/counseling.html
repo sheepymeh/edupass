@@ -6,9 +6,76 @@
 	<title>EduPass | Counseling</title>
 	<meta name='viewport' content='width=device-width, initial-scale=1'>
 	<link rel='icon' type='image/svg+xml' href='logo.svg'>
-	<link href='https://fonts.googleapis.com/css?family=Roboto:400,400i,500,500i' rel='stylesheet'>
+	<link href='https://fonts.googleapis.com/css?family=Roboto:400,400i,500,500i|Roboto+Condensed:700' rel='stylesheet'>
 	<link rel='stylesheet' type='text/css' media='screen' href='../common.css'>
 	<link rel='stylesheet' type='text/css' media='screen' href='../layout.css'>
+	<!--yo idk but this looks slightly weird idk why, i mean it looks ok but just something is just slightly off-putting-->
+	<style>
+		#chatbox {
+			display: flex;
+			flex-direction: column;
+		}
+		.message {
+			max-width: 70%;
+			box-shadow: 0 1px 1px rgba(0, 0, 0, .5);
+			padding: 6px 8px;
+			border-radius: 24px;
+			color: #fff;
+		}
+		.message-from {
+			background-color: #0dd24d;
+			align-self: flex-end;
+			border-bottom-right-radius: 0;
+			margin: 7px;
+			padding: 10px;
+		}
+		.message-to {
+			/* this looks really bad */
+			background-color: #1288fc;
+			align-self: flex-start;
+			border-bottom-left-radius: 0;
+			margin: 7px;
+			padding: 15px;
+		}
+		#reply {
+			height: 200px;
+			width: 1124px;
+			position: absolute;
+			margin-top: 10px;
+			margin-left: 10px;
+			display: inline-block;
+  			border: 1px solid #ccc;
+ 			border-radius: 4px;
+  			box-sizing: border-box;
+			font-size: 16px;
+			padding: 12px;
+		}
+
+		#reply_area {
+			display: flex;
+			flex-direction: row;
+		}
+
+		#submit_button {
+			font-weight: 500;
+			background-color: #D32F2F;
+			color: #fff;
+			cursor: pointer;
+			border: none;
+			outline: none;
+			padding: 8px 24px;
+			margin: 3px 0;
+			display: inline-block;
+			box-shadow: 0 1px 2px rgba(0, 0, 0, .5);
+			font: inherit;
+			border-radius: 4px;
+			font-size: 20px;
+			text-decoration: none;
+			margin-left: 1134px;
+			margin-top: 10px;
+			height: 200px;
+		}
+	</style>
 	<link rel='stylesheet' type='text/css' href='../themes/messages/dark_theme.css'>
 </head>
 <body>
@@ -18,8 +85,19 @@
 		<a href='counseling.html'><img src='../assets/icons/counseling.svg'>Counseling</a>
 	</nav>
 	<main>
-		<h1>School Services</h1>
-		<h2>Choose one of the services on the left</h2>
+		<h1>Counseling</h1>
+		<section id='chatbox'>
+			<div class='message message-from'>Hi, I'm feeling stressed because of exams. What should I do?</div>
+			<div class='message message-to'>Hi, exams are meant to be stressful, but don't work yourself too hard! Always remember to take regular breaks!</div>
+			<div class='message message-from'>But, doing so makes me feel so unproductive. I would rather be studying than resting! The test is hyper important, after all!</div>
+			<div class='message message-to'>Don't worry! Taking breaks actually helps you to be more productive during your next study session.</div>
+			<div class='message message-from'>Oh really? Thanks, I will try that out next time!</div>
+			<div class='message message-to'>No problem.</div>
+		</section>
+		<form id="reply_area">
+			<textarea type="text" name="message" placeholder="Chat with your counsellor here!" id="reply"></textarea>
+			<input id="submit_button" type="submit"/>
+		</form>
 	</main>
 </body>
 </html>

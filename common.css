@@ -15,10 +15,10 @@ img {
 	vertical-align: middle;
 }
 strong, h1, h2, h3, h4, h5, h6 {
-	font-weight: 500;
+	font-family: 'Roboto Condensed', Roboto, sans-serif;
+	font-weight: 700;
 	margin: 0;
 	line-height: inherit;
-	/* just to teach jeron the dummkopf */
 }
 
 .md-input {
@@ -125,27 +125,36 @@ input[type='radio']:checked + label:before {
 input[type='radio'] + label:after {
 	content: '';
 	display: block;
-	height: 30px;
-	width: 30px;
+	height: 35px;
+	width: 35px;
 	position: absolute;
-	top: 11px;
-	left: 1px;
+	top: 8px;
+	left: -1px;
 	border-radius: 50%;
 	background-color: #000;
 	opacity: .5;
 	transform: scale(0);
 }
 input[type='radio']:checked + label:after {
-	animation: ripple .2s ease-in-out;
+	animation: ripple .2s linear;
 }
 @keyframes ripple {
 	from {
-		transform: scale(0);
+		transform: scale(.1);
 	}
-	10% {
+	25% {
 		transform: scale(1);
 	}
 	to {
 		transform: scale(0);
 	}
+}
+
+.bubble-link {
+	padding: 6px 10px;
+	border: 1px solid #ccc;
+	text-decoration: none;
+	color: inherit;
+	margin-right: 12px;
+	border-radius: 21.3px;
 }
