@@ -3,24 +3,39 @@
 <head>
 	<meta charset='utf-8'>
 	<meta http-equiv='X-UA-Compatible' content='IE=edge'>
-	<title>EduPass | Template</title>
+	<title>EduPass | Books</title>
 	<link rel='icon' type='image/svg+xml' href='logo.svg'>
 	<link href='https://fonts.googleapis.com/css?family=Roboto:400,400i,500,500i|Roboto+Condensed:400,700' rel='stylesheet'>
 	<link rel='stylesheet' type='text/css' media='screen' href='../common.css'>
 	<link rel='stylesheet' type='text/css' media='screen' href='../layout.css'>
 	<style>
-			main div table {
-				width: calc(100% + 16px);
-				margin-left: -16px;
-				border-spacing: 16px 6px;
-				border-collapse: separate;
-			}
-			main div table td {
-				border-radius: 6px;
-				background-color: #cfcfcf;
-				padding: 8px 12px;
-				box-shadow: 0px 1px 2px rgba(0, 0, 0, .5);
-			}
+		main div table {
+			width: calc(100% + 16px);
+			margin-left: -16px;
+			border-spacing: 16px 6px;
+			border-collapse: separate;
+		}
+		main div table td {
+			border-radius: 6px;
+			background-color: #cfcfcf;
+			padding: 8px 12px;
+			box-shadow: 0px 1px 2px rgba(0, 0, 0, .5);
+			position: relative;
+		}
+		.overdue td:last-child::after {
+			content: '!';
+			background-color: #f00;
+			border-radius: 50%;
+			line-height: 32px;
+			height: 32px;
+			width: 32px;
+			color: #fff;
+			display: inline-block;
+			text-align: center;
+			position: absolute;
+			right: 12px;
+			top: 10px;
+		}
 	</style>
 	<script>
 		let TYPE;
@@ -43,43 +58,45 @@
 		// Fetch from database based on TYPE
 		const DATA = [
 			{
-				genre: "Fantasy",
-				name: "A Certain Scientific Railgun"
+				due: new Date(Date.UTC(2019, 0, 3)),
+				name: "A Certain Magical Index: Volume 22"
 			},
 			{
-				genre: "Thriller, Mystery",
-				name: "Boogiepop Phantom: Origins"
+				due: new Date(Date.UTC(2019, 10, 4)),
+				name: "《你的名字。》"
 			},
 			{
-				genre: "Romance, Drama",
-				name: "Eternal Sunshine of the Spotless Mind"
+				due: new Date(Date.UTC(2019, 11, 5)),
+				name: "SMO Sample Questions: A Compendium"
 			},
 			{
-				genre: "Comedy",
-				name: "Louis CK and Philosophy: You Don’t Get to be Bored"
+				due: new Date(Date.UTC(2019, 11, 5)),
+				name: "The Theory Of Everything"
 			}
 		];
+		const TIME_NOW = new Date();
 		document.addEventListener('DOMContentLoaded', () => {
 			for (let link of document.getElementsByTagName('nav')[0].getElementsByTagName('a')) link.href += `#${TYPE.short}`;
 			document.getElementsByTagName('h1')[0].appendChild(document.createTextNode(` (${TYPE.long})`))
-			const body = document.getElementById("content");
-			var res = "<table>";
+			const BODY = document.getElementById("content");
+			let res = "<table>";
 			DATA.forEach(book => {
-				res = `${res}<tr><td>${book.genre}</td><td>${book.name}</td></tr>`;
+				const S = book.due;
+				res = `${res}<tr ${S < TIME_NOW ? 'class="overdue"' : ''}><td>${S.getUTCDate()}/${S.getUTCMonth() + 1}/${S.getUTCFullYear()}</td><td>${book.name}</td></tr>`;
 			});
 			res = `${res}</table>`;
-			body.innerHTML = res;
+			BODY.innerHTML = res;
 		});
 	</script>
 </head>
 <body>
-	<nav>
+	<nav id='nav'>
 		<a href='books.html'><img src='../assets/icons/library.svg'>Books</a>
-		<a href='recommendations.html'><img src='../assets/icons/library.svg'>Recommendations</a>
+		<a href='recommendations.html'><img src='../assets/icons/library.svg'>Recommended</a>
 		<a href='fines.html'><img src='../assets/icons/dollar-symbol.svg'>Fines</a>
 	</nav>
 	<main>
-		<h1>Recommendations</h1>
+		<h1>Borrowed Books</h1>
 		<div id = "content">
 
 		</div>

@@ -3,11 +3,12 @@ body {
 	background-color: #ccc;
 }
 nav {
-	width: 200px;
+	width: 250px;
 	height: 100%;
 	float: left;
 	margin: 0;
 	cursor: pointer;
+	font-family: 'Roboto Condensed', Roboto, sans-serif;
 }
 nav a {
 	display: block;
@@ -24,7 +25,7 @@ nav img {
 }
 main {
 	margin: 0;
-	width: calc(100% - 200px);
+	width: calc(100% - 250px);
 	height: 100%;
 	background-color: #fff;
 	float: left;
