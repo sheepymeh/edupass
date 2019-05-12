@@ -108,11 +108,11 @@
 					const ul=document.createElement('div');
 					ul.classList.add('assignments');
 					ul.style.display='none'; //probably horrible coding but I'll take it if it works zzz
-					for (var i = 0; i < course.assignments.length; i++) {
-						var as=document.createElement('div');
-						as.style.margin='7px';
-						as.appendChild(document.createTextNode(course.assignments[i]));
-						ul.appendChild(as);
+					for (let i = 0; i < course.assignments.length; i++) {
+						const AS=document.createElement('div');
+						AS.style.margin='7px';
+						AS.appendChild(document.createTextNode(course.assignments[i]));
+						ul.appendChild(AS);
 					}
 						ASSIGNMENTS.addEventListener('mouseover',()=>{
 							ul.style.display='block';
