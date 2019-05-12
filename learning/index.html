@@ -3,7 +3,7 @@
 <head>
 	<meta charset='utf-8'>
 	<meta http-equiv='X-UA-Compatible' content='IE=edge'>
-	<title>EduPass | Courses</title>
+	<title>EduPass | Learning Platform</title>
 	<meta name='viewport' content='width=device-width, initial-scale=1'>
 	<link rel='icon' type='image/svg+xml' href='logo.svg'>
 	<link href='https://fonts.googleapis.com/css?family=Roboto:400,400i,500,500i|Roboto+Condensed:700' rel='stylesheet'>
@@ -53,7 +53,6 @@
 		position:absolute;
 	}
 	</style>
-	<title>EduPass | Learning Platform</title>
 </head>
 <body>
 	<nav>
@@ -65,32 +64,15 @@
 		<div id="course-table">
 		</div>
 	</main>
+	<script type="text/javascript" src="coursedata.js"></script>
 	<script>
 		document.addEventListener('DOMContentLoaded', () => {
-			const COURSES = [
-				{
-					id: 123,
-					name: "Physics",
-					teacher: "Chia Kok Pin",
-					assignments: ["Electromagnetism 69"]
-				},
-				{
-					id: 124,
-					name: "Ingerlisc",
-					teacher: "Jeyalatha Balasingam",
-					assignments: []
-				},
-				{
-					id: 125,
-					name: "Meth hur dur i am useless",
-					teacher: "Chua Boon Woo",
-					assignments: ["math assignment 1", "math assignment 2", "low effort worksheet", "wasting paper", "unnecessary bullfuck"]
-				}
-			];
+			const COURSES = coursedata;
 			const COURSE_TABLE = document.getElementById('course-table');
 			COURSES.forEach(course => {
 				const PARENT = document.createElement('div');
 				PARENT.classList.add('course-generic');
+				PARENT.setAttribute('id',course.id);
 				PARENT.appendChild(document.createTextNode(course.name));
 				PARENT.dataset.id = course.id;
 
@@ -111,7 +93,7 @@
 					for (let i = 0; i < course.assignments.length; i++) {
 						const AS=document.createElement('div');
 						AS.style.margin='7px';
-						AS.appendChild(document.createTextNode(course.assignments[i]));
+						AS.appendChild(document.createTextNode(course.assignments[i].name));
 						ul.appendChild(AS);
 					}
 						ASSIGNMENTS.addEventListener('mouseover',()=>{
@@ -140,6 +122,7 @@
 					let element = e.target;
 					while (element.parentElement !== COURSE_TABLE) element = element.parentElement;
 				}
+				window.location.href=`ASDisplay.html?courseid=${e.target.getAttribute('id')}`;
 				e.stopPropagation();
 			});
 		});
