@@ -149,6 +149,19 @@ input[type='radio']:checked + label:after {
 		transform: scale(0);
 	}
 }
+textarea {
+	outline: none;
+	border: 1px solid #ccc;
+	font: inherit;
+	font-size: 24px;
+	resize: none;
+	transition: .2s border-color ease-in-out;
+	border-radius: 4px;
+	padding: 3px 6px;
+}
+textarea:focus {
+	border-color: #D32F2F;
+}
 
 .bubble-link {
 	padding: 6px 10px;

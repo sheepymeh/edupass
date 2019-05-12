@@ -14,6 +14,9 @@
 		#chatbox {
 			display: flex;
 			flex-direction: column;
+			height: calc(100% - 72px - 72px);
+			overflow-y: scroll;
+			padding-bottom: 12px;
 		}
 		.message {
 			max-width: 70%;
@@ -37,43 +40,18 @@
 			margin: 7px;
 			padding: 15px;
 		}
-		#reply {
-			height: 200px;
-			width: 1124px;
-			position: absolute;
-			margin-top: 10px;
-			margin-left: 10px;
-			display: inline-block;
-  			border: 1px solid #ccc;
- 			border-radius: 4px;
-  			box-sizing: border-box;
-			font-size: 16px;
-			padding: 12px;
-		}
 
-		#reply_area {
+		form {
 			display: flex;
-			flex-direction: row;
+			align-items: baseline;
+			height: 60px;
+			margin-top: 12px;
 		}
-
-		#submit_button {
-			font-weight: 500;
-			background-color: #D32F2F;
-			color: #fff;
-			cursor: pointer;
-			border: none;
-			outline: none;
-			padding: 8px 24px;
-			margin: 3px 0;
-			display: inline-block;
-			box-shadow: 0 1px 2px rgba(0, 0, 0, .5);
-			font: inherit;
-			border-radius: 4px;
-			font-size: 20px;
-			text-decoration: none;
-			margin-left: 1134px;
-			margin-top: 10px;
-			height: 200px;
+		form div {
+			flex: 1;
+		}
+		button {
+			margin-left: 12px;
 		}
 	</style>
 	<link rel='stylesheet' type='text/css' href='../themes/messages/dark_theme.css'>
@@ -86,18 +64,65 @@
 	</nav>
 	<main>
 		<h1>Counseling</h1>
-		<section id='chatbox'>
-			<div class='message message-from'>Hi, I'm feeling stressed because of exams. What should I do?</div>
-			<div class='message message-to'>Hi, exams are meant to be stressful, but don't work yourself too hard! Always remember to take regular breaks!</div>
-			<div class='message message-from'>But, doing so makes me feel so unproductive. I would rather be studying than resting! The test is hyper important, after all!</div>
-			<div class='message message-to'>Don't worry! Taking breaks actually helps you to be more productive during your next study session.</div>
-			<div class='message message-from'>Oh really? Thanks, I will try that out next time!</div>
-			<div class='message message-to'>No problem.</div>
-		</section>
-		<form id="reply_area">
-			<textarea type="text" name="message" placeholder="Chat with your counsellor here!" id="reply"></textarea>
-			<input id="submit_button" type="submit"/>
+		<section id='chatbox'></section>
+		<form>
+			<div>
+				<input class='md-input' id='new-message' placeholder=' '>
+				<div></div>
+				<span>Your message for the counselor</span>
+			</div>
+			<button>Send</button>
 		</form>
 	</main>
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+			const CHATBOX = document.getElementById('chatbox');
+			// load in past messages
+			const OLD_MESSAGES = [
+				{
+					from: true,
+					message: "Hi, I'm feeling stressed because of exams. What should I do?"
+				},
+				{
+					from: false,
+					message: "Hi, exams are meant to be stressful, but don't work yourself too hard! Always remember to take regular breaks!"
+				},
+				{
+					from: true,
+					message: "But, doing so makes me feel so unproductive. I would rather be studying than resting! The test is hyper important, after all!"
+				},
+				{
+					from: false,
+					message: "Don't worry! Taking breaks actually helps you to be more productive during your next study session."
+				},
+				{
+					from: true,
+					message: "Oh really? Thanks, I will try that out next time!"
+				},
+				{
+					from: false,
+					message: "No problem."
+				}
+			];
+			OLD_MESSAGES.forEach(message => displayMessage(message.message, message.from));
+			document.getElementsByTagName('form')[0].addEventListener('submit', e => {
+				e.preventDefault();
+
+				const MESSAGE = document.getElementById('new-message').value;
+				// submission
+
+				displayMessage(MESSAGE, true);
+				document.getElementById('new-message').value = '';
+			});
+			function displayMessage(message, send) {
+				const MESSAGE_BUBBLE = document.createElement('div');
+				MESSAGE_BUBBLE.classList.add('message');
+				MESSAGE_BUBBLE.classList.add(`message-${send ? 'from' : 'to'}`);
+				MESSAGE_BUBBLE.appendChild(document.createTextNode(message));
+				CHATBOX.appendChild(MESSAGE_BUBBLE);
+				CHATBOX.scrollTop = CHATBOX.scrollHeight
+			}
+		});
+	</script>
 </body>
 </html>
