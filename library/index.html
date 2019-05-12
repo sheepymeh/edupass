@@ -10,88 +10,50 @@
 	<link rel='stylesheet' type='text/css' media='screen' href='../common.css'>
 	<link rel='stylesheet' type='text/css' media='screen' href='../layout.css'>
 	<style>
-        main{
-            transition: width .15s;
-        }
-        main a {
+		main a {
 			display: inline-block;
 			text-decoration: none;
 			color: #000;
 			border-radius: 12px;
 			box-shadow: 0 2px 5px rgba(0, 0, 0, .3);
 			padding: 12px;
-			
 			will-change: box-shadow;
-            width: 274px;
-            height: 358px;
 			margin: 12px;
+			transition: box-shadow .15s, transform .15s;
+		}
+		main a img {
+			transition: transform .15s;
 		}
 		main a:hover {
 			box-shadow: 0 3px 12px rgba(0, 0, 0, .3);
-        }
-        main a:hover div, #open div {
-            transition: width .15s, height .15s, transform .15s;
-        }
-		main a:hover div, #open div {
+		}
+		main a:hover {
 			transform: scale(1.05);
 		}
-		main a:hover img, #open img {
-			transform: scale(1.2);
-        }
-        nav{
-            transition: width .15s;
-        }
-        @media only screen and (max-width: 420px) {
-            nav{
-                width: 0px;
-            }
-            main {
-	            margin: 0;
-	            width: 100%;
-	            height: 100%;
-	            background-color: #fff;
-	            float: left;
-	            border-radius: 0 12px 12px 12px;
-	            overflow-y: auto;
-	            padding: 3px 12px;
-            }
-        }
-        @media only screen and (min-width: 420px) {
-            nav{
-                width: 200px;
-            }
-            main {
-	            margin: 0;
-	            width: calc(100% - 200px);
-	            height: 100%;
-	            background-color: #fff;
-	            float: left;
-	            border-radius: 0 12px 12px 12px;
-	            overflow-y: auto;
-	            padding: 3px 12px;
-            }
-        }
+		main a:hover img {
+			transform: scale(1.12);
+		}
 	</style>
 </head>
 <body>
-    <nav>
-        <a><img src='../assets/icons/learning.svg'>Descriptor</a>
-        <a><img src='../assets/icons/learning.svg'>Descriptor</a>
-    </nav>
+	<nav>
+		<a><img src='../assets/icons/learning.svg'>Descriptor</a>
+		<a><img src='../assets/icons/learning.svg'>Descriptor</a>
+	</nav>
 	<main>
-        <h1 style="padding-left: 12px">Library accounts</h1>
-        <a href = "school">
-            <div style="text-align:center">
-                <img src = "logos/0806.png" style = "height: 200px"/>
-            </div>
-            <div style="text-align:center">School account</div>
-        </a>
-        <a href = "nlb">
-            <div style="text-align: center">
-                <img src = "logos/nlb-logo.png"/>
-            </div>
-            <div style="text-align: center">NLB</div>
-        </a>
+		<h1 style="padding-left: 12px">Library accounts</h1>
+		<a href = "books.html#school">
+			<div style="text-align:center">
+				<img src = "logos/0806.png" style = "height: 200px"/>
+			</div>
+			<div style="text-align:center">School account</div>
+		</a>
+		<a href = "books.html#nlb">
+			<div style="text-align: center">
+				<img src = "logos/nlb-logo.png"/>
+			</div>
+			<div style="text-align: center">NLB</div>
+		</a>
 	</main>
 </body>
 </html>

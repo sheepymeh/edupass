@@ -7,8 +7,8 @@
 	<meta name='viewport' content='width=device-width, initial-scale=1'>
 	<link rel='icon' type='image/svg+xml' href='logo.svg'>
 	<link href='https://fonts.googleapis.com/css?family=Roboto:400,400i,500,500i' rel='stylesheet'>
-	<link rel='stylesheet' type='text/css' media='screen' href='../../common.css'>
-	<link rel='stylesheet' type='text/css' media='screen' href='../../layout.css'>
+	<link rel='stylesheet' type='text/css' media='screen' href='../common.css'>
+	<link rel='stylesheet' type='text/css' media='screen' href='../layout.css'>
 	<style>
 			main div table {
 				width: calc(100% + 16px);
@@ -24,6 +24,24 @@
 			}
 	</style>
 	<script>
+		let TYPE;
+		switch (window.location.hash.substr(1)) {
+			case 'school':
+				TYPE = {
+					short: 'school',
+					long: 'School'
+				};
+				break;
+			case 'nlb':
+				TYPE = {
+					short: 'nlb',
+					long: 'National Library'
+				};
+				break;
+			default:
+				location.href = 'index.html';
+		}
+		// Fetch from database based on TYPE
 		const DATA = [
 			{
 				genre: "Fantasy",
@@ -43,6 +61,8 @@
 			}
 		];
 		document.addEventListener('DOMContentLoaded', () => {
+			for (let link of document.getElementsByTagName('nav')[0].getElementsByTagName('a')) link.href += `#${TYPE.short}`;
+			document.getElementsByTagName('h1')[0].appendChild(document.createTextNode(` (${TYPE.long})`))
 			const body = document.getElementById("content");
 			var res = "<table>";
 			DATA.forEach(book => {
@@ -55,12 +75,12 @@
 </head>
 <body>
 	<nav>
-		<a href='index.html'><img src='../../assets/icons/library.svg'>Books</a>
-		<a href='recommendations.html'><img src='../../assets/icons/library.svg'>Recommendations</a>
-		<a href='fines.html'><img src='../../assets/icons/dollar-symbol.svg'>Fines</a>
+		<a href='index.html'><img src='../assets/icons/library.svg'>Books</a>
+		<a href='recommendations.html'><img src='../assets/icons/library.svg'>Recommendations</a>
+		<a href='fines.html'><img src='../assets/icons/dollar-symbol.svg'>Fines</a>
 	</nav>
 	<main>
-		<h1>Recommendations (School)</h1>
+		<h1>Recommendations</h1>
 		<div id = "content">
 
 		</div>
