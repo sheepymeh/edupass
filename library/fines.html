@@ -4,9 +4,8 @@
 	<meta charset='utf-8'>
 	<meta http-equiv='X-UA-Compatible' content='IE=edge'>
 	<title>EduPass | Fines</title>
-	<meta name='viewport' content='width=device-width, initial-scale=1'>
 	<link rel='icon' type='image/svg+xml' href='logo.svg'>
-	<link href='https://fonts.googleapis.com/css?family=Roboto:400,400i,500,500i' rel='stylesheet'>
+	<link href='https://fonts.googleapis.com/css?family=Roboto:400,400i,500,500i|Roboto+Condensed:400,700' rel='stylesheet'>
 	<link rel='stylesheet' type='text/css' media='screen' href='../common.css'>
 	<link rel='stylesheet' type='text/css' media='screen' href='../layout.css'>
 	<style>
@@ -69,7 +68,7 @@
 				const S = book.due;
 				totalFine += (S - TIME_NOW)/- 86400000 * 0.15;
 				// fine of 15 cents per day
-				res = `${res}<tr><td>${S.getUTCMonth() + 1}/${S.getUTCDate()}/${S.getUTCFullYear()}</td><td>${book.name}</td><td>$${((S - TIME_NOW)/-86400000*0.15).toFixed(2)}</td></tr>`;
+				res = `${res}<tr><td>${S.getUTCDate()}/${S.getUTCMonth() + 1}/${S.getUTCFullYear()}</td><td>${book.name}</td><td>$${((S - TIME_NOW)/-86400000*0.15).toFixed(2)}</td></tr>`;
 			});
 			res += `<tr><td></td><td></td><td>$${totalFine.toFixed(2)}</td></tr></table>`;
 			BODY.innerHTML = res;
@@ -78,8 +77,8 @@
 </head>
 <body>
 	<nav>
-		<a href='index.html'><img src='../assets/icons/library.svg'>Books</a>
-		<a href='recommendations.html'><img src='../assets/icons/library.svg'>Recommendations</a>
+		<a href='books.html'><img src='../assets/icons/library.svg'>Books</a>
+		<a href='recommendations.html'><img src='../assets/icons/library.svg'>Recommended</a>
 		<a href='fines.html'><img src='../assets/icons/dollar-symbol.svg'>Fines</a>
 	</nav>
 	<main>
