@@ -3,78 +3,50 @@
 <head>
 	<meta charset='utf-8'>
 	<meta http-equiv='X-UA-Compatible' content='IE=edge'>
-	<title>EduPass | Template</title>
+	<title>EduPass | Recommendations</title>
 	<meta name='viewport' content='width=device-width, initial-scale=1'>
 	<link rel='icon' type='image/svg+xml' href='logo.svg'>
 	<link href='https://fonts.googleapis.com/css?family=Roboto:400,400i,500,500i' rel='stylesheet'>
 	<link rel='stylesheet' type='text/css' media='screen' href='../../common.css'>
 	<link rel='stylesheet' type='text/css' media='screen' href='../../layout.css'>
 	<style>
-		main div table{
-			font-weight: 500;
-			border: none;
-			outline: none;
-			font-size: 20px;
-			text-decoration: none;
-			font: inherit;
-			width: 100%;
-		}
-		main div table td{
-			background-color: #cfcfcf;
-			padding: 8px 12px;
-			border-spacing: 12px 12px;
-			border-collapse: separate;
-			box-shadow: 0px 1px 2px rgba(0, 0, 0, .5);
-		}
+			main div table {
+				width: calc(100% + 16px);
+				margin-left: -16px;
+				border-spacing: 16px 6px;
+				border-collapse: separate;
+			}
+			main div table td {
+				border-radius: 6px;
+				background-color: #cfcfcf;
+				padding: 8px 12px;
+				box-shadow: 0px 1px 2px rgba(0, 0, 0, .5);
+			}
 	</style>
 	<script>
 		const DATA = [
-			[
-				{
-					date: new Date(Date.UTC(2019, 0, 3)),
-					name: "A Certain Magical Index: Volume 22",
-					overdue: true
-				},
-				{
-					date: new Date(Date.UTC(2019, 10, 4)),
-					name: "《你的名字。》",
-					overdue: true
-				},
-				{
-					date: new Date(Date.UTC(2019, 11, 5)),
-					name: "SMO Sample Questions: A Compendium",
-					overdue: false
-				},
-				{
-					date: new Date(Date.UTC(2019, 11, 5)),
-					name: "The Theory Of Everything",
-					overdue: false
-				}
-			],
-			[
-				{
-					genre: "Fantasy",
-					name: "A Certain Scientific Railgun"
-				},
-				{
-					genre: "Thriller, Mystery",
-					name: "Boogiepop Phantom: Origins"
-				},
-				{
-					genre: "Romance, Drama",
-					name: "Eternal Sunshine of the Spotless Mind"
-				},
-				{
-					genre: "Comedy",
-					name: "Louis CK and Philosophy: You Don’t Get to be Bored"
-				}
-			]
+			{
+				genre: "Fantasy",
+				name: "A Certain Scientific Railgun"
+			},
+			{
+				genre: "Thriller, Mystery",
+				name: "Boogiepop Phantom: Origins"
+			},
+			{
+				genre: "Romance, Drama",
+				name: "Eternal Sunshine of the Spotless Mind"
+			},
+			{
+				genre: "Comedy",
+				name: "Louis CK and Philosophy: You Don’t Get to be Bored"
+			}
 		];
 		document.addEventListener('DOMContentLoaded', () => {
 			const body = document.getElementById("content");
 			var res = "<table>";
-			DATA[1].forEach((element) => {
-				res = `${res}<tr><td>${element.genre}</td><td>${element.name}</td></tr>`;
+			DATA.forEach(book => {
+				res = `${res}<tr><td>${book.genre}</td><td>${book.name}</td></tr>`;
 			});
 			res = `${res}</table>`;
 			body.innerHTML = res;
