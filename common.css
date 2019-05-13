@@ -20,6 +20,9 @@ strong, h1, h2, h3, h4, h5, h6 {
 	margin: 0;
 	line-height: inherit;
 }
+h2 {
+	font-size: 32px;
+}
 
 .md-input {
 	border-radius: 0;
