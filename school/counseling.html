@@ -20,7 +20,7 @@
 		.message {
 			max-width: 70%;
 			box-shadow: 0 1px 1px rgba(0, 0, 0, .5);
-			padding: 6px 8px;
+			padding: 10px 12px;
 			border-radius: 24px;
 			color: #fff;
 		}
@@ -29,15 +29,12 @@
 			align-self: flex-end;
 			border-top-right-radius: 3px;
 			margin: 7px;
-			padding: 10px;
 		}
 		.message-to {
-			/* this looks really bad */
 			background-color: #1288fc;
 			align-self: flex-start;
 			border-top-left-radius: 3px;
 			margin: 7px;
-			padding: 15px;
 		}
 
 		form {
@@ -56,18 +53,13 @@
 			display: flex;
 			flex-direction: row;
 		}
-		#back_button{
-			padding: 12px;
-			background-color: #2fd3d3;
-			margin: 12px;
-			margin-right: 20px;
-			filter: invert(100%);
-		}
-		#back_button:hover {
-			background-color: #52dada;
-			filter: invert(100%);
+		nav a:last-child {
+			background-color: #D32F2F;
 		}
 	</style>
+	<script>
+
+	</script>
 	<link rel='stylesheet' type='text/css' href='../themes/messages/dark_theme.css'>
 </head>
 <body>
@@ -75,12 +67,10 @@
 		<a href='messages.html'><img src='../assets/icons/messages.svg'>Messages</a>
 		<a href='records.html'><img src='../assets/icons/records.svg'>Records</a>
 		<a href='counseling.html'><img src='../assets/icons/counseling.svg'>Counseling</a>
+		<a href="../index.html"><img src='../assets/icons/back-arrow.svg'>Return</a>
 	</nav>
 	<main>
-		<div id="top">
-			<input type="image" src='../assets/icons/back-arrow.svg' id='back_button'>
-			<h1>Counseling</h1>
-		</div>
+		<h1>Counseling</h1>
 		<section id='chatbox'></section>
 		<form>
 			<div>
