@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset='utf-8'>
+	<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+	<title>EduPass | Class</title>
+	<link rel='icon' type='image/svg+xml' href='logo.svg'>
+	<link href='https://fonts.googleapis.com/css?family=Roboto:400,400i,500,500i|Roboto+Condensed:400,700' rel='stylesheet'>
+	<link rel='stylesheet' type='text/css' media='screen' href='../common.css'>
+	<link rel='stylesheet' type='text/css' media='screen' href='../layout.css'>
+	<style>
+		header {
+			display: flex;
+			align-items: baseline;
+			justify-content: space-between;
+		}
+		#container {
+			display: flex;
+			margin-bottom: 12px;
+		}
+		#container > * {
+			height: calc(100% - 72px);
+			border-radius: 12px;
+			box-shadow: 0 2px 6px rgba(0, 0, 0, .6);
+			padding: 12px;
+		}
+		#topics {
+			width: 250px;
+			margin-right: 12px;
+		}
+		#content {
+			flex: 1;
+			padding-bottom: 0;
+		}
+		section {
+			box-shadow: 0 1px 4px rgba(0, 0, 0, .5);
+			padding: 12px;
+			border-radius: 8px;
+			margin-bottom: 12px;
+		}
+		caption {
+			font-size: 20px;
+			font-weight: 500;
+			line-height: 1;
+			margin-bottom: -3px;
+		}
+		.attachments {
+			margin-top: 6px;
+		}
+	</style>
+</head>
+<body>
+	<nav>
+		<a href='link.html'><img src='../assets/icons/icon.svg'>Link</a>
+		<a href="../index.html"><img src='../assets/icons/back-arrow.svg'>Return</a>
+	</nav>
+	<main>
+		<header>
+			<h1></h1>
+			<h2></h2>
+		</header>
+		<div id='container'>
+			<div id='topics'>
+				<h3>TOPICS</h3>
+			</div>
+			<div id='content'></div>
+		</div>
+	</main>
+	<script>
+		if (window.location.hash.substr(1).length != 6) location.href = 'index.html';
+		const CLASS = {
+			name: '4S3 Chemistry',
+			teacher: 'R Lee',
+			tags: [
+				{
+					code: 12345,
+					name: 'Reaction Kinetics'
+				}
+			]
+		}
+		const CLASS_INFO = [
+			{
+				title: 'Reaction Kinetics 71 Page Revision Worksheet',
+				timestamp: 1557713700000,
+				description: 'There will still be June lessons',
+				attachments: [{
+					name: 'kinetics_ws1_of_20.pdf',
+					link: '/link/to/s3'
+				}, {
+					name: 'kinetics_ws1_of_20_ans.pdf',
+					link: '/link/to/s3'
+				}]
+			},
+			{
+				title: 'Reaction Kinetics Slides',
+				timestamp: 1557701700000,
+				description: 'There will still be June lessons',
+				attachments: [{
+					name: 'kinetics_slides.pdf',
+					link: '/link/to/s3'
+				}]
+			}
+		]
+		document.addEventListener('DOMContentLoaded', () => {
+			document.getElementsByTagName('h1')[0].appendChild(document.createTextNode(CLASS.name));
+			document.getElementsByTagName('h2')[0].appendChild(document.createTextNode(CLASS.teacher));
+
+			const TOPICS_ELEM = document.getElementById('topics');
+			const CONTENT_ELEM = document.getElementById('content');
+
+			CLASS.tags.forEach(tag => {
+				const TOPIC_LIST_ELEM = document.createElement('div');
+				TOPIC_LIST_ELEM.appendChild(document.createTextNode(tag.name));
+				TOPIC_LIST_ELEM.dataset.code = tag.code;
+				TOPICS_ELEM.appendChild(TOPIC_LIST_ELEM);
+			});
+
+			TOPICS_ELEM.addEventListener('click', e => {
+				e.preventDefault();
+				if (e.target !== e.currentTarget) {
+					if (e.target.tagName == 'H3') return;
+					while (CONTENT_ELEM.hasChildNodes()) CONTENT_ELEM.removeChild(CONTENT_ELEM.lastChild);
+					let element = e.target;
+					while (element.parentElement !== TOPICS_ELEM) element = element.parentElement;
+					console.info(element.dataset.code);
+					// pretend to fetch data based on element.dataset.code
+
+					const TOPIC_TITLE = document.createElement('h1');
+					TOPIC_TITLE.appendChild(document.createTextNode(element.innerHTML));
+					CONTENT_ELEM.appendChild(TOPIC_TITLE);
+					CLASS_INFO.forEach(item => {
+						const ITEM = document.createElement('section');
+						const DATE = document.createElement('caption');
+						const TIMESTAMP = new Date(item.timestamp);
+						DATE.appendChild(document.createTextNode(`${TIMESTAMP.getDate()}/${TIMESTAMP.getMonth()}`));
+						const TITLE = document.createElement('h2');
+						TITLE.appendChild(document.createTextNode(item.title));
+						const DESCRIPTION = document.createElement('div');
+						DESCRIPTION.appendChild(document.createTextNode(item.description));
+						const ATTACHMENTS = document.createElement('div');
+						ATTACHMENTS.classList.add('attachments');
+						item.attachments.forEach(attachment => {
+							const ATTACHMENT = document.createElement('a');
+							ATTACHMENT.href = attachment.link;
+							ATTACHMENT.appendChild(document.createTextNode(attachment.name));
+							ATTACHMENT.classList.add('bubble-link');
+							ATTACHMENTS.appendChild(ATTACHMENT);
+						});
+						ITEM.appendChild(DATE);
+						ITEM.appendChild(TITLE);
+						ITEM.appendChild(DESCRIPTION);
+						ITEM.appendChild(ATTACHMENTS);
+						CONTENT_ELEM.appendChild(ITEM);
+					});
+				}
+				e.stopPropagation();
+			})
+		});
+	</script>
+</body>
+</html>
