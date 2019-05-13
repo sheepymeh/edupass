@@ -26,9 +26,10 @@ main {
 	margin: 0;
 	width: calc(100% - 200px);
 	height: 100%;
-	background-color: #fff;
+	background-color: #292b2d;
 	float: left;
 	border-radius: 0 12px 12px 12px;
 	overflow-y: auto;
 	padding: 3px 12px;
+	color: #d8d8d8;
 }
