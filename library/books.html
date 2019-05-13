@@ -9,6 +9,9 @@
 	<link rel='stylesheet' type='text/css' media='screen' href='../common.css'>
 	<link rel='stylesheet' type='text/css' media='screen' href='../layout.css'>
 	<style>
+		.info{
+			border-radius: 6px;
+		}
 		main div table {
 			width: calc(100% + 16px);
 			margin-left: -16px;
@@ -56,37 +59,61 @@
 				location.href = 'index.html';
 		}
 		// Fetch from database based on TYPE
-		const DATA = [
-			{
-				due: new Date(Date.UTC(2019, 0, 3)),
-				name: "A Certain Magical Index: Volume 22"
-			},
-			{
-				due: new Date(Date.UTC(2019, 10, 4)),
-				name: "《你的名字。》"
-			},
-			{
-				due: new Date(Date.UTC(2019, 11, 5)),
-				name: "SMO Sample Questions: A Compendium"
-			},
-			{
-				due: new Date(Date.UTC(2019, 11, 5)),
-				name: "The Theory Of Everything"
-			}
-		];
+		const DATA = {
+			school: [
+				{
+					due: new Date(Date.UTC(2019, 0, 3)),
+					name: "A Certain Magical Index: Volume 22",
+					sypnosis: "Kamijou Touma is a student living in Academy City, a highly advanced place in terms of technology. Despite being gauged as a level zero esper (no powers), he possesses on his right hand the Imagine Breaker, an ability that negates any power whatsoever. Touma finds a young girl named Index who is trying to run away from Necessarius, a powerful magic organization that she is member of. Blessed with the skill of memorizing any sort of information, she holds 103,000 forbidden magical books within her head. As science and magic cross paths, Touma must face several dangers amid espers and magicians who appear in the exciting scientific town.",
+					author: "Kazuma Kamachi"
+				},
+				{
+					due: new Date(Date.UTC(2019, 10, 4)),
+					name: "《你的名字。》",
+					sypnosis: "Mitsuha Miyamizu, a high school girl, yearns to live the life of a boy in the bustling city of Tokyo—a dream that stands in stark contrast to her present life in the countryside. Meanwhile in the city, Taki Tachibana lives a busy life as a high school student while juggling his part-time job and hopes for a future in architecture. One day, Mitsuha awakens in a room that is not her own and suddenly finds herself living the dream life in Tokyo—but in Taki's body! Elsewhere, Taki finds himself living Mitsuha's life in the humble countryside. In pursuit of an answer to this strange phenomenon, they begin to search for one another. Kimi no Na wa. revolves around Mitsuha and Taki's actions, which begin to have a dramatic impact on each other's lives, weaving them into a fabric held together by fate and circumstance",
+					author: "Makoto Shinkai"
+				},
+				{
+					due: new Date(Date.UTC(2019, 11, 5)),
+					name: "SMO Sample Questions: A Compendium",
+					sypnosis: "",
+					author: ""
+				},
+				{
+					due: new Date(Date.UTC(2019, 11, 5)),
+					name: "The Theory Of Everything"
+				}
+			],
+			nlb: [
+				{
+					due: new Date(Date.UTC(2019, 0, 3)),
+					name: "LKY",
+					sypnosis: "a bibliography of our GOD EMPEROR LEE KUAN YEW, the savior of the fatherland",
+					author: "OUR GOD EMPEROR LEE KUAN YEW"
+				}
+			]
+		};
 		const TIME_NOW = new Date();
 		document.addEventListener('DOMContentLoaded', () => {
 			for (let link of document.getElementsByTagName('nav')[0].getElementsByTagName('a')) link.href += `#${TYPE.short}`;
 			document.getElementsByTagName('h1')[0].appendChild(document.createTextNode(` (${TYPE.long})`))
 			const BODY = document.getElementById("content");
 			let res = "<table>";
-			DATA.forEach(book => {
+			let count = 0;
+			DATA[TYPE.short].forEach(book => {
 				const S = book.due;
-				res = `${res}<tr ${S < TIME_NOW ? 'class="overdue"' : ''}><td>${S.getUTCDate()}/${S.getUTCMonth() + 1}/${S.getUTCFullYear()}</td><td>${book.name}</td></tr>`;
+				res = `${res}<tr onmouseover = 'info(${count})'${S < TIME_NOW ? ' class="overdue"' : ''}><td>${S.getUTCDate()}/${S.getUTCMonth() + 1}/${S.getUTCFullYear()}</td><td>${book.name}</td></tr>`;
+				count++;
 			});
 			res = `${res}</table>`;
 			BODY.innerHTML = res;
 		});
+		const info = (id) => {
+			// help plox
+			const body = document.getElementById("content");
+			let res = body.innerHTML;
+			res = `${res}<div class = ></div>`;
+		}
 	</script>
 </head>
 <body>
