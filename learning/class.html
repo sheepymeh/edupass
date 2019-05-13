@@ -52,7 +52,7 @@
 <body>
 	<nav>
 		<a href='link.html'><img src='../assets/icons/icon.svg'>Link</a>
-		<a href="../index.html"><img src='../assets/icons/back-arrow.svg'>Back</a>
+		<a href="index.html"><img src='../assets/icons/back-arrow.svg'>Back</a>
 	</nav>
 	<main>
 		<header>
@@ -77,30 +77,7 @@
 					name: 'Reaction Kinetics'
 				}
 			]
-		}
-		const CLASS_INFO = [
-			{
-				title: 'Reaction Kinetics 71 Page Revision Worksheet',
-				timestamp: 1557713700000,
-				description: 'There will still be June lessons',
-				attachments: [{
-					name: 'kinetics_ws1_of_20.pdf',
-					link: '/link/to/s3'
-				}, {
-					name: 'kinetics_ws1_of_20_ans.pdf',
-					link: '/link/to/s3'
-				}]
-			},
-			{
-				title: 'Reaction Kinetics Slides',
-				timestamp: 1557701700000,
-				description: 'There will still be June lessons',
-				attachments: [{
-					name: 'kinetics_slides.pdf',
-					link: '/link/to/s3'
-				}]
-			}
-		]
+		};
 		document.addEventListener('DOMContentLoaded', () => {
 			document.getElementsByTagName('h1')[0].appendChild(document.createTextNode(CLASS.name));
 			document.getElementsByTagName('h2')[0].appendChild(document.createTextNode(CLASS.teacher));
@@ -124,6 +101,29 @@
 					while (element.parentElement !== TOPICS_ELEM) element = element.parentElement;
 					console.info(element.dataset.code);
 					// pretend to fetch data based on element.dataset.code
+					const CLASS_INFO = [
+						{
+							title: 'Reaction Kinetics 71 Page Revision Worksheet',
+							timestamp: 1557713700000,
+							description: 'There will still be June lessons',
+							attachments: [{
+								name: 'kinetics_ws1_of_20.pdf',
+								link: '/link/to/s3'
+							}, {
+								name: 'kinetics_ws1_of_20_ans.pdf',
+								link: '/link/to/s3'
+							}]
+						},
+						{
+							title: 'Reaction Kinetics Slides',
+							timestamp: 1557701700000,
+							description: 'There will still be June lessons',
+							attachments: [{
+								name: 'kinetics_slides.pdf',
+								link: '/link/to/s3'
+							}]
+						}
+					];
 
 					const TOPIC_TITLE = document.createElement('h1');
 					TOPIC_TITLE.appendChild(document.createTextNode(element.innerHTML));

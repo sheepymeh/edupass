@@ -96,9 +96,8 @@
 			COURSES.forEach(course => {
 				const PARENT = document.createElement('div');
 				PARENT.classList.add('course-generic');
-				PARENT.setAttribute('id', course.id);
-				PARENT.appendChild(document.createTextNode(course.name));
 				PARENT.dataset.id = course.id;
+				PARENT.appendChild(document.createTextNode(course.name));
 
 				const TEACHER = document.createElement('div');
 				TEACHER.classList.add('teacher');
@@ -108,6 +107,7 @@
 				if (course.assignments.length > 0) {
 					const ASSIGNMENTS = document.createElement('div');
 					ASSIGNMENTS.classList.add('assignment-count');
+					ASSIGNMENTS.dataset.id = course.id;
 					ASSIGNMENTS.appendChild(document.createTextNode(`${course.assignments.length} outstanding assignment${course.assignments.length == 1 ? '' : 's'}`));
 					const UL=document.createElement('div');
 					UL.classList.add('assignments');
@@ -117,7 +117,7 @@
 						AS.appendChild(document.createTextNode(course.assignments[i].name));
 						UL.appendChild(AS);
 					}
-					ASSIGNMENTS.addEventListener('mouseover',()=>{
+					ASSIGNMENTS.addEventListener('mouseover', ()=>{
 						UL.style.display='block';
 						ASSIGNMENTS.addEventListener('mouseout', () => {
 							UL.classList.remove('show-left');
@@ -132,15 +132,14 @@
 
 				COURSE_TABLE.appendChild(PARENT);
 			});
-			// performant event listener for multiple elements
-			// see https://www.kirupa.com/html5/handling_events_for_many_elements.htm
 			COURSE_TABLE.addEventListener('click', e => {
 				e.preventDefault();
 				if (e.target !== e.currentTarget) {
 					let element = e.target;
-					while (element.parentElement !== COURSE_TABLE) element = element.parentElement;
+					while (element.parentElement !== COURSE_TABLE && !element.classList.contains('assignment-count')) element = element.parentElement;
+					if (element.classList.contains('assignment-count')) window.location.href=`ASDisplay.html#${element.dataset.id}`;
+					else window.location.href=`class.html#${element.dataset.id}`;
 				}
-				window.location.href=`ASDisplay.html?courseid=${e.target.getAttribute('id')}`;
 				e.stopPropagation();
 			});
 		});
