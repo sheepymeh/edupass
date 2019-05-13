@@ -32,6 +32,7 @@ h2 {
 	border-bottom: 1px solid #ccc;
 	font: inherit;
 	outline: none;
+	background: transparent;
 }
 .md-input + div {
 	margin-top: -2px;
