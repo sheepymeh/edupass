@@ -98,7 +98,7 @@ input[type='radio'] + label {
 	display: block;
 	position: relative;
 	border: 1px solid #212121;
-	background-color: #ccc;
+	background-color: #eaeaea;
 	padding: 6px;
 	margin-bottom: 6px;
 	border-radius: 6px;
@@ -120,7 +120,8 @@ input[type='radio']:checked + label {
 	background-color: #fff;
 }
 input[type='radio']:checked + label:before {
-	background-image: radial-gradient(#000, #000 40%, transparent 40%);
+	background-image: radial-gradient(#D32F2F, #D32F2F 40%, transparent 40%);
+	border-color: #D32F2F;
 }
 input[type='radio'] + label:after {
 	content: '';
@@ -131,7 +132,7 @@ input[type='radio'] + label:after {
 	top: 8px;
 	left: -1px;
 	border-radius: 50%;
-	background-color: #000;
+	background-color: #D32F2F;
 	opacity: .5;
 	transform: scale(0);
 }
