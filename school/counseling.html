@@ -53,16 +53,8 @@
 			display: flex;
 			flex-direction: row;
 		}
-		#back_button{
-			padding: 12px;
-			background-color: #2fd3d3;
-			margin: 12px;
-			margin-right: 20px;
-			filter: invert(100%);
-		}
-		#back_button:hover {
-			background-color: #52dada;
-			filter: invert(100%);
+		nav a:last-child {
+			background-color: #D32F2F;
 		}
 	</style>
 	<script>
@@ -75,14 +67,10 @@
 		<a href='messages.html'><img src='../assets/icons/messages.svg'>Messages</a>
 		<a href='records.html'><img src='../assets/icons/records.svg'>Records</a>
 		<a href='counseling.html'><img src='../assets/icons/counseling.svg'>Counseling</a>
+		<a href="../index.html"><img src='../assets/icons/back-arrow.svg'>Return</a>
 	</nav>
 	<main>
-		<div id="top">
-			<a href="../index.html">
-				<img src='../assets/icons/back-arrow.svg' id='back_button'>
-			</a>
-			<h1>Counseling</h1>
-		</div>
+		<h1>Counseling</h1>
 		<section id='chatbox'></section>
 		<form>
 			<div>
