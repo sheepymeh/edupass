@@ -174,5 +174,7 @@ textarea:focus {
 	text-decoration: none;
 	color: inherit;
 	margin-right: 12px;
-	border-radius: 21.3px;
+	border-radius: 25px;
+	display: inline-block;
+	margin-bottom: 3px;
 }

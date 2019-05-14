@@ -17,20 +17,30 @@
 		#container {
 			display: flex;
 			margin-bottom: 12px;
+			min-height: calc(100% - 84px);
 		}
 		#container > * {
-			height: calc(100% - 72px);
 			border-radius: 12px;
 			box-shadow: 0 2px 6px rgba(0, 0, 0, .6);
-			padding: 12px;
 		}
 		#topics {
 			width: 250px;
 			margin-right: 12px;
+			padding-bottom: 12px;
+		}
+		#topics h3 {
+			padding: 3px 10px;
+		}
+		#topics div {
+			cursor: pointer;
+			background-color: #fcc;
+			padding: 3px 10px;
 		}
 		#content {
 			flex: 1;
 			padding-bottom: 0;
+			padding: 12px;
+			position: relative;
 		}
 		section {
 			box-shadow: 0 1px 4px rgba(0, 0, 0, .5);
@@ -46,6 +56,13 @@
 		}
 		.attachments {
 			margin-top: 6px;
+		}
+		#content-placeholder {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			font-weight: 500;
 		}
 	</style>
 </head>
@@ -63,7 +80,9 @@
 			<div id='topics'>
 				<h3>TOPICS</h3>
 			</div>
-			<div id='content'></div>
+			<div id='content'>
+				<div id='content-placeholder'>Please select a topic on the left</div>
+			</div>
 		</div>
 	</main>
 	<script>
@@ -79,6 +98,7 @@
 			]
 		};
 		document.addEventListener('DOMContentLoaded', () => {
+			document.getElementsByTagName('title')[0].innerHTML = `Edupass | ${CLASS.name}`;
 			document.getElementsByTagName('h1')[0].appendChild(document.createTextNode(CLASS.name));
 			document.getElementsByTagName('h2')[0].appendChild(document.createTextNode(CLASS.teacher));
 
