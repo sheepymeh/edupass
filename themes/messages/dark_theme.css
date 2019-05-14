@@ -5,3 +5,12 @@ main {
 	background-color: #292b2d;
 	color: #d8d8d8;
 }
+.sidebar {
+	background-color: #eaeaea;
+}
+.message-from {
+	background-color: #69108c;	
+}
+.message-to {
+	background-color: #c97c12;
+}
