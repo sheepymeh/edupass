@@ -8,9 +8,10 @@ main {
 .sidebar {
 	background-color: #eaeaea;
 }
-.message-from {
-	background-color: #69108c;	
+#content {
+    color: #0b0e14;
+    background-color: #292b2d;
 }
-.message-to {
-	background-color: #c97c12;
+.index_button {
+    background-color: #d8d8d8;
 }
