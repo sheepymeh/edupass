@@ -1,0 +1,17 @@
+body {
+	background-color: #0b0e14;
+}
+main {
+	background-color: #292b2d;
+	color: #d8d8d8;
+}
+.sidebar {
+	background-color: #eaeaea;
+}
+#content {
+    color: #0b0e14;
+    background-color: #292b2d;
+}
+.index_button {
+    background-color: #d8d8d8;
+}
