@@ -8,7 +8,11 @@
 	<link href='https://fonts.googleapis.com/css?family=Roboto:400,400i,500,500i|Roboto+Condensed:400,700' rel='stylesheet'>
 	<link rel='stylesheet' type='text/css' href='../common.css'>
 	<link rel='stylesheet' type='text/css' href='../layout.css'>
+	<link rel='stylesheet' type='text/css' href='../themes/learning/dark_theme.css'>
 	<style>
+		.adjusttxt{
+			color:#666;
+		}
 		header {
 			display: flex;
 			align-items: baseline;
@@ -113,6 +117,7 @@
 
 			CLASS.tags.forEach(tag => {
 				const TOPIC_LIST_ELEM = document.createElement('div');
+				TOPIC_LIST_ELEM.classList.add('adjusttxt');
 				TOPIC_LIST_ELEM.appendChild(document.createTextNode(tag.name));
 				TOPIC_LIST_ELEM.dataset.code = tag.code;
 				TOPICS_ELEM.appendChild(TOPIC_LIST_ELEM);
