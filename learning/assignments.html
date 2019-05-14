@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset='utf-8'>
+	<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+	<title>Edupass | Assignments</title>
+	<link rel='icon' type='image/svg+xml' href='logo.svg'>
+	<link href='https://fonts.googleapis.com/css?family=Roboto:400,400i,500,500i|Roboto+Condensed:400,700' rel='stylesheet'>
+	<link rel='stylesheet' type='text/css' href='../common.css'>
+	<link rel='stylesheet' type='text/css' href='../layout.css'>
+	<style>
+		header {
+			display: flex;
+			align-items: baseline;
+			justify-content: space-between;
+		}
+		#container {
+			display: flex;
+			margin-bottom: 12px;
+			min-height: calc(100% - 84px);
+		}
+		#container > * {
+			border-radius: 12px;
+			box-shadow: 0 2px 6px rgba(0, 0, 0, .6);
+		}
+		#topics {
+			width: 250px;
+			margin-right: 12px;
+			padding-bottom: 12px;
+		}
+		#topics h3 {
+			padding: 3px 10px;
+		}
+		#topics div {
+			cursor: pointer;
+			background-color: #fcc;
+			padding: 3px 10px;
+		}
+		#content {
+			flex: 1;
+			padding-bottom: 0;
+			padding: 12px;
+			position: relative;
+		}
+		section {
+			box-shadow: 0 1px 4px rgba(0, 0, 0, .5);
+			padding: 12px;
+			border-radius: 8px;
+			margin-bottom: 12px;
+		}
+		caption {
+			font-size: 20px;
+			font-weight: 500;
+			line-height: 1;
+			margin-bottom: -3px;
+		}
+		.attachments {
+			margin-top: 6px;
+		}
+		#content-placeholder {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			font-weight: 500;
+		}
+		#assignments > a {
+			width: 100%;
+			display: flex;
+			background-color: #ccc;
+			box-shadow: 0 1px 3px rgba(0, 0, 0, .5);
+			margin-bottom: 6px;
+			border-radius: 8px;
+			padding: 8px;
+			text-decoration: none;
+			color: inherit;
+		}
+		#assignments > a > div:first-child {
+			flex: 1;
+		}
+		#assignments > a > div:first-child > div {
+			display: inline-block;
+			margin: 0 8px;
+			padding: 0 10px;
+			background-color: #0f0;
+			border-radius: 18px;
+		}
+	</style>
+</head>
+<body>
+	<nav>
+		<a href='class.html'><img src='../assets/icons/icon.svg'>Classwork</a>
+		<a href='assignments.html'><img src='../assets/icons/icon.svg'>Assignments</a>
+		<a href="index.html"><img src='../assets/icons/back-arrow.svg'>Back</a>
+	</nav>
+	<main>
+		<header>
+			<h1></h1>
+			<h2></h2>
+		</header>
+		<div id='assignments'></div>
+	</main>
+	<script type="text/javascript" src="coursedata.js"></script>
+	<script>
+		if (window.location.hash.substr(1).length != 6) location.href = 'index.html';
+		const CLASS = {
+			name: '4S3 Chemistry',
+			teacher: 'R Lee',
+			assignments: [
+				{
+					code: 12345,
+					name: 'Hyper Easy Mole Concept Revision',
+					tags: ['Mole Concept', 'Revision'],
+					due: 1557796568966
+				},
+				{
+					code: 12346,
+					name: 'Hyper Easy Reaction Kinetics Quiz',
+					tags: ['Reaction Kinetics'],
+					date: 1557796468966
+				}
+			]
+		};
+		document.addEventListener('DOMContentLoaded', () => {
+			document.getElementsByTagName('title')[0].innerHTML = `Edupass | ${CLASS.name}`;
+			document.getElementsByTagName('h1')[0].appendChild(document.createTextNode(CLASS.name));
+			document.getElementsByTagName('h2')[0].appendChild(document.createTextNode(CLASS.teacher));
+
+			for (const LINK of document.getElementsByTagName('nav')[0].getElementsByTagName('a')) 
+				if (LINK !== LINK.parentNode.lastElementChild) LINK.href += window.location.hash;
+
+			const ASSIGNMENTS_ELEM = document.getElementById('assignments');
+
+			CLASS.assignments.forEach(assignment => {
+				const PARENT = document.createElement('a');
+				PARENT.href = `assignment.html${window.location.hash}-${assignment.code}`;
+				const LEFT = document.createElement('div');
+				LEFT.appendChild(document.createTextNode(assignment.name));
+				assignment.tags.forEach(tag => {
+					const TAG = document.createElement('div');
+					TAG.appendChild(document.createTextNode(tag));
+					LEFT.appendChild(TAG);
+				});
+
+				const DUE = document.createElement('div');
+				DUE.appendChild(document.createTextNode(new Date(assignment.due).getDate()));
+				PARENT.appendChild(LEFT);
+				PARENT.appendChild(DUE);
+				ASSIGNMENTS_ELEM.appendChild(PARENT);
+			});
+		});
+	</script>
+</body>
+</html>

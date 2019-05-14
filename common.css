@@ -20,6 +20,9 @@ strong, h1, h2, h3, h4, h5, h6 {
 	margin: 0;
 	line-height: inherit;
 }
+h2 {
+	font-size: 32px;
+}
 
 .md-input {
 	border-radius: 0;
@@ -29,6 +32,7 @@ strong, h1, h2, h3, h4, h5, h6 {
 	border-bottom: 1px solid #ccc;
 	font: inherit;
 	outline: none;
+	background: transparent;
 }
 .md-input + div {
 	margin-top: -2px;
@@ -98,7 +102,7 @@ input[type='radio'] + label {
 	display: block;
 	position: relative;
 	border: 1px solid #212121;
-	background-color: #ccc;
+	background-color: #eaeaea;
 	padding: 6px;
 	margin-bottom: 6px;
 	border-radius: 6px;
@@ -120,7 +124,8 @@ input[type='radio']:checked + label {
 	background-color: #fff;
 }
 input[type='radio']:checked + label:before {
-	background-image: radial-gradient(#000, #000 40%, transparent 40%);
+	background-image: radial-gradient(#D32F2F, #D32F2F 40%, transparent 40%);
+	border-color: #D32F2F;
 }
 input[type='radio'] + label:after {
 	content: '';
@@ -131,7 +136,7 @@ input[type='radio'] + label:after {
 	top: 8px;
 	left: -1px;
 	border-radius: 50%;
-	background-color: #000;
+	background-color: #D32F2F;
 	opacity: .5;
 	transform: scale(0);
 }
@@ -169,5 +174,7 @@ textarea:focus {
 	text-decoration: none;
 	color: inherit;
 	margin-right: 12px;
-	border-radius: 21.3px;
+	border-radius: 25px;
+	display: inline-block;
+	margin-bottom: 3px;
 }
