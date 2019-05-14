@@ -224,14 +224,12 @@
 					MESSAGE_VIEWER.innerHTML += MD_TO_HTML.makeHtml(MESSAGE.text);
 
 					if (MESSAGE.form) {
-						console.info(1);
 						const FORM_PARENT = document.createElement('details');
 						const FORM_HEADER = document.createElement('summary');
 						const FORM = document.createElement('form');
 						FORM_PARENT.appendChild(FORM);
 						let formTime = 0;
 						MESSAGE.form.forEach((question, qnIndex) => {
-							console.info(2);
 							const QUESTION_PARENT = document.createElement('div');
 							const QUESTION = document.createElement('p');
 							QUESTION.appendChild(document.createTextNode(question.question));
@@ -253,7 +251,6 @@
 										QUESTION_PARENT.appendChild(OPTION_INPUT);
 										QUESTION_PARENT.appendChild(OPTION_LABEL);
 									});
-									console.info('3a');
 									break;
 								case 'oe':
 									formTime += 2;
@@ -267,7 +264,6 @@
 									QUESTION_PARENT.appendChild(INPUT);
 									QUESTION_PARENT.appendChild(INPUT_AFTER);
 									QUESTION_PARENT.appendChild(INPUT_PLACEHOLDER);
-									console.info('3b');
 									break;
 							}
 							FORM.appendChild(QUESTION_PARENT);

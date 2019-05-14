@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset='utf-8'>
+	<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+	<title>Edupass | Assignment</title>
+	<link rel='icon' type='image/svg+xml' href='logo.svg'>
+	<link href='https://fonts.googleapis.com/css?family=Roboto:400,400i,500,500i|Roboto+Condensed:400,700' rel='stylesheet'>
+	<link rel='stylesheet' type='text/css' href='../common.css'>
+	<link rel='stylesheet' type='text/css' href='../layout.css'>
+	<style>
+		header {
+			display: flex;
+			align-items: baseline;
+			justify-content: space-between;
+		}
+		#questions > div {
+			padding: 10px 8px;
+			box-shadow: 0 2px 6px rgba(0, 0, 0, .5);
+			border-radius: 8px;
+			margin-bottom: 12px;
+		}
+		#questions > div:after {
+			content: '';
+			clear: both;
+		}
+		#questions img {
+			float: right;
+		}
+		p {
+			margin-top: 0;
+			margin-bottom: 16px;
+		}
+		caption {
+			display: flex;
+			justify-content: space-between;
+			font: 700 20px 'Roboto Condensed', Roboto, sans-serif;
+			padding-right: 8px;
+		}
+		caption div:last-child {
+			font-style: italic;
+		}
+	</style>
+</head>
+<body>
+	<nav>
+		<a href='class.html'><img src='../assets/icons/icon.svg'>Classwork</a>
+		<a href='assignments.html'><img src='../assets/icons/icon.svg'>Assignments</a>
+		<a href="index.html"><img src='../assets/icons/back-arrow.svg'>Back</a>
+	</nav>
+	<main>
+		<header>
+			<h1></h1>
+			<h2></h2>
+		</header>
+		<div id='questions'></div>
+	</main>
+	<script>
+		if (window.location.hash.substr(1).length != 12) window.history.back();
+		const METADATA = {
+			name: 'Hyper Easy Mole Concept Revision',
+			class: '4S3 Chemistry',
+			// milliseconds
+			time: 600000,
+
+		};
+		const QUESTIONS = [
+			{
+				question: 'Which line corresponds to the reaction in higher temperature?',
+				type: 'mcq',
+				image: 'https://www.edplace.com/userfiles/image/Rate%20of%20Reaction%202.jpg',
+				options: [
+					'Blue Line',
+					'Pink Line'
+				],
+				marks: 1
+			},
+			{
+				question: 'Why do reactions occur faster in higher concentrations?',
+				type: 'oe',
+				marks: 3
+			}
+		]
+		document.addEventListener('DOMContentLoaded', () => {
+			document.getElementsByTagName('title')[0].innerHTML = `Edupass | ${METADATA.name}`;
+			document.getElementsByTagName('h1')[0].appendChild(document.createTextNode(METADATA.name));
+			document.getElementsByTagName('h2')[0].appendChild(document.createTextNode(`${METADATA.class} - Assignment`));
+			const QUESTIONS_PARENT = document.getElementById('questions');
+			QUESTIONS.forEach((question, qnIndex) => {
+				const QUESTION_PARENT = document.createElement('div');
+				const QUESTION_HEADER = document.createElement('caption');
+				const QUESTION_NUMBER = document.createElement('div');
+				QUESTION_NUMBER.appendChild(document.createTextNode(`Q${qnIndex + 1}.`));
+				const QUESTION_MAKRS = document.createElement('div');
+				QUESTION_MAKRS.appendChild(document.createTextNode(`${question.marks} mark${question.marks == 1 ? '' : 's'}`));
+				QUESTION_HEADER.appendChild(QUESTION_NUMBER);
+				QUESTION_HEADER.appendChild(QUESTION_MAKRS);
+				QUESTION_PARENT.appendChild(QUESTION_HEADER);
+				const QUESTION = document.createElement('p');
+				QUESTION.appendChild(document.createTextNode(question.question));
+				QUESTION_PARENT.appendChild(QUESTION);
+				switch (question.type) {
+					case 'mcq':
+						question.options.forEach((option, optIndex) => {
+							const OPTION_INPUT = document.createElement('input');
+							OPTION_INPUT.type = 'radio';
+							OPTION_INPUT.name = qnIndex;
+							OPTION_INPUT.id = `q${qnIndex}-${optIndex}`;
+							OPTION_INPUT.value = option;
+
+							const OPTION_LABEL = document.createElement('label');
+							OPTION_LABEL.setAttribute('for', `q${qnIndex}-${optIndex}`);
+							OPTION_LABEL.appendChild(document.createTextNode(option));
+
+							QUESTION_PARENT.appendChild(OPTION_INPUT);
+							QUESTION_PARENT.appendChild(OPTION_LABEL);
+						});
+						break;
+					case 'oe':
+						const INPUT = document.createElement('input');
+						INPUT.classList.add('md-input');
+						INPUT.placeholder = ' ';
+						const INPUT_AFTER = document.createElement('div');
+						const INPUT_PLACEHOLDER = document.createElement('span');
+						INPUT_PLACEHOLDER.appendChild(document.createTextNode(`Your answer for question ${qnIndex + 1}`));
+
+						QUESTION_PARENT.appendChild(INPUT);
+						QUESTION_PARENT.appendChild(INPUT_AFTER);
+						QUESTION_PARENT.appendChild(INPUT_PLACEHOLDER);
+						break;
+				}
+				QUESTIONS_PARENT.appendChild(QUESTION_PARENT);
+			});
+		});
+	</script>
+</body>
+</html>
