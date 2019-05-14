@@ -9,80 +9,17 @@
 	<link rel='stylesheet' type='text/css' media='screen' href='../common.css'>
 	<link rel='stylesheet' type='text/css' media='screen' href='../layout.css'>
 	<style>
-			main div table {
-				width: calc(100% + 16px);
-				margin-left: -16px;
-				border-spacing: 16px 6px;
-				border-collapse: separate;
-			}
-			main div table td {
-				border-radius: 6px;
-				background-color: #cfcfcf;
-				padding: 8px 12px;
-				box-shadow: 0px 1px 2px rgba(0, 0, 0, .5);
-			}
 	</style>
 	<script>
-		let TYPE;
-		switch (window.location.hash.substr(1)) {
-			case 'school':
-				TYPE = {
-					short: 'school',
-					long: 'School'
-				};
-				break;
-			case 'nlb':
-				TYPE = {
-					short: 'nlb',
-					long: 'National Library'
-				};
-				break;
-			default:
-				location.href = 'index.html';
-		}
-		// Fetch from database based on TYPE
-		const DATA = [
-			{
-				genre: "Fantasy",
-				name: "A Certain Scientific Railgun"
-			},
-			{
-				genre: "Thriller, Mystery",
-				name: "Boogiepop Phantom: Origins"
-			},
-			{
-				genre: "Romance, Drama",
-				name: "Eternal Sunshine of the Spotless Mind"
-			},
-			{
-				genre: "Comedy",
-				name: "Louis CK and Philosophy: You Don’t Get to be Bored"
-			}
-		];
-		document.addEventListener('DOMContentLoaded', () => {
-			for (let link of document.getElementsByTagName('nav')[0].getElementsByTagName('a')) link.href += `#${TYPE.short}`;
-			document.getElementsByTagName('h1')[0].appendChild(document.createTextNode(` (${TYPE.long})`))
-			const body = document.getElementById("content");
-			var res = "<table>";
-			DATA.forEach(book => {
-				res = `${res}<tr><td>${book.genre}</td><td>${book.name}</td></tr>`;
-			});
-			res = `${res}</table>`;
-			body.innerHTML = res;
-		});
 	</script>
 </head>
 <body>
 	<nav>
 		<a href='books.html'><img src='../assets/icons/library.svg'>Books</a>
 		<a href='recommendations.html'><img src='../assets/icons/library.svg'>Recommendations</a>
-		<a href='fines.html'><img src='../assets/icons/dollar-symbol.svg'>Fines</a>
 	</nav>
 	<main>
-		<h1>Recommendations</h1>
-		<div id = "content">
-
-		</div>
+		<h1>Title</h1>
 	</main>
 </body>
 </html>

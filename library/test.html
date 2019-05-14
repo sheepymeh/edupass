@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset='utf-8'>
+	<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+	<title>EduPass | Template</title>
+	<link rel='icon' type='image/svg+xml' href='logo.svg'>
+	<link href='https://fonts.googleapis.com/css?family=Roboto:400,400i,500,500i|Roboto+Condensed:400,700' rel='stylesheet'>
+	<link rel='stylesheet' type='text/css' media='screen' href='../common.css'>
+	<link rel='stylesheet' type='text/css' media='screen' href='../layout.css'>
+	<style>
+        .tooltip {
+        position: relative;
+        display: inline-block;
+        }
+        .tooltip .tooltiptext {
+            display: none;
+            transition: opacity 0.15s;
+            width: 240px;
+            background-color: #ffffff;
+            color: #000000;
+            text-align: left;
+            border-radius: 6px;
+            padding: 5px 0;
+            position: absolute;
+            z-index: 1;
+            /*top: 130%;*/
+            left: 50%;
+            margin-left: -60px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, .3);
+        }
+
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: transparent transparent black transparent;
+        }
+
+        .tooltip:hover .tooltiptext, .tooltip .tooltiptext:hover{
+            display: inline-block;
+        }
+        .tooltiptext div::after{
+            content: '!';
+	        background-color: #f00;
+	        border-radius: 50%;
+	        line-height: 32px;
+	        height: 32px;
+		    width: 32px;
+		    color: #fff;
+		    display: inline-block;
+		    text-align: center;
+		    position: absolute;
+		    right: 12px;
+		    top: 10px;
+        }
+	</style>
+	<script>
+	</script>
+</head>
+<body>
+	<nav>
+		<a href='books.html'><img src='../assets/icons/library.svg'>Books</a>
+		<a href='recommendations.html'><img src='../assets/icons/library.svg'>Recommendations</a>
+	</nav>
+	<main>
+        <h1>Title</h1>
+        <div class = "tooltip">
+            check it longer text for sidesss
+            <span class = "tooltiptext">
+                <div style = "padding: 12px;">
+                    <div style = "font-size: 12px;">AUTHOR</div>
+                    <div style = "font-size: 20px;" id = "author">Kazuma Kamachi</div>
+                    <!---<br/>-->
+                    <div style = "font-size: 12px;">SYPNOSIS</div>
+                    <div style = "font-size: 12px; width: 200px; height: 120px; overflow: scroll" id = "text">Kamijou Touma is a student living in Academy City, a highly advanced place in terms of technology. Despite being gauged as a level zero esper (no powers), he possesses on his right hand the Imagine Breaker, an ability that negates any power whatsoever. Touma finds a young girl named Index who is trying to run away from Necessarius, a powerful magic organization that she is member of. Blessed with the skill of memorizing any sort of information, she holds 103,000 forbidden magical books within her head. As science and magic cross paths, Touma must face several dangers amid espers and magicians who appear in the exciting scientific town.</div>
+                    <div style = "font-size: 12px;">DUE DATE</div>
+                    <div style = "font-size: 20px; color: red">OVERDUE</div>
+                </div>
+            </span>
+        </div>
+	</main>
+</body>
+</html>

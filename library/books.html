@@ -39,6 +39,52 @@
 			right: 12px;
 			top: 10px;
 		}
+		/*----extra info----*/
+        .tooltip .tooltiptext {
+            display: none;
+            transition: opacity 0.15s;
+            width: 240px;
+            background-color: #ffffff;
+            color: #000000;
+            text-align: left;
+            border-radius: 6px;
+            padding: 5px 0;
+            position: absolute;
+            z-index: 1;
+            top: 100%;
+            left: 50%;
+            margin-left: -60px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, .3);
+        }
+
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: transparent transparent black transparent;
+        }
+
+        .tooltip:hover .tooltiptext, .tooltip .tooltiptext:hover{
+            display: inline-block;
+        }
+        .tooltiptext .od::after{
+            content: '!';
+	        background-color: #f00;
+	        border-radius: 50%;
+	        line-height: 32px;
+	        height: 32px;
+		    width: 32px;
+		    color: #fff;
+		    display: inline-block;
+		    text-align: center;
+		    position: absolute;
+		    right: 12px;
+		    top: 10px;
+        }
 	</style>
 	<script>
 		let TYPE;
@@ -102,7 +148,7 @@
 			let count = 0;
 			DATA[TYPE.short].forEach(book => {
 				const S = book.due;
-				res = `${res}<tr onmouseover = 'info(${count})'${S < TIME_NOW ? ' class="overdue"' : ''}><td>${S.getUTCDate()}/${S.getUTCMonth() + 1}/${S.getUTCFullYear()}</td><td>${book.name}</td></tr>`;
+				res = `${res}<tr onmouseover = 'info(${count})'${S < TIME_NOW ? ' class="overdue"' : ''}><td>${S.getUTCDate()}/${S.getUTCMonth() + 1}/${S.getUTCFullYear()}</td><td class = "tooltip">${book.name}<span class = "tooltiptext"><div ${S < TIME_NOW ? 'class="od "' : ''}style = "padding: 12px;"><div style = "font-size: 12px;">AUTHOR</div><div style = "font-size: 20px;">${book.author}</div><div style = "font-size: 12px;">SYPNOSIS</div><div style = "font-size: 12px; width: 200px; height: 120px; overflow: scroll">${book.sypnosis}</div><div style = "font-size: 12px;">DUE DATE</div>${S < TIME_NOW ? ' <div style = "font-size: 20px; color: red">OVERDUE</div>' : `<div style = "font-size: 20px;">${S.getUTCDate()}/${S.getUTCMonth() + 1}/${S.getUTCFullYear()}</div>`}</span></td></tr>`;
 				count++;
 			});
 			res = `${res}</table>`;
