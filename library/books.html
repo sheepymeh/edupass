@@ -9,7 +9,7 @@
 	<link rel='stylesheet' type='text/css' href='../common.css'>
 	<link rel='stylesheet' type='text/css' href='../layout.css'>
 	<style>
-		.info{
+		.info {
 			border-radius: 6px;
 		}
 		main div table {
@@ -39,39 +39,63 @@
 			right: 12px;
 			top: 10px;
 		}
-		/*----extra info----*/
-        .tooltip .tooltiptext {
-            display: none;
-            transition: opacity 0.15s;
-            width: 240px;
-            background-color: #ffffff;
-            color: #000000;
-            text-align: left;
-            border-radius: 6px;
-            padding: 5px 0;
-            position: absolute;
-            z-index: 1;
-            top: 100%;
-            left: 50%;
-            margin-left: -60px;
-            box-shadow: 0px 2px 5px rgba(0, 0, 0, .3);
-        }
 
-        .tooltip .tooltiptext::after {
+		.tooltip {
+			display: none;
+			transition: opacity .15s;
+			width: 400px;
+			background-color: #fff;
+			position: absolute;
+			top: 100%;
+			left: 25%;
+			transform: translate(-50%, 0);
+            border-radius: 6px;
+            box-shadow: 0px 3px 6px rgba(0, 0, 0, .7);
+			z-index: 1;
+			padding: 5px;
+			font-size: 22px;
+		}
+        .tooltip:before {
             content: "";
             position: absolute;
             bottom: 100%;
             left: 50%;
-            margin-left: -5px;
-            border-width: 5px;
-            border-style: solid;
-            border-color: transparent transparent black transparent;
+            transform: translateX(-50%);
+			border: 16px solid transparent;
+            border-bottom-color: #fff;
         }
-
-        .tooltip:hover .tooltiptext, .tooltip .tooltiptext:hover{
-            display: inline-block;
+		.hover .tooltip {
+			display: block;
+		}
+		.tooltip caption {
+			font-size: 20px;
+			font-family: 'Roboto Condensed', Roboto, sans-serif;
+			line-height: 1;
+			font-weight: 700;
+			margin: 3px 0 -2px 1px;
+		}
+		.synopsis {
+			max-height: 300px;
+			overflow-y: auto;
+			background-color: #ccc;
+			padding: 5px;
+			border-radius: 3px;
+			margin-top: 3px;
+		}
+		.show-top {
+			top: 0;
+			transform: translate(-50%, -100%);
+		}
+        .show-top:before {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-bottom-color: transparent;
+			border-top-color: #fff;
         }
-        .tooltiptext .od::after{
+		/* .overdue .tooltip:after {
             content: '!';
 	        background-color: #f00;
 	        border-radius: 50%;
@@ -84,7 +108,7 @@
 		    position: absolute;
 		    right: 12px;
 		    top: 10px;
-        }
+        } */
 	</style>
 	<script>
 		let TYPE;
@@ -122,12 +146,14 @@
 				{
 					due: new Date(Date.UTC(2019, 11, 5)),
 					name: "SMO Sample Questions: A Compendium",
-					sypnosis: "",
-					author: ""
+					sypnosis: "123",
+					author: "123"
 				},
 				{
 					due: new Date(Date.UTC(2019, 11, 5)),
-					name: "The Theory Of Everything"
+					name: "The Theory Of Everything",
+					sypnosis: "123",
+					author: "123"
 				}
 			],
 			nlb: [
@@ -144,15 +170,44 @@
 			for (let link of document.getElementsByTagName('nav')[0].getElementsByTagName('a')) link.href += `#${TYPE.short}`;
 			document.getElementsByTagName('h1')[0].appendChild(document.createTextNode(` (${TYPE.long})`))
 			const BODY = document.getElementById("content");
-			let res = "<table>";
+			const TABLE = document.createElement('table');
 			let count = 0;
 			DATA[TYPE.short].forEach(book => {
 				const S = book.due;
-				res = `${res}<tr onmouseover = 'info(${count})'${S < TIME_NOW ? ' class="overdue"' : ''}><td>${S.getUTCDate()}/${S.getUTCMonth() + 1}/${S.getUTCFullYear()}</td><td class = "tooltip">${book.name}<span class = "tooltiptext"><div ${S < TIME_NOW ? 'class="od "' : ''}style = "padding: 12px;"><div style = "font-size: 12px;">AUTHOR</div><div style = "font-size: 20px;">${book.author}</div><div style = "font-size: 12px;">SYPNOSIS</div><div style = "font-size: 12px; width: 200px; height: 120px; overflow: scroll">${book.sypnosis}</div><div style = "font-size: 12px;">DUE DATE</div>${S < TIME_NOW ? ' <div style = "font-size: 20px; color: red">OVERDUE</div>' : `<div style = "font-size: 20px;">${S.getUTCDate()}/${S.getUTCMonth() + 1}/${S.getUTCFullYear()}</div>`}</span></td></tr>`;
+				const ROW = TABLE.insertRow();
+				if (S < TIME_NOW) ROW.classList.add('overdue');
+				const DUE_CELL = ROW.insertCell();
+				DUE_CELL.appendChild(document.createTextNode(`${S.getUTCDate()}/${S.getUTCMonth() + 1}/${S.getUTCFullYear()}`));
+				const NAME_CELL = ROW.insertCell();
+				NAME_CELL.appendChild(document.createTextNode(book.name));
+				const TOOLTIP = document.createElement('div');
+				TOOLTIP.classList.add('tooltip');
+				const T_AUTHORH = document.createElement('caption');
+				T_AUTHORH.appendChild(document.createTextNode('AUTHOR'));
+				const T_AUTHOR = document.createElement('div');
+				T_AUTHOR.appendChild(document.createTextNode(book.author));
+				const T_SYNOPSISH = document.createElement('caption');
+				T_SYNOPSISH.appendChild(document.createTextNode('SYNOPSIS'));
+				const T_SYNOPSIS = document.createElement('div');
+				T_SYNOPSIS.classList.add('synopsis');
+				T_SYNOPSIS.appendChild(document.createTextNode(book.sypnosis));
+				TOOLTIP.appendChild(T_AUTHORH);
+				TOOLTIP.appendChild(T_AUTHOR);
+				TOOLTIP.appendChild(T_SYNOPSISH);
+				TOOLTIP.appendChild(T_SYNOPSIS);
+				NAME_CELL.appendChild(TOOLTIP);
+				ROW.addEventListener('mouseover', () => {
+					ROW.classList.add('hover');
+					if (TOOLTIP.getBoundingClientRect().bottom > (window.innerHeight - 16)) 
+							TOOLTIP.classList.add('show-top');
+					ROW.addEventListener('mouseout', () => {
+						ROW.classList.remove('hover');
+						TOOLTIP.classList.remove('show-top');
+					});
+				});
 				count++;
 			});
-			res = `${res}</table>`;
-			BODY.innerHTML = res;
+			BODY.appendChild(TABLE);
 		});
 		const info = (id) => {
 			// help plox
