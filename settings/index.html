@@ -9,10 +9,10 @@
 	<link rel='stylesheet' type='text/css' href='../common.css'>
     <link rel='stylesheet' type='text/css' href='../layout.css'>
     <div id='jeronisbadatthesign'>
-    <link rel='stylesheet' type='text/css' href='../themes/dark_theme.css' id="theme">
+    <link rel='stylesheet' type='text/css' href='../dark_theme.css' id="theme">
 	</div>
     <script type="text/javascript">
-    	function changeKala(themenum){
+    	function changeKala(themenum){//DO NOT IMPLEMENT FOR THE WHOLE WEBSITE UNTIL JERON FIXES CSS
     		const themes=["dark_theme","light_theme","alistair_theme"];
     		var currTheme;//pretend this is the user current theme.
     		currTheme=themes[themenum];
@@ -21,13 +21,13 @@
     		const NEWTHEME=document.createElement('link');
     		document.getElementById('theme').parentNode.removeChild(document.getElementById('theme'));
     		NEWTHEME.setAttribute('id','theme');
-    		NEWTHEME.setAttribute('href',`../themes/${currTheme}.css`);
+    		NEWTHEME.setAttribute('href',`../${currTheme}.css`);
     		jeronsucks.appendChild(NEWTHEME);
     	}
     </script>
 </head>
 <body>
-<form action="" onsubmit="changeKala(kala)">
+<form action="" onsubmit="changeKala()">
 	<div style="color:white">Dark Theme?</div>
 	<input type="radio" name="kala" value="0" id="0" checked><label for="0">Dark</label>
 	<input type="radio" name="kala" value="1" id="1"><label for="1">Light</label>
