@@ -8,4 +8,31 @@
 	<link href='https://fonts.googleapis.com/css?family=Roboto:400,400i,500,500i|Roboto+Condensed:400,700' rel='stylesheet'>
 	<link rel='stylesheet' type='text/css' href='../common.css'>
     <link rel='stylesheet' type='text/css' href='../layout.css'>
+    <div id='jeronisbadatthesign'>
+    <link rel='stylesheet' type='text/css' href='../dark_theme.css' id="theme">
+	</div>
+    <script type="text/javascript">
+    	function changeKala(themenum){//DO NOT IMPLEMENT FOR THE WHOLE WEBSITE UNTIL JERON FIXES CSS
+    		const themes=["dark_theme","light_theme","alistair_theme"];
+    		var currTheme;//pretend this is the user current theme.
+    		currTheme=themes[themenum];
+    		alert('the earth is actually a pizza');
+    		const jeronsucks=document.getElementById('jeronisbadatthesign');
+    		const NEWTHEME=document.createElement('link');
+    		document.getElementById('theme').parentNode.removeChild(document.getElementById('theme'));
+    		NEWTHEME.setAttribute('id','theme');
+    		NEWTHEME.setAttribute('href',`../${currTheme}.css`);
+    		jeronsucks.appendChild(NEWTHEME);
+    	}
+    </script>
 </head>
+<body>
+<form action="" onsubmit="changeKala()">
+	<div style="color:white">Dark Theme?</div>
+	<input type="radio" name="kala" value="0" id="0" checked><label for="0">Dark</label>
+	<input type="radio" name="kala" value="1" id="1"><label for="1">Light</label>
+	<input type="radio" name="kala" value="2" id="2"><label for="2">Alistair :3</label>
+	<button type='submit'>Apply</button>
+</form>
+</body>
+</html>
