@@ -1,12 +1,20 @@
 const coursedata=[
 		{
-			id:"0",
-			name:"Physics",
-			teacher:"Chia Kok Pin",
+			id:"123456",
+			name:"4S3 Chemistry",
+			teacher:"AH SEN RUDY LEE CHONG TAI",
 			assignments:[
+			{
+					code: 12345,
+					name: 'Hyper Easy Mole Concept Revision',
+					tags: ['Mole Concept', 'Revision'],
+					due: 1557796568966
+				},
 				{
-					name:"Electromagnetism 69",
-					duedate:new Date(Date.UTC(2019,4,14))
+					code: 12346,
+					name: 'Hyper Easy Reaction Kinetics Quiz',
+					tags: ['Reaction Kinetics'],
+					date: 1557796468966
 				}
 			]
 		},
@@ -37,5 +45,5 @@ const coursedata=[
 					name:"unnecessary bullfuck"
 				}
 			]
-		}	
+		}
 	]
