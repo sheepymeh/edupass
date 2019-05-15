@@ -108,8 +108,8 @@
 			<button>Sign in</button>
 		</form>
 	</main>
-	<!-- <script src='aws.js'></script> -->
-	<script src="https://sdk.amazonaws.com/js/aws-sdk-2.455.0.min.js"></script>
+	<script src='aws.js'></script>
+	<script src="amazon-cognito-identity.js"></script>
 	<script src='cookies.js'></script>
 	<script>
 		const COGNITO_POOL = new AmazonCognitoIdentity.CognitoUserPool({
@@ -120,7 +120,7 @@
 			Username: 'T0372813C',
 			Pool: COGNITO_POOL
 		});
-		cognitoUser.authenticateUser({
+		USER.authenticateUser({
 			Username: 'T0372813C',
 			Password: 'aA1@aA1@'
 		}, {
