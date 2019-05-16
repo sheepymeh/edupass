@@ -1,19 +1,122 @@
 import json
 import boto3
-import random
 
-# def user_create(username, password, name, gender, birthdate, address):
-# 	import passlib as pwd_context
-# 	dynamodb = boto3.resource('dynamodb')
-# 	table = dynamodb.Table('messages')
-# 	table.put_item(
-# 		Item = {
-# 			'username': username
-# 			'name': name,
-# 			'password': '1',
-# 			'timestamp': 1558012701695
-# 		}
-# 	)
+def user_login():
+	return {
+
+	}
+
+def user_create():
+	return {
+
+	}
+
+def user_forget():
+	return {
+
+	}
+
+def message_new(dynamodb, rights, title, username, markdown):
+	import time
+	from random import SystemRandom
+	dynamodb.put_item(
+		TableName = 'messages',
+		Item = {
+			'id': {'N': SystemRandom().randint(10000, 99999)},
+			'title': {'S': title},
+			'from': {'S': 'Jeron Sia'},
+			'timestamp': {'N': int(round(time.time() * 1000))}
+		}
+	)
+	return {
+		'success': True
+	}
+
+def message_list():
+	return {
+
+	}
+
+def message_view(dynamodb, username, rights, id):
+	message = dynamodb.get_item(
+			TableName = 'messages',
+			Key = {
+				'username': {'S': username}
+			},
+			ProjectionExpression = 'session_ids, rights, classes'
+		)
+	# 1. get message
+	# 2. mark as read
+	return {
+
+	}
+
+def message_respond():
+	return {
+
+	}
+
+def records_get():
+	return {
+
+	}
+
+def learning_list():
+	return {
+
+	}
+
+def learning_show_class():
+	return {
+
+	}
+
+def learning_show_assignments():
+	return {
+
+	}
+
+def learning_assignment():
+	return {
+
+	}
+
+def learning_assignment_submit():
+	return {
+
+	}
+
+def library_index():
+	return {
+
+	}
+
+def library_fines():
+	return {
+
+	}
+
+def library_books():
+	return {
+
+	}
+
+def library_recommendations():
+	return {
+
+	}
+
+def settings_get():
+	return {
+
+	}
+
+def settings_update():
+	return {
+
+	}
+
+
 
 def lambda_handler(param, context):
 	dynamodb = boto3.client('dynamodb')
@@ -33,34 +136,34 @@ def lambda_handler(param, context):
 			Key = {
 				'username': {'S': param['user']['username']}
 			},
-			ProjectionExpression = 'session_ids, role, classes'
+			ProjectionExpression = 'session_ids, rights, classes'
 		)
-		if (param['user']['session_id'] in user_data['Item']['session_ids']['SS'])
+		if (param['user']['session_id'] in user_data['Item']['session_ids']['SS']):
 			return {
-				'message_new': message_new(user_data['Item']['role']['S'], param['request']['title'], param['request']['from'], param['request']['timestamp']),
-				'message_list': message_list(user_data['Item']['role']['S']),
-				'message_view': message_view(param['user']['username'], param['request']['id']),
-				'message_respond': message_respond(param['user']['username'], param['request']['id'], param['request']['response'])
+				'message_new': message_new(dynamodb, user_data['Item']['rights']['S'], param['request']['title'], param['user']['username'], param['request']['markdown']),
+				'message_list': message_list(dynamodb, user_data['Item']['rights']['S']),
+				'message_view': message_view(dynamodb, param['user']['username'], user_data['Item']['rights']['S'], param['request']['id']),
+				'message_respond': message_respond(dynamodb, param['user']['username'], param['request']['id'], param['request']['response']),
 
-				'records_get': records_get(param['user']['username']),
+				'records_get': records_get(dynamodb, param['user']['username']),
 				# 'records_update'
 
 				# 'counseling'
 
 				# we'll need a function to check that the student is actually in the class
-				'learning_list': learning_list(param['user']['username'], user_data['Item']['classes']['NS']),
-				'learning_show_class': learning_show_class(param['request']['id'], param['request']['id'])
-				'learning_show_assignments': learning_show_assignments(param['user']['username'], param['request']['id']),
-				'learning_assignment': learning_assignment(param['user']['username'], param['request']['id']),
-				'learning_assignment_submit': learning_assignment_submit(param['user']['username'], param['request']['id'], param['request']['answers']),
+				'learning_list': learning_list(dynamodb, param['user']['username'], user_data['Item']['classes']['NS']),
+				'learning_show_class': learning_show_class(dynamodb, param['request']['id'], param['request']['id']),
+				'learning_show_assignments': learning_show_assignments(dynamodb, param['user']['username'], param['request']['id']),
+				'learning_assignment': learning_assignment(dynamodb, param['user']['username'], param['request']['id']),
+				'learning_assignment_submit': learning_assignment_submit(dynamodb, param['user']['username'], param['request']['id'], param['request']['answers']),
 
-				'library_index': library_index(param['user']['username']),
-				'library_fines': library_fines(param['user']['username']),
-				'library_books': library_books(param['user']['username']),
-				'library_recommendations': library_recommendations(param['user']['username']),
+				'library_index': library_index(dynamodb, param['user']['username']),
+				'library_fines': library_fines(dynamodb, param['user']['username']),
+				'library_books': library_books(dynamodb, param['user']['username']),
+				'library_recommendations': library_recommendations(dynamodb, param['user']['username']),
 
-				'settings_get': settings_get(param['user']['username']),
-				'settings_update': settings_update(param['user']['username']),
+				'settings_get': settings_get(dynamodb, param['user']['username']),
+				'settings_update': settings_update(dynamodb, param['user']['username']),
 				# ^^ how?
 			}.get(param['request']['type'], {
 				'success': False,
@@ -68,12 +171,3 @@ def lambda_handler(param, context):
 			})
 		else:
 			return 'no'
-	# table = dynamodb.Table('messages')
-	# table.put_item(
-	# 	Item = {
-	# 		'id': random.SystemRandom().randint(10000, 99999),
-	# 		'title': 'A Certain Dumb Cunt: A Certain Miagical Index Fan Fiction',
-	# 		'from': 'Jeron Sia',
-	# 		'timestamp': 1558012701695
-	# 	}
-	# )
