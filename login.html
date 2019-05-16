@@ -112,23 +112,24 @@
 	<script src="amazon-cognito-identity.js"></script>
 	<script src='cookies.js'></script>
 	<script>
-		const COGNITO_POOL = new AmazonCognitoIdentity.CognitoUserPool({
+		var COGNITO_POOL = new AmazonCognitoIdentity.CognitoUserPool({
 			UserPoolId: 'ap-southeast-1_PqK9O9TNu',
 			ClientId: '4h9fdr6uqs2l1orgh12v6e315u'
 		});
-		const USER = new AmazonCognitoIdentity.CognitoUser({
+		var USER = new AmazonCognitoIdentity.CognitoUser({
 			Username: 'T0372813C',
 			Pool: COGNITO_POOL
 		});
-		USER.authenticateUser({
+		var USER_DATA = {
 			Username: 'T0372813C',
 			Password: 'aA1@aA1@'
-		}, {
+		};
+		USER.authenticateUser(USER_DATA, {
 			onSuccess: res => {
-				console.info(res);
+				console.info('res');
 			},
 			onError: err => {
-				console.warn(err);
+				console.warn('err');
 			},
 			mfaRequired: delivery => {
 				var verificationCode = prompt('Please input verification code' ,'');
