@@ -4,3 +4,5 @@ But, doing so makes me feel so unproductive. I would rather be studying than res
 Don't worry! Taking breaks actually helps you to be more productive during your next study session.
 Oh really? Thanks, I will try that out next time!
 No problem.
+
+jesus this is the worst readme ive ever read
