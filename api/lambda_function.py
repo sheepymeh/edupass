@@ -12,11 +12,6 @@ def user_create(dynamodb, username, password, name, gender, birthdate, address):
 
 	}
 
-def user_forget(dynamodb, username):
-	return {
-
-	}
-
 def message_new(dynamodb, username, title, markdown, rights, student_readable):
 	if rights != 'teacher' and rights != 'admin':
 		return {
@@ -130,7 +125,6 @@ def message_view(dynamodb, username, user_rights, id):
 		}
 
 def message_respond(dynamodb, username, id, response):
-
 	return {
 
 	}
@@ -140,21 +134,32 @@ def records_get(dynamodb, username):
 
 	}
 
-def learning_list(dynamodb, username, classes_list):
-	lL=dynamodb.scan(
-		TableName='learning',
-		ProjectionExpression='id,class_name,teacher'
-	)['Items']
-	objectLiterally={}
-	for i in lL:
-		objectLiterally[i['id']['S']]={
-			'teacher':i['teacher']['S'],
-			'name':i['class_name']['S']
+def learning_list(dynamodb, username):
+	classes = dynamodb.scan(
+		TableName = 'learning',
+		ProjectionExpression = 'id,class_name,teacher',
+		FilterExpression = 'contains(members, :username)',
+		ExpressionAttributeValues = {
+			":username": {
+				"S": username
 			}
-	return objectLiterally
+		}
+	)
+	if 'Items' not in classes:
+		return {
+			'success': True
+		}
+	else:
+		classes = classes['Items']
+	return_dict = {}
+	for i in classes:
+		return_dict[i['id']['S']] = {
+			'teacher': i['teacher']['S'],
+			'name': i['class_name']['S']
+			}
+	return return_dict
 
 def learning_list_topics(dynamodb, username, class_id):
-
 	return {
 
 	}
@@ -166,17 +171,17 @@ def learning_get_topic(dynamodb, username, class_id, topic_id):
 
 def learning_show_assignments(dynamodb, username, class_id):
 	assignments = dynamodb.get_item(
-			TableName = 'learning',
-			Key = {
-				'id': {'S': str(class_id)}
-			},
-			ProjectionExpression = 'members, assignments, class_name, teacher'
-		)
+		TableName = 'learning',
+		Key = {
+			'id': {'S': str(class_id)}
+		},
+		ProjectionExpression = 'members, assignments, class_name, teacher'
+	)
 	if 'Item' not in assignments:
 		return {
 			'success': False,
 			'error_code': 404,
-			'error': 'This class does not exist'
+			'error': 'This assignment does not exist'
 		}
 	assignments = assignments['Item']
 	if username not in assignments['members']['SS']:
@@ -222,21 +227,23 @@ def learning_assignment(dynamodb, username, class_id, assignment_id):
 			'error_code': 404,
 			'error': 'This assignment does not exist'
 		}
-	return assignments
 	return_dict = {
-		'name': assignment['M']['A' + str(assignment_id)]['M']['name']['S'],
+		'name': assignments['assignments']['M']['A' + str(assignment_id)]['M']['name']['S'],
 		'class': assignments['class_name']['S'],
 		'questions': []
 	}
 	for question in assignments['assignments']['M']['A' + str(assignment_id)]['M']['questions']['L']:
 		assignment_dict = {
-			'question': question[''],
-			'type': assignment['M']['A' + str(assignment_id)]['M']['mcq']['S'],
-			'image': # image,
-			'marks': #
+			'question': question['M']['question']['S'],
+			'type': question['M']['type']['S'],
+			'marks': question['M']['marks']['N']
 		}
-		if type == 'mcq':
-			assignment_dict['options'] = # options
+		if question['M']['type']['S'] == 'mcq':
+			assignment_dict['options'] = []
+			for option in question['M']['options']['L']:
+				assignment_dict['options'].append(option['S'])
+		if 'image' in question['M']:
+			assignment_dict['image'] = question['M']['image']['S']
 		return_dict['questions'].append(assignment_dict)
 	return return_dict
 
@@ -283,8 +290,6 @@ def lambda_handler(param, context):
 			return user_login(dynamodb, param['request']['username'], param['request']['password'])
 		elif param['request']['type'] == 'user_create':
 			return user_create(dynamodb, param['request']['username'], param['request']['password'], param['request']['name'], param['request']['gender'], param['request']['birthdate'], param['request']['address'])
-		elif param['request']['type'] == 'user_forget':
-			return user_forget(dynamodb, param['request']['username'])
 		else:
 			return {
 				'success': False,
@@ -319,7 +324,7 @@ def lambda_handler(param, context):
 			elif param['request']['type'] == 'records_get':
 				return records_get(dynamodb, param['user']['username'])
 			elif param['request']['type'] == 'learning_list':
-				return learning_list(dynamodb, param['user']['username'], user_data['classes']['L'])
+				return learning_list(dynamodb, param['user']['username'])
 			elif param['request']['type'] == 'learning_list_topics':
 				return learning_list_topics(dynamodb, param['user']['username'], param['request']['id'])
 			elif param['request']['type'] == 'learning_get_topic':
