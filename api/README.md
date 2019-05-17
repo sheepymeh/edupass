@@ -3,8 +3,8 @@
 ## Logged In Componenets
 
 ### Temporary Credentials
-**Username:** T0372813C
-**Session ID:** long_id_no_one_will_ever_guess
+**Username:** ```T0372813C```  
+**Session ID:** ```long_id_no_one_will_ever_guess```
 
 ### Request Format
 ```json
