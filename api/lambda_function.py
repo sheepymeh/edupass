@@ -207,7 +207,7 @@ def learning_assignment(dynamodb, username, class_id, assignment_id):
 			Key = {
 				'id': {'S': str(class_id)}
 			},
-			ProjectionExpression = 'members, assignments.A' + str(assignment_id)
+			ProjectionExpression = 'members, class_name, assignments.A' + str(assignment_id)
 		)
 	if 'Item' not in assignments:
 		return {
@@ -222,15 +222,23 @@ def learning_assignment(dynamodb, username, class_id, assignment_id):
 			'error_code': 404,
 			'error': 'This assignment does not exist'
 		}
-	assignments = assignments['assignments']['M']['A' + str(assignment_id)]['M']
+	return assignments
 	return_dict = {
-		'name': assignments['name']['S'],
-		# 'name': assignments['']['S'],
-		
+		'name': assignment['M']['A' + str(assignment_id)]['M']['name']['S'],
+		'class': assignments['class_name']['S'],
+		'questions': []
 	}
-	return {
-
-	}
+	for question in assignments['assignments']['M']['A' + str(assignment_id)]['M']['questions']['L']:
+		assignment_dict = {
+			'question': question[''],
+			'type': assignment['M']['A' + str(assignment_id)]['M']['mcq']['S'],
+			'image': # image,
+			'marks': #
+		}
+		if type == 'mcq':
+			assignment_dict['options'] = # options
+		return_dict['questions'].append(assignment_dict)
+	return return_dict
 
 def learning_assignment_submit(dynamodb, username, assignment_id, answers):
 	return {
@@ -319,7 +327,7 @@ def lambda_handler(param, context):
 			elif param['request']['type'] == 'learning_show_assignments':
 				return learning_show_assignments(dynamodb, param['user']['username'], param['request']['class_id'])
 			elif param['request']['type'] == 'learning_assignment':
-				return learning_assignment(dynamodb, param['user']['username'], param['request']['class_id'], param['request']['id'])
+				return learning_assignment(dynamodb, param['user']['username'], param['request']['class_id'], param['request']['assignment_id'])
 			elif param['request']['type'] == 'learning_assignment_submit':
 				return learning_assignment_submit(dynamodb, param['user']['username'], param['request']['id'], param['request']['answers'])
 			elif param['request']['type'] == 'library_index':
