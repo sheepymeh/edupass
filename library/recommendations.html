@@ -9,6 +9,9 @@
 	<link rel='stylesheet' type='text/css' href='../common.css'>
 	<link rel='stylesheet' type='text/css' href='../layout.css'>
 	<style>
+		.info {
+			border-radius: 6px;
+		}
 		main div table {
 			width: calc(100% + 16px);
 			margin-left: -16px;
@@ -20,13 +23,63 @@
 			background-color: #cfcfcf;
 			padding: 8px 12px;
 			box-shadow: 0px 1px 2px rgba(0, 0, 0, .5);
+			position: relative;
 		}
-		#content{
-			display: inline-block;
-			background-color: #ececec;
-			border-radius: 12px;
-			width: 100%;
+		.tooltip {
+			display: none;
+			transition: opacity .15s;
+			width: 400px;
+			background-color: #fff;
+			position: absolute;
+			top: 100%;
+			left: 25%;
+			transform: translate(-50%, 0);
+            border-radius: 6px;
+            box-shadow: 0px 3px 6px rgba(0, 0, 0, .7);
+			z-index: 1;
+			padding: 5px;
+			font-size: 22px;
 		}
+        .tooltip:before {
+            content: "";
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+			border: 16px solid transparent;
+            border-bottom-color: #fff;
+        }
+		.hover .tooltip {
+			display: block;
+		}
+		.tooltip caption {
+			font-size: 20px;
+			font-family: 'Roboto Condensed', Roboto, sans-serif;
+			line-height: 1;
+			font-weight: 700;
+			margin: 3px 0 -2px 1px;
+		}
+		.synopsis {
+			max-height: 300px;
+			overflow-y: auto;
+			background-color: #ccc;
+			padding: 5px;
+			border-radius: 3px;
+			margin-top: 3px;
+		}
+		.show-top {
+			top: 0;
+			transform: translate(-50%, -100%);
+		}
+        .show-top:before {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-bottom-color: transparent;
+			border-top-color: #fff;
+        }
 	</style>
 	<link rel='stylesheet' type='text/css' href='../themes/library/dark_theme.css'>
 	<script>
@@ -51,31 +104,68 @@
 		const DATA = [
 			{
 				genre: "Fantasy",
-				name: "A Certain Scientific Railgun"
+				name: "A Certain Scientific Railgun",
+				synopsis: 'The student-filled Academy City is at the forefront of scientific advancement and home to the esper development program. The seven "Level 5" espers are the most powerful in Academy City, and ranked third among them is middle schooler Mikoto Misaka, an electricity manipulator known as "The Railgun." When strange incidents begin occurring throughout the city, she finds each crime to be connected to the elusive "Level Upper," a legendary device that allegedly increases the esper level of its user. As the situation escalates, it becomes apparent that there is more to the Level Upper than meets the eye, and that Academy City may be a far more twisted place than the glamorous utopia it appears to be.',
+				author: "Kazuma Kamachi",
 			},
 			{
 				genre: "Thriller, Mystery",
-				name: "Boogiepop Phantom: Origins"
+				name: "Boogiepop Phantom: Origins",
+				synopsis: "123",
+				author: "123"
 			},
 			{
 				genre: "Romance, Drama",
-				name: "Eternal Sunshine of the Spotless Mind"
+				name: "Eternal Sunshine of the Spotless Mind",
+				synopsis: "123",
+				author: "123"
 			},
 			{
 				genre: "Comedy",
-				name: "Louis CK and Philosophy: You Don’t Get to be Bored"
+				name: "Louis CK and Philosophy: You Don’t Get to be Bored",
+				synopsis: "123",
+				author: "123"
 			}
 		];
 		document.addEventListener('DOMContentLoaded', () => {
 			for (let link of document.getElementsByTagName('nav')[0].getElementsByTagName('a')) link.href += `#${TYPE.short}`;
-			document.getElementsByTagName('h1')[0].appendChild(document.createTextNode(` (${TYPE.long})`))
-			const body = document.getElementById("content");
-			var res = "<table>";
+			document.getElementsByTagName('h1')[0].appendChild(document.createTextNode(` (${TYPE.long})`));
+			const BODY = document.getElementById("content");
+			const TABLE = document.createElement('table');
 			DATA.forEach(book => {
-				res = `${res}<tr><td>${book.genre}</td><td>${book.name}</td></tr>`;
+				const ROW = TABLE.insertRow();
+				const G = book.genre;
+				const GENRE_CELL = ROW.insertCell();
+				GENRE_CELL.appendChild(document.createTextNode(G));
+				const NAME_CELL = ROW.insertCell();
+				NAME_CELL.appendChild(document.createTextNode(book.name));
+				const TOOLTIP = document.createElement('div');
+				TOOLTIP.classList.add('tooltip');
+				const T_AUTHORH = document.createElement('caption');
+				T_AUTHORH.appendChild(document.createTextNode('AUTHOR'));
+				const T_AUTHOR = document.createElement('div');
+				T_AUTHOR.appendChild(document.createTextNode(book.author));
+				const T_SYNOPSISH = document.createElement('div');
+				T_SYNOPSISH.appendChild(document.createTextNode("SYNOPSIS"));
+				const T_SYNOPSIS = document.createElement('div');
+				T_SYNOPSIS.classList.add('synopsis');
+				T_SYNOPSIS.appendChild(document.createTextNode(book.synopsis));
+				TOOLTIP.appendChild(T_AUTHORH);
+				TOOLTIP.appendChild(T_AUTHOR);
+				TOOLTIP.appendChild(T_SYNOPSISH);
+				TOOLTIP.appendChild(T_SYNOPSIS);
+				NAME_CELL.appendChild(TOOLTIP);
+				ROW.addEventListener('mouseover', () => {
+					ROW.classList.add('hover');
+					if(TOOLTIP.getBoundingClientRect().bottom > (window.innerHeight - 16))
+						TOOLTIP.classList.add('show-top');
+					ROW.addEventListener('mouseout', () =>{
+						ROW.classList.remove('hover');
+						TOOLTIP.classList.remove('show-top');
+					});
+				});
 			});
-			res = `${res}</table>`;
-			body.innerHTML = res;
+			BODY.appendChild(TABLE);
 		});
 	</script>
 </head>
