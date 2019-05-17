@@ -5,16 +5,13 @@ body {
 h1 {
     color: #ccc;
 }
-img {
-    filter: invert(100%);
-}
 main {
     max-width: 1600px;
     /* color removed in merging process jeron fix pls */
     background-color: #212121;
 }
 main a {
-    background-color: #fff;
+    background-color: #ccc;
 }
 main div {
     background-color: #000;
@@ -27,4 +24,30 @@ main div {
 }
 .md-input ~ span {
     color: #fff;
+}
+
+#message {
+    color: #eaeaea;
+}
+#list > div > div:first-child {
+    color: #eaeaea;
+    background: transparent;
+}
+#list > div > div:nth-child(2){
+    background: transparent;
+}
+#list > div > div:last-child{
+    background: transparent;
+}
+#selected {
+    background-color: #d32f2f;
+}
+input[type='radio'] + label {
+    color: #515151;
+}
+.bubble-link {
+    color: #515151;
+}
+summary img {
+    filter:invert(100%);
 }
