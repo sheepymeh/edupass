@@ -173,7 +173,6 @@
 			document.getElementsByTagName('h1')[0].appendChild(document.createTextNode(` (${TYPE.long})`))
 			const BODY = document.getElementById("content");
 			const TABLE = document.createElement('table');
-			let count = 0;
 			DATA[TYPE.short].forEach(book => {
 				const S = book.due;
 				const ROW = TABLE.insertRow();
@@ -207,7 +206,6 @@
 						TOOLTIP.classList.remove('show-top');
 					});
 				});
-				count++;
 			});
 			BODY.appendChild(TABLE);
 		});
