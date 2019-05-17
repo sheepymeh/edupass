@@ -48,24 +48,26 @@ def message_new(dynamodb, username, title, markdown, rights, student_readable):
 
 def message_list(dynamodb, rights):
 	if rights == 'teacher' or rights=='admin':
-		msgs= dynamodb.scan(
+		messages= dynamodb.scan(
 			TableName='messages',
 			ProjectionExpression='id, poster, posttime, title'
 		)['Items']
 	else:
-		msgs= dynamodb.scan(
-			TableName='messages',
-			FilterExpression='student = 1',
-			ProjectionExpression='id, poster, posttime, title'
+		messages= dynamodb.scan(
+			TableName = 'messages',
+			FilterExpression = 'student = 1',
+			ProjectionExpression = 'id, poster, posttime, title'
 		)['Items']
-	objectLiteral={}
-	for i in msgs:
-		objectLiteral[i['id']['N']]={
-			'title':i['title']['S'],
-			'time':i['posttime']['N'],
-			'user':i['poster']['S']
+	return_dict = {
+		'success': True
+	}
+	for message in messages:
+		return_dict[message['id']['N']] = {
+			'title': message['title']['S'],
+			'time': message['posttime']['N'],
+			'user': message['poster']['S']
 			}
-	return objectLiteral
+	return return_dict
 
 def message_view(dynamodb, username, user_rights, id):
 	try:
@@ -84,6 +86,13 @@ def message_view(dynamodb, username, user_rights, id):
 			}
 		else:
 			message = message['Item']
+
+		if message['student']['BOOL'] and user_rights != 'teacher' and user_rights != 'admin':
+			return {
+				'success': False,
+				'error_code': 404,
+				'error': 'This message does not exist'
+			}
 
 		return_dict = {
 			'success': True,
@@ -108,13 +117,6 @@ def message_view(dynamodb, username, user_rights, id):
 				if (form['M']['type']['S'] == 'mcq'):
 					form_dict['options'] = form['M']['options']['SS']
 				return_dict['form'].append(form_dict)
-
-		if message['student']['BOOL'] and user_rights != 'teacher' and user_rights != 'admin':
-			return {
-				'success': False,
-				'error_code': 404,
-				'error': 'This message does not exist'
-			}
 
 		return return_dict
 	except ClientError as e:
@@ -181,7 +183,7 @@ def learning_show_assignments(dynamodb, username, class_id):
 		return {
 			'success': False,
 			'error_code': 404,
-			'error': 'This assignment does not exist'
+			'error': 'This class does not exist'
 		}
 	assignments = assignments['Item']
 	if username not in assignments['members']['SS']:
@@ -201,7 +203,7 @@ def learning_show_assignments(dynamodb, username, class_id):
 			'code': assignment_code[1:],
 			'name': assignments['assignments']['M'][assignment_code]['M']['name']['S'],
 			# tags,
-			'due': assignments['assignments']['M'][assignment_code]['M']['due']
+			'due': assignments['assignments']['M'][assignment_code]['M']['due']['N']
 		}
 		return_dict['assignments'].append(assignment_dict)
 	return return_dict
