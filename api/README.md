@@ -42,7 +42,7 @@
 Solve by logging in again
 
 ### message_new
-_Note: should **not** be used in student environment anyways, just a debugging tool_
+_Should **not** be used in student environment anyways, just a debugging tool_
 **Purpose:** creates new message  
 **Security Clearance:** Admins/Teachers only
 

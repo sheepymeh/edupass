@@ -337,6 +337,7 @@ def learning_assignment(dynamodb, username, class_id, assignment_id):
 	return return_dict
 
 def learning_assignment_submit(dynamodb, username, assignment_id, answers):
+	# reference message_respond
 	return {
 
 	}
