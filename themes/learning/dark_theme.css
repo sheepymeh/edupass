@@ -17,8 +17,14 @@ main {
 #topics, #content, #questions > div {
 	background-color: #606060;
 }
-.md_input {
+#questions > div {
+	box-shadow: none;
+}
+.md_input, ::placeholder {
 	color: #eaeaea;
+}
+#container > section {
+	background-color: #292b2d;
 }
 label {
 	color: #0b0e14;
