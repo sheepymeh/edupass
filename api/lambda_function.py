@@ -624,7 +624,7 @@ def settings_update(dynamodb, username, key, value):
 	return {
 		'success': True
 	}
-	
+
 def lambda_handler(param, context):
 	dynamodb = boto3.client('dynamodb')
 	if param['user']['logged_in'] == False:

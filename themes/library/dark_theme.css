@@ -17,4 +17,5 @@ main {
 }
 .md-input, .md-input ~ span {
     color: #fff;
+    background-color: #eaeaea;
 }

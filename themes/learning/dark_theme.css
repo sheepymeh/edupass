@@ -14,6 +14,16 @@ main {
 .course_generic {
 	background-color: #eaeaea;
 }
-.md-input, .md-input ~ span {
-    color: #fff;
+#topics, #content, #questions > div {
+	background-color: #3f3f3f;
+}
+.md_input, .md-input ~ span {
+	color: #eaeaea;
+}
+#container > section {
+	background-color: #292b2d;
+}
+label {
+	color: #0b0e14;
+	border: none;
 }
