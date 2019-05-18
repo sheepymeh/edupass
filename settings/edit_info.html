@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset='utf-8'>
+	<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+	<title>EduPass | Learning Platform</title>
+	<link rel='icon' type='image/svg+xml' href='logo.svg'>
+	<link href='https://fonts.googleapis.com/css?family=Roboto:400,400i,500,500i|Roboto+Condensed:400,700' rel='stylesheet'>
+	<link rel='stylesheet' type='text/css' href='../common.css'>
+    <link rel='stylesheet' type='text/css' href='../layout.css'>
+    <style>
+        main table {
+            border: 2px solid black;
+            border-collapse: collapse;
+            margin-top: 12px;
+        }
+        main table tr, td {
+            padding: 12px;
+        }
+        #edit_button {
+            font-weight: 500;
+            color: #276cdb;
+            background-color: unset;
+            cursor: pointer;
+            font: inherit;
+            font-size: 32px;
+            text-decoration: underline;
+        }
+        main table tr td input {
+            width: 450px;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        #finalize {
+            margin-top: 24px;
+        }
+        #cancel {
+            font-weight:normal; 
+            margin-bottom:24px;
+            position:absolute; 
+            bottom:0;
+        }
+        </style>
+    <div id='jeronisbadatthesign'>
+        <link rel='stylesheet' type='text/css' href='../themes/settings/dark_theme.css' id="theme">
+    </div>
+    </head>
+    <body>
+        <nav>
+            <a href='themes.html' class='sidebar'><img src='../assets/icons/themes.svg'>Themes</a>				
+            <a href='student_info.html' class='sidebar'><img src='../assets/icons/info.svg'>Student Info</a>
+            <a href="../index.html" class='sidebar'><img src='../assets/icons/back-arrow.svg'>Back</a>
+        </nav>
+        <main>
+            <h1>Student Info</h1>
+            <h2 style='font-weight: normal'>Edit your credentials and information.</h2>
+            <form>
+            <table>
+            <tr>
+                <td>Name: </td>
+                <td>
+                    <input type="text" title="input_name">
+                </td>
+            </tr>
+            <tr>
+                <td>School: </td>
+                <td>
+                    <input type="text" title="input_school">
+                </td>
+            </tr>
+            <tr>
+                <td>Class: </td>
+                <td>
+                    <input type="text" title="input_class">
+                </td>
+            </tr>
+            <tr>
+                <td>IC Number: </td>
+                <td>
+                    <input type="text" title="input_IC">
+                </td>
+            </tr>
+             <tr>
+                <td>Email: </td>
+                <td>
+                    <input type="email" title="input_email">
+                </td>
+            </tr>
+            </table>
+            <button type='submit' id='finalize' onClick='alert("cool stuff")'>Submit</button>
+            </form>
+            <h2 id='cancel'>If you want to cancel your changes, click
+                <a href='student_info.html' id='edit_button'>here</a>
+            </h2>
+         </main>
+    </body>
+</html>
