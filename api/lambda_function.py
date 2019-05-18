@@ -344,23 +344,85 @@ def learning_assignment_submit(dynamodb, username, assignment_id, answers):
 
 def library_index(dynamodb, username):
 	return {
-
+		'success': True,
+		'school_code': dynamodb.get_item(
+			TableName = 'users',
+			Key = {
+				'username': {'S': username}
+			},
+			ProjectionExpression = 'library.school.school_code'
+		)['Item']['library']['M']['school']['M']['school_code']['S']
 	}
 
-def library_fines(dynamodb, username):
-	return {
+def library_books(dynamodb, username, library, library_code):
+	# library_code is "nlb" or "xxxx" (school code)
+	if library != 'school' and library != 'nlb':
+		return {
+			'success': False,
+			'error_code': 400,
+			'error': 'Library can only be "school" or "nlb"'
+		}
+	if library == 'nlb' and library_code != 'nlb':
+		return {
+			'success': False,
+			'error_code': 400,
+			'error': 'Library_code can only be "nlb"'
+		}
+	if library == 'school' and (library_code.isdigit() == False or len(library_code) != 4):
+		return {
+			'success': False,
+			'error_code': 400,
+			'error': 'Library_code can only be a four-digit integer (including leading zeros)'
+		}
 
-	}
+	books = dynamodb.get_item(
+		TableName = 'users',
+		Key = {
+			'username': {'S': username}
+		},
+		ProjectionExpression = 'library.' + library + '.borrowed'
+	)
+	if 'Item' not in books:
+		return {
+			'success': True,
+			'books': []
+		}
+	else:
+		books = books['Item']['library']['M'][library]['M']['borrowed']['L']
+	id_list = []
+	for i in books:
+		if i['M']['returned']['BOOL'] == True:
+			books.remove(i)
+	for i in books:
+		id_list.append({'id': i['M']['id']})
+	if len(id_list) == 0:
+		return {
+			'success': True,
+			'books': []
+		}
+	book_data = dynamodb.batch_get_item(
+		RequestItems = {
+			'books_' + library_code: {
+				'Keys': id_list,
+				'ProjectionExpression': 'id, book_name, author, synopsis'
+			}
+		}
+	)['Responses']['books_nlb']
+	book_data_formatted = {}
+	for book in book_data:
+		book_data_formatted[book['id']['S']] = {
+			'name': book['book_name']['S'],
+			'synopsis': book['synopsis']['S'],
+			'author': book['author']['S']
+		}
+	return_list = []
+	for book in books:
+		return_list.append({
+			'due': book['M']['due']['N'],
+			**book_data_formatted[book['M']['id']['S']]
+		})
 
-def library_books(dynamodb, username):
-	return {
-
-	}
-
-def library_recommendations(dynamodb, username):
-	return {
-
-	}
+	return return_list
 
 def settings_get(dynamodb, username):
 	return {
@@ -430,9 +492,7 @@ def lambda_handler(param, context):
 			elif param['request']['type'] == 'library_fines':
 				return library_fines(dynamodb, param['user']['username'])
 			elif param['request']['type'] == 'library_books':
-				return library_books(dynamodb, param['user']['username'])
-			elif param['request']['type'] == 'library_recommendations':
-				return library_recommendations(dynamodb, param['user']['username'])
+				return library_books(dynamodb, param['user']['username'], param['request']['library'], param['request']['library_code'])
 			elif param['request']['type'] == 'settings_get':
 				return settings_get(dynamodb, param['user']['username'])
 			elif param['request']['type'] == 'settings_update':

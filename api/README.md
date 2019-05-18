@@ -281,3 +281,13 @@ _Drop-in replacement for const QUESTIONS in assignment.html_
 **Errors:**
 * 404 // Not found
 	* Error Message: This class does not exist // The class ID supplied is invalid, or the student has not joined that class
+
+### library_index
+**Purpose:** returns school code of student
+**Security Clearance:** all
+
+**Response:**
+* school_code // Integer, school code
+
+### library_recommendations
+Not implemented due to time constraints
