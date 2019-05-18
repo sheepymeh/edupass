@@ -108,8 +108,18 @@
 		</form>
 	</main>
 	<script src='lambda.js'></script>
-	<script src='init.js'></script>
 	<script>
+		AWS.config.accessKeyId = 'AKIAQF4IUI6AIH5HNSOF';
+		AWS.config.secretAccessKey = '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';
+		AWS.config.region = 'ap-southeast-1';
+		const LAMBDA = new AWS.Lambda({apiVersion: '2015-03-31'});
+		const COOKIE = {
+			set: (name, value, seconds) => {
+				const d = new Date();
+				d.setTime(d.getTime() + seconds * 1000);
+				document.cookie = `${name}=${value};expires=${d.toUTCString()};path=/`
+			}
+		}
 		document.addEventListener('DOMContentLoaded', () => {
 			const FORM = document.getElementsByTagName('form')[0];
 			FORM.addEventListener('submit', e => {
@@ -133,12 +143,14 @@
 					}
 					else {
 						const RESPONSE = JSON.parse(data.Payload);
-						if (!RESPONSE.success) {
+						if (RESPONSE.success == 'False') {
 							alert('An error occured, see console for details');
 							console.error(RESPONSE)
 							return;
 						}
-						COOKIE.set()
+						COOKIE.set('sessid', RESPONSE.session_id, 7776000);
+						COOKIE.set('username', FORM.username.value, 7776000);
+						window.location = 'index.html'
 					}
 				})
 

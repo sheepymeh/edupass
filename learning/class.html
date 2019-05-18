@@ -91,100 +91,111 @@
 			</div>
 		</div>
 	</main>
+	<script src='../lambda.js'></script>
+	<script src='../init.js'></script>
 	<script>
 		if (window.location.hash.substr(1).length != 5) location.href = 'index.html';
-		const CLASS = {
-			name: '4S3 Chemistry',
-			teacher: 'R Lee',
-			tags: [
-				{
-					code: 123456,
-					name: 'Reaction Kinetics'
-				}
-			]
-		};
 		document.addEventListener('DOMContentLoaded', () => {
-			document.getElementsByTagName('title')[0].innerHTML = `Edupass | ${CLASS.name}`;
-			document.getElementsByTagName('h1')[0].appendChild(document.createTextNode(CLASS.name));
-			document.getElementsByTagName('h2')[0].appendChild(document.createTextNode(CLASS.teacher));
-
-			for (const LINK of document.getElementsByTagName('nav')[0].getElementsByTagName('a')) 
-				if (LINK !== LINK.parentNode.lastElementChild) LINK.href += window.location.hash;
-
-			const TOPICS_ELEM = document.getElementById('topics');
-			const CONTENT_ELEM = document.getElementById('content');
-
-			CLASS.tags.forEach(tag => {
-				const TOPIC_LIST_ELEM = document.createElement('div');
-				TOPIC_LIST_ELEM.classList.add('adjusttxt');
-				TOPIC_LIST_ELEM.appendChild(document.createTextNode(tag.name));
-				TOPIC_LIST_ELEM.dataset.code = tag.code;
-				TOPICS_ELEM.appendChild(TOPIC_LIST_ELEM);
-			});
-
-			TOPICS_ELEM.addEventListener('click', e => {
-				e.preventDefault();
-				if (e.target !== e.currentTarget) {
-					if (e.target.tagName == 'H3') return;
-					while (CONTENT_ELEM.hasChildNodes()) CONTENT_ELEM.removeChild(CONTENT_ELEM.lastChild);
-					let element = e.target;
-					while (element.parentElement !== TOPICS_ELEM) element = element.parentElement;
-					console.info(element.dataset.code);
-					// pretend to fetch data based on element.dataset.code
-					const CLASS_INFO = [
-						{
-							title: 'Reaction Kinetics 71 Page Revision Worksheet',
-							timestamp: 1557713700000,
-							description: 'There will still be June lessons',
-							attachments: [{
-								name: 'kinetics_ws1_of_20.pdf',
-								link: '/link/to/s3'
-							}, {
-								name: 'kinetics_ws1_of_20_ans.pdf',
-								link: '/link/to/s3'
-							}]
-						},
-						{
-							title: 'Reaction Kinetics Slides',
-							timestamp: 1557701700000,
-							description: 'There will still be June lessons',
-							attachments: [{
-								name: 'kinetics_slides.pdf',
-								link: '/link/to/s3'
-							}]
-						}
-					];
-
-					const TOPIC_TITLE = document.createElement('h1');
-					TOPIC_TITLE.appendChild(document.createTextNode(element.innerHTML));
-					CONTENT_ELEM.appendChild(TOPIC_TITLE);
-					CLASS_INFO.forEach(item => {
-						const ITEM = document.createElement('section');
-						const DATE = document.createElement('caption');
-						const TIMESTAMP = new Date(item.timestamp);
-						DATE.appendChild(document.createTextNode(`${TIMESTAMP.getDate()}/${TIMESTAMP.getMonth()}`));
-						const TITLE = document.createElement('h2');
-						TITLE.appendChild(document.createTextNode(item.title));
-						const DESCRIPTION = document.createElement('div');
-						DESCRIPTION.appendChild(document.createTextNode(item.description));
-						const ATTACHMENTS = document.createElement('div');
-						ATTACHMENTS.classList.add('attachments');
-						item.attachments.forEach(attachment => {
-							const ATTACHMENT = document.createElement('a');
-							ATTACHMENT.href = attachment.link;
-							ATTACHMENT.appendChild(document.createTextNode(attachment.name));
-							ATTACHMENT.classList.add('bubble-link');
-							ATTACHMENTS.appendChild(ATTACHMENT);
-						});
-						ITEM.appendChild(DATE);
-						ITEM.appendChild(TITLE);
-						ITEM.appendChild(DESCRIPTION);
-						ITEM.appendChild(ATTACHMENTS);
-						CONTENT_ELEM.appendChild(ITEM);
-					});
+			LAMBDA.invoke({
+				FunctionName: 'edupass',
+				Payload: JSON.stringify({
+					user: {
+						logged_in: true,
+						session_id: COOKIE.get('sessid'),
+						username: COOKIE.get('username')
+					},
+					request: {
+						type: 'learning_list_topics',
+						id: window.location.hash.substr(1)
+					}
+				})
+			}, (err, data) => {
+				if (err) {
+					alert('An error occured, see console for details');
+					console.error(err);
 				}
-				e.stopPropagation();
-			})
+				else {
+					const CLASS = JSON.parse(data.Payload);
+					document.getElementsByTagName('title')[0].innerHTML = `Edupass | ${CLASS.name}`;
+					document.getElementsByTagName('h1')[0].appendChild(document.createTextNode(CLASS.name));
+					document.getElementsByTagName('h2')[0].appendChild(document.createTextNode(CLASS.teacher));
+
+					for (const LINK of document.getElementsByTagName('nav')[0].getElementsByTagName('a')) 
+						if (LINK !== LINK.parentNode.lastElementChild) LINK.href += window.location.hash;
+
+					const TOPICS_ELEM = document.getElementById('topics');
+					const CONTENT_ELEM = document.getElementById('content');
+
+					CLASS.tags.forEach(tag => {
+						const TOPIC_LIST_ELEM = document.createElement('div');
+						TOPIC_LIST_ELEM.classList.add('adjusttxt');
+						TOPIC_LIST_ELEM.appendChild(document.createTextNode(tag.name));
+						TOPIC_LIST_ELEM.dataset.code = tag.code;
+						TOPICS_ELEM.appendChild(TOPIC_LIST_ELEM);
+					});
+
+					TOPICS_ELEM.addEventListener('click', e => {
+						e.preventDefault();
+						if (e.target !== e.currentTarget) {
+							if (e.target.tagName == 'H3') return;
+							while (CONTENT_ELEM.hasChildNodes()) CONTENT_ELEM.removeChild(CONTENT_ELEM.lastChild);
+							let element = e.target;
+							while (element.parentElement !== TOPICS_ELEM) element = element.parentElement;
+							LAMBDA.invoke({
+								FunctionName: 'edupass',
+								Payload: JSON.stringify({
+									user: {
+										logged_in: true,
+										session_id: COOKIE.get('sessid'),
+										username: COOKIE.get('username')
+									},
+									request: {
+										type: 'learning_get_topic',
+										class_id: window.location.hash.substr(1),
+										topic_id: element.dataset.code
+									}
+								})
+							}, (err, data) => {
+								if (err) {
+									alert('An error occured, see console for details');
+									console.error(err);
+								}
+								else {
+									const CLASS_INFO = JSON.parse(data.Payload);
+									const TOPIC_TITLE = document.createElement('h1');
+									TOPIC_TITLE.appendChild(document.createTextNode(element.innerHTML));
+									CONTENT_ELEM.appendChild(TOPIC_TITLE);
+									CLASS_INFO.forEach(item => {
+										const ITEM = document.createElement('section');
+										const DATE = document.createElement('caption');
+										const TIMESTAMP = new Date(parseInt(item.timestamp));
+										DATE.appendChild(document.createTextNode(`${TIMESTAMP.getDate()}/${TIMESTAMP.getMonth()}`));
+										const TITLE = document.createElement('h2');
+										TITLE.appendChild(document.createTextNode(item.title));
+										const DESCRIPTION = document.createElement('div');
+										DESCRIPTION.appendChild(document.createTextNode(item.description));
+										const ATTACHMENTS = document.createElement('div');
+										ATTACHMENTS.classList.add('attachments');
+										item.attachments.forEach(attachment => {
+											const ATTACHMENT = document.createElement('a');
+											ATTACHMENT.href = attachment.link;
+											ATTACHMENT.appendChild(document.createTextNode(attachment.name));
+											ATTACHMENT.classList.add('bubble-link');
+											ATTACHMENTS.appendChild(ATTACHMENT);
+										});
+										ITEM.appendChild(DATE);
+										ITEM.appendChild(TITLE);
+										ITEM.appendChild(DESCRIPTION);
+										ITEM.appendChild(ATTACHMENTS);
+										CONTENT_ELEM.appendChild(ITEM);
+									});
+								}
+							});
+						}
+						e.stopPropagation();
+					})
+				}
+			});
 		});
 	</script>
 </body>

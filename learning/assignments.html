@@ -101,52 +101,57 @@
 		</header>
 		<div id='assignments'></div>
 	</main>
+	<script src='../lambda.js'></script>
+	<script src='../init.js'></script>
 	<script>
-		if (window.location.hash.substr(1).length != 6) location.href = 'index.html';
-		const CLASS = {
-			name: '4S3 Chemistry',
-			teacher: 'R Lee',
-			assignments: [
-				{
-					code: 12345,
-					name: 'Hyper Easy Mole Concept Revision',
-					tags: ['Mole Concept', 'Revision'],
-					due: 1557796568966
-				},
-				{
-					code: 12346,
-					name: 'Hyper Easy Reaction Kinetics Quiz',
-					tags: ['Reaction Kinetics'],
-					due: 1557796468966
-				}
-			]
-		};
+		if (window.location.hash.substr(1).length != 5) location.href = 'index.html';
 		document.addEventListener('DOMContentLoaded', () => {
-			document.getElementsByTagName('title')[0].innerHTML = `Edupass | ${CLASS.name}`;
-			document.getElementsByTagName('h1')[0].appendChild(document.createTextNode(CLASS.name));
-			document.getElementsByTagName('h2')[0].appendChild(document.createTextNode(CLASS.teacher));
+			LAMBDA.invoke({
+				FunctionName: 'edupass',
+				Payload: JSON.stringify({
+					user: {
+						logged_in: true,
+						session_id: COOKIE.get('sessid'),
+						username: COOKIE.get('username')
+					},
+					request: {
+						type: 'learning_show_assignments',
+						class_id: window.location.hash.substr(1)
+					}
+				})
+			}, (err, data) => {
+				if (err) {
+					alert('An error occured, see console for details');
+					console.error(err);
+				}
+				else {
+					const CLASS = JSON.parse(data.Payload);document.getElementsByTagName('title')[0].innerHTML = `Edupass | ${CLASS.name}`;
+					document.getElementsByTagName('h1')[0].appendChild(document.createTextNode(CLASS.name));
+					document.getElementsByTagName('h2')[0].appendChild(document.createTextNode(CLASS.teacher));
 
-			for (const LINK of document.getElementsByTagName('nav')[0].getElementsByTagName('a')) 
-				if (LINK !== LINK.parentNode.lastElementChild) LINK.href += window.location.hash;
+					for (const LINK of document.getElementsByTagName('nav')[0].getElementsByTagName('a')) 
+						if (LINK !== LINK.parentNode.lastElementChild) LINK.href += window.location.hash;
 
-			const ASSIGNMENTS_ELEM = document.getElementById('assignments');
+					const ASSIGNMENTS_ELEM = document.getElementById('assignments');
 
-			CLASS.assignments.forEach(assignment => {
-				const PARENT = document.createElement('a');
-				PARENT.href = `assignment.html${window.location.hash}-${assignment.code}`;
-				const LEFT = document.createElement('div');
-				LEFT.appendChild(document.createTextNode(assignment.name));
-				assignment.tags.forEach(tag => {
-					const TAG = document.createElement('div');
-					TAG.appendChild(document.createTextNode(tag));
-					LEFT.appendChild(TAG);
-				});
+					CLASS.assignments.forEach(assignment => {
+						const PARENT = document.createElement('a');
+						PARENT.href = `assignment.html${window.location.hash}-${assignment.code}`;
+						const LEFT = document.createElement('div');
+						LEFT.appendChild(document.createTextNode(assignment.name));
+						// assignment.tags.forEach(tag => {
+						// 	const TAG = document.createElement('div');
+						// 	TAG.appendChild(document.createTextNode(tag));
+						// 	LEFT.appendChild(TAG);
+						// });
 
-				const DUE = document.createElement('div');
-				DUE.appendChild(document.createTextNode(new Date(assignment.due).getDate()));
-				PARENT.appendChild(LEFT);
-				PARENT.appendChild(DUE);
-				ASSIGNMENTS_ELEM.appendChild(PARENT);
+						const DUE = document.createElement('div');
+						DUE.appendChild(document.createTextNode(new Date(assignment.due).getDate()));
+						PARENT.appendChild(LEFT);
+						PARENT.appendChild(DUE);
+						ASSIGNMENTS_ELEM.appendChild(PARENT);
+					});
+				}
 			});
 		});
 	</script>

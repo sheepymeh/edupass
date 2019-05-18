@@ -42,7 +42,7 @@
 Solve by logging in again
 
 ### message_new
-_Should **not** be used in student environment anyways, just a debugging tool_
+_Should **not** be used in student environment anyways, just a debugging tool_  
 **Purpose:** creates new message  
 **Security Clearance:** Admins/Teachers only
 
@@ -76,7 +76,7 @@ _Should **not** be used in student environment anyways, just a debugging tool_
 ```
 
 ### message_list
-_Drop-in replacement for const MESSAGES_OBJECT in messages.html_
+_Drop-in replacement for const MESSAGES_OBJECT in messages.html_  
 **Purpose:** lists all messages available  
 **Security Clearance:** automatically hides privileged posts from students
 
@@ -120,7 +120,7 @@ _Drop-in replacement for const MESSAGES_OBJECT in messages.html_
 ```
 
 ### message_view
-_Drop-in replacement for const MESSAGE in messages.html_
+_Drop-in replacement for const MESSAGE in messages.html_  
 **Purpose:** returns Markdown of specific message  
 **Security Clearance:** automatically hides privileged posts from students
 
@@ -185,7 +185,7 @@ _Drop-in replacement for const MESSAGE in messages.html_
 ```
 
 ### message_respond
-_Currently unimplemented in messages.html_
+_Currently unimplemented in messages.html_  
 **Purpose:** Respond to forms in messages
 **Security Clearence:** All
 
@@ -247,7 +247,7 @@ _Currently unimplemented in messages.html_
 ```
 
 ### learning_list
-_**CONDENSED (different)** replacement for const MESSAGES_OBJECT in messages.html_
+_**CONDENSED (different)** replacement for const MESSAGES_OBJECT in messages.html_  
 **Purpose:** lists all joined classes  
 **Security Clearance:** automatically shows only joined classes
 
@@ -288,7 +288,7 @@ _**CONDENSED (different)** replacement for const MESSAGES_OBJECT in messages.htm
 ```
 
 ### learning_show_assignments
-_Drop-in replacement for const CLASS in assignments.html_
+_Drop-in replacement for const CLASS in assignments.html_  
 **Purpose:** lists assignments in a certain class  
 **Security Clearance:** automatically shows only assignments of joined classes
 
@@ -339,7 +339,7 @@ _Drop-in replacement for const CLASS in assignments.html_
 ```
 
 ### learning_assignment
-_Drop-in replacement for const QUESTIONS in assignment.html_
+_Drop-in replacement for const QUESTIONS in assignment.html_  
 **Purpose:** shows details of one assignment
 **Security Clearance:** automatically shows only assignments of joined classes
 

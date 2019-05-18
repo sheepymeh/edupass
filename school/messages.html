@@ -142,8 +142,8 @@
 			Payload: JSON.stringify({
 				user: {
 					logged_in: true,
-					session_id: 'long_id_no_one_will_ever_guess',
-					username: 'T0372813C'
+					session_id: COOKIE.get('sessid'),
+					username: COOKIE.get('username')
 				},
 				request: {
 					type: 'message_list'
@@ -154,7 +154,9 @@
 				alert('An error occured, see console for details');
 				console.error(err);
 			}
-			else console.info(JSON.parse(data.Payload));
+			else {
+				const RESPONSE = JSON.parse(data.Payload);
+			}
 		})
 		
 		// some fetching

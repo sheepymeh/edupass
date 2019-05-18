@@ -56,81 +56,82 @@
 		</header>
 		<div id='questions'></div>
 	</main>
+	<script src='../lambda.js'></script>
+	<script src='../init.js'></script>
 	<script>
 		if (window.location.hash.substr(1).length != 12) window.history.back();
-		const METADATA = {
-			name: 'Hyper Easy Mole Concept Revision',
-			class: '4S3 Chemistry',
-			// milliseconds
-			time: 600000,
-
-		};
-		const QUESTIONS = [
-			{
-				question: 'Which line corresponds to the reaction in higher temperature?',
-				type: 'mcq',
-				image: 'https://www.edplace.com/userfiles/image/Rate%20of%20Reaction%202.jpg',
-				options: [
-					'Blue Line',
-					'Pink Line'
-				],
-				marks: 1
-			},
-			{
-				question: 'Why do reactions occur faster in higher concentrations?',
-				type: 'oe',
-				marks: 3
-			}
-		]
 		document.addEventListener('DOMContentLoaded', () => {
-			document.getElementsByTagName('title')[0].innerHTML = `Edupass | ${METADATA.name}`;
-			document.getElementsByTagName('h1')[0].appendChild(document.createTextNode(METADATA.name));
-			document.getElementsByTagName('h2')[0].appendChild(document.createTextNode(`${METADATA.class} - Assignment`));
-			const QUESTIONS_PARENT = document.getElementById('questions');
-			QUESTIONS.forEach((question, qnIndex) => {
-				const QUESTION_PARENT = document.createElement('div');
-				const QUESTION_HEADER = document.createElement('caption');
-				const QUESTION_NUMBER = document.createElement('div');
-				QUESTION_NUMBER.appendChild(document.createTextNode(`Q${qnIndex + 1}.`));
-				const QUESTION_MAKRS = document.createElement('div');
-				QUESTION_MAKRS.appendChild(document.createTextNode(`${question.marks} mark${question.marks == 1 ? '' : 's'}`));
-				QUESTION_HEADER.appendChild(QUESTION_NUMBER);
-				QUESTION_HEADER.appendChild(QUESTION_MAKRS);
-				QUESTION_PARENT.appendChild(QUESTION_HEADER);
-				const QUESTION = document.createElement('p');
-				QUESTION.appendChild(document.createTextNode(question.question));
-				QUESTION_PARENT.appendChild(QUESTION);
-				switch (question.type) {
-					case 'mcq':
-						question.options.forEach((option, optIndex) => {
-							const OPTION_INPUT = document.createElement('input');
-							OPTION_INPUT.type = 'radio';
-							OPTION_INPUT.name = qnIndex;
-							OPTION_INPUT.id = `q${qnIndex}-${optIndex}`;
-							OPTION_INPUT.value = option;
-
-							const OPTION_LABEL = document.createElement('label');
-							OPTION_LABEL.setAttribute('for', `q${qnIndex}-${optIndex}`);
-							OPTION_LABEL.appendChild(document.createTextNode(option));
-
-							QUESTION_PARENT.appendChild(OPTION_INPUT);
-							QUESTION_PARENT.appendChild(OPTION_LABEL);
-						});
-						break;
-					case 'oe':
-						const INPUT = document.createElement('input');
-						INPUT.classList.add('md-input');
-						INPUT.placeholder = ' ';
-						const INPUT_AFTER = document.createElement('div');
-						const INPUT_PLACEHOLDER = document.createElement('span');
-						INPUT_PLACEHOLDER.appendChild(document.createTextNode(`Your answer for question ${qnIndex + 1}`));
-
-						QUESTION_PARENT.appendChild(INPUT);
-						QUESTION_PARENT.appendChild(INPUT_AFTER);
-						QUESTION_PARENT.appendChild(INPUT_PLACEHOLDER);
-						break;
+			LAMBDA.invoke({
+				FunctionName: 'edupass',
+				Payload: JSON.stringify({
+					user: {
+						logged_in: true,
+						session_id: COOKIE.get('sessid'),
+						username: COOKIE.get('username')
+					},
+					request: {
+						type: 'learning_assignment',
+						class_id: window.location.hash.substr(1, 5),
+						assignment_id: window.location.hash.substr(7)
+					}
+				})
+			}, (err, data) => {
+				if (err) {
+					alert('An error occured, see console for details');
+					console.error(err);
 				}
-				QUESTIONS_PARENT.appendChild(QUESTION_PARENT);
+				else {
+					const RESPONSE = JSON.parse(data.Payload);
+					document.getElementsByTagName('title')[0].innerHTML = `Edupass | ${RESPONSE.name}`;
+					document.getElementsByTagName('h1')[0].appendChild(document.createTextNode(RESPONSE.name));
+					document.getElementsByTagName('h2')[0].appendChild(document.createTextNode(`${RESPONSE.class} - Assignment`));
+					const QUESTIONS_PARENT = document.getElementById('questions');
+					RESPONSE.questions.forEach((question, qnIndex) => {
+						const QUESTION_PARENT = document.createElement('div');
+						const QUESTION_HEADER = document.createElement('caption');
+						const QUESTION_NUMBER = document.createElement('div');
+						QUESTION_NUMBER.appendChild(document.createTextNode(`Q${qnIndex + 1}.`));
+						const QUESTION_MAKRS = document.createElement('div');
+						QUESTION_MAKRS.appendChild(document.createTextNode(`${question.marks} mark${question.marks == 1 ? '' : 's'}`));
+						QUESTION_HEADER.appendChild(QUESTION_NUMBER);
+						QUESTION_HEADER.appendChild(QUESTION_MAKRS);
+						QUESTION_PARENT.appendChild(QUESTION_HEADER);
+						const QUESTION = document.createElement('p');
+						QUESTION.appendChild(document.createTextNode(question.question));
+						QUESTION_PARENT.appendChild(QUESTION);
+						switch (question.type) {
+							case 'mcq':
+								question.options.forEach((option, optIndex) => {
+									const OPTION_INPUT = document.createElement('input');
+									OPTION_INPUT.type = 'radio';
+									OPTION_INPUT.name = qnIndex;
+									OPTION_INPUT.id = `q${qnIndex}-${optIndex}`;
+									OPTION_INPUT.value = option;
+
+									const OPTION_LABEL = document.createElement('label');
+									OPTION_LABEL.setAttribute('for', `q${qnIndex}-${optIndex}`);
+									OPTION_LABEL.appendChild(document.createTextNode(option));
+
+									QUESTION_PARENT.appendChild(OPTION_INPUT);
+									QUESTION_PARENT.appendChild(OPTION_LABEL);
+								});
+								break;
+							case 'oe':
+								const INPUT = document.createElement('input');
+								INPUT.classList.add('md-input');
+								INPUT.placeholder = ' ';
+								const INPUT_AFTER = document.createElement('div');
+								const INPUT_PLACEHOLDER = document.createElement('span');
+								INPUT_PLACEHOLDER.appendChild(document.createTextNode(`Your answer for question ${qnIndex + 1}`));
+
+								QUESTION_PARENT.appendChild(INPUT);
+								QUESTION_PARENT.appendChild(INPUT_AFTER);
+								QUESTION_PARENT.appendChild(INPUT_PLACEHOLDER);
+								break;
+						}
+						QUESTIONS_PARENT.appendChild(QUESTION_PARENT);
+					});
+				}
 			});
 		});
 	</script>

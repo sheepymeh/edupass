@@ -277,7 +277,7 @@ def learning_list_topics(dynamodb, username, class_id):
 	for topic in topics['topics']['M']:
 		topics_list.append({
 			'code': topic[1:],
-			'name': topics['topics']['M'][topic]['M']['name']
+			'name': topics['topics']['M'][topic]['M']['name']['S']
 		})
 	return {
 		'name': topics['class_name']['S'],
@@ -289,7 +289,7 @@ def learning_get_topic(dynamodb, username, class_id, topic_id):
 	getTopic= dynamodb.get_item(
 		TableName='learning',
 		Key = {
-			'id': {'S': str(class_id)} 		
+			'id': {'S': str(class_id)}
 		}, 
 		ProjectionExpression='topics'
 	)
@@ -299,26 +299,24 @@ def learning_get_topic(dynamodb, username, class_id, topic_id):
 			'error_code': 404,
 			'error': 'This class does not exist'
 		}
-	getTopic= getTopic['Item']['topics']['M'][topic_id]
-	topicReturn={
-		"name":getTopic['M']['name'],
-		"posts":[]
-	}
+	getTopic = getTopic['Item']['topics']['M']['T' + topic_id]
+	return_list = []
 	for post in getTopic['M']['posts']['L']:
 		attachments=[]
-		for attachment in post['M']['attachments']['L']:
-			attachments.append({
-				"name":attachment['M']['name']['S'],
-				"link":attachment['M']['link']['S']
-			})
+		if 'attachments' in post['M']:
+			for attachment in post['M']['attachments']['L']:
+				attachments.append({
+					"name":attachment['M']['name']['S'],
+					"link":attachment['M']['link']['S']
+				})
 
-		topicReturn['posts'].append({
+		return_list.append({
 			"title":post['M']['title']['S'],
 			"description":post['M']['description']['S'],
 			"timestamp":post['M']['timestamp']['N'],
 			"attachments":attachments
-			})
-	return topicReturn
+		})
+	return return_list
 
 def learning_show_assignments(dynamodb, username, class_id):
 	assignments = dynamodb.get_item(

@@ -42,6 +42,7 @@
 			position: relative;
 		}
 		.assignments {
+			z-index: 1;
 			font-size: 16px;
 			font-weight: 500;
 			border-radius: 8px;
@@ -91,59 +92,80 @@
 		<div id="course-table">
 		</div>
 	</main>
-	<script type="text/javascript" src="coursedata.js"></script>
+	<script src='../lambda.js'></script>
+	<script src='../init.js'></script>
 	<script>
 		document.addEventListener('DOMContentLoaded', () => {
-			const COURSES = coursedata;
-			const COURSE_TABLE = document.getElementById('course-table');
-			COURSES.forEach(course => {
-				const PARENT = document.createElement('div');
-				PARENT.classList.add('course-generic');
-				PARENT.dataset.id = course.id;
-				PARENT.appendChild(document.createTextNode(course.name));
-
-				const TEACHER = document.createElement('div');
-				TEACHER.classList.add('teacher');
-				TEACHER.appendChild(document.createTextNode(course.teacher));
-				PARENT.appendChild(TEACHER);
-
-				if (course.assignments.length > 0) {
-					const ASSIGNMENTS = document.createElement('div');
-					ASSIGNMENTS.classList.add('assignment-count');
-					ASSIGNMENTS.dataset.id = course.id;
-					ASSIGNMENTS.appendChild(document.createTextNode(`${course.assignments.length} outstanding assignment${course.assignments.length == 1 ? '' : 's'}`));
-					const UL=document.createElement('div');
-					UL.classList.add('assignments');
-					for (let i = 0; i < course.assignments.length; i++) {
-						const AS=document.createElement('div');
-						AS.style.margin='7px';
-						AS.appendChild(document.createTextNode(course.assignments[i].name));
-						UL.appendChild(AS);
+			LAMBDA.invoke({
+				FunctionName: 'edupass',
+				Payload: JSON.stringify({
+					user: {
+						logged_in: true,
+						session_id: COOKIE.get('sessid'),
+						username: COOKIE.get('username')
+					},
+					request: {
+						type: 'learning_list'
 					}
-					ASSIGNMENTS.addEventListener('mouseover', ()=>{
-						UL.style.display='block';
-						ASSIGNMENTS.addEventListener('mouseout', () => {
-							UL.classList.remove('show-left');
-							UL.style.display='none';
-						});
-						if (UL.getBoundingClientRect().right > (window.innerWidth - 16)) 
-							UL.classList.add('show-left');
-					});
-					ASSIGNMENTS.appendChild(UL);
-					PARENT.appendChild(ASSIGNMENTS);
-				}
+				})
+				}, (err, data) => {
+					if (err) {
+						alert('An error occured, see console for details');
+						console.error(err);
+					}
+					else {
+						const COURSES = JSON.parse(data.Payload);
+						const COURSE_TABLE = document.getElementById('course-table');
+						COURSES.forEach(course => {
+							const PARENT = document.createElement('div');
+							PARENT.classList.add('course-generic');
+							PARENT.dataset.id = course.code;
+							PARENT.appendChild(document.createTextNode(course.name));
 
-				COURSE_TABLE.appendChild(PARENT);
-			});
-			COURSE_TABLE.addEventListener('click', e => {
-				e.preventDefault();
-				if (e.target !== e.currentTarget) {
-					let element = e.target;
-					while (element.parentElement !== COURSE_TABLE && !element.classList.contains('assignment-count')) element = element.parentElement;
-					if (element.classList.contains('assignment-count')) window.location.href=`ASDisplay.html#${element.dataset.id}`;
-					else window.location.href=`class.html#${element.dataset.id}`;
-				}
-				e.stopPropagation();
+							const TEACHER = document.createElement('div');
+							TEACHER.classList.add('teacher');
+							TEACHER.appendChild(document.createTextNode(course.teacher));
+							PARENT.appendChild(TEACHER);
+
+							if (course.assignments.length > 0) {
+								const ASSIGNMENTS = document.createElement('div');
+								ASSIGNMENTS.classList.add('assignment-count');
+								ASSIGNMENTS.dataset.id = course.code;
+								ASSIGNMENTS.appendChild(document.createTextNode(`${course.assignments.length} outstanding assignment${course.assignments.length == 1 ? '' : 's'}`));
+								const UL=document.createElement('div');
+								UL.classList.add('assignments');
+								for (let i = 0; i < course.assignments.length; i++) {
+									const AS=document.createElement('div');
+									AS.style.margin='7px';
+									AS.appendChild(document.createTextNode(course.assignments[i]));
+									UL.appendChild(AS);
+								}
+								ASSIGNMENTS.addEventListener('mouseover', ()=>{
+									UL.style.display='block';
+									ASSIGNMENTS.addEventListener('mouseout', () => {
+										UL.classList.remove('show-left');
+										UL.style.display='none';
+									});
+									if (UL.getBoundingClientRect().right > (window.innerWidth - 16)) 
+										UL.classList.add('show-left');
+								});
+								ASSIGNMENTS.appendChild(UL);
+								PARENT.appendChild(ASSIGNMENTS);
+							}
+
+							COURSE_TABLE.appendChild(PARENT);
+						});
+						COURSE_TABLE.addEventListener('click', e => {
+							e.preventDefault();
+							if (e.target !== e.currentTarget) {
+								let element = e.target;
+								while (element.parentElement !== COURSE_TABLE && !element.classList.contains('assignment-count')) element = element.parentElement;
+								if (element.classList.contains('assignment-count')) window.location.href=`assignments.html#${element.dataset.id}`;
+								else window.location.href=`class.html#${element.dataset.id}`;
+							}
+							e.stopPropagation();
+						});
+					}
 			});
 		});
 		</script>
