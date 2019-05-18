@@ -126,9 +126,63 @@ def message_view(dynamodb, username, user_rights, id):
 			'error': e.response['Error']['Message']
 		}
 
-def message_respond(dynamodb, username, id, response):
-	return {
+def message_respond(dynamodb, username, user_rights, id, response):
+	message = dynamodb.get_item(
+		TableName = 'messages',
+		Key = {
+			'id': {'N': str(id)}
+		},
+		ProjectionExpression = 'form, student'
+	)
+	if 'Item' not in message:
+		return {
+			'success': False,
+			'error_code': 404,
+			'error': 'This message does not exist'
+		}
+	else:
+		message = message['Item']
 
+	if message['student']['BOOL'] and user_rights != 'teacher' and user_rights != 'admin':
+		return {
+			'success': False,
+			'error_code': 404,
+			'error': 'This message does not exist'
+		}
+	error_dict = {
+		'success': False,
+		'error_code': 400,
+		'error': 'Your JSON response does not match the schema'
+	}
+	if len(response) != len(message['form']['L']):
+		return error_dict
+
+	answer_array = []
+	for i in range(0, len(response)):
+		if message['form']['L'][i]['M']['type']['S'] == 'mcq':
+			if int(response[i]) >= len(message['form']['L'][i]['M']['options']['SS']):
+				return error_dict
+		answer_array.append({
+			'N' if message['form']['L'][i]['M']['type']['S'] == 'mcq' else 'S': str(response[i])
+		})
+
+	dynamodb.update_item(
+		TableName = 'messages',
+		Key = {
+			'id': {'N': str(id)}
+		},
+		UpdateExpression = 'SET responses.#UID = :response',
+		ExpressionAttributeNames = {
+			'#UID': username
+		},
+		ExpressionAttributeValues = {
+			":response": {
+				"L": answer_array
+			}
+		}
+	)
+	return {
+		'success': True
 	}
 
 def records_get(dynamodb, username):
@@ -139,7 +193,7 @@ def records_get(dynamodb, username):
 def learning_list(dynamodb, username):
 	classes = dynamodb.scan(
 		TableName = 'learning',
-		ProjectionExpression = 'id,class_name,teacher',
+		ProjectionExpression = 'id, class_name, teacher',
 		FilterExpression = 'contains(members, :username)',
 		ExpressionAttributeValues = {
 			":username": {
@@ -322,7 +376,7 @@ def lambda_handler(param, context):
 			elif param['request']['type'] == 'message_view':
 				return message_view(dynamodb, param['user']['username'], user_data['rights']['S'], param['request']['id'])
 			elif param['request']['type'] == 'message_respond':
-				return message_respond(dynamodb, param['user']['username'], param['request']['id'], param['request']['response'])
+				return message_respond(dynamodb, param['user']['username'], user_data['rights']['S'], param['request']['id'], param['request']['response'])
 			elif param['request']['type'] == 'records_get':
 				return records_get(dynamodb, param['user']['username'])
 			elif param['request']['type'] == 'learning_list':

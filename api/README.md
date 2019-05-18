@@ -42,6 +42,7 @@
 Solve by logging in again
 
 ### message_new
+_Note: should **not** be used in student environment anyways, just a debugging tool_
 **Purpose:** creates new message  
 **Security Clearance:** Admins/Teachers only
 
@@ -230,4 +231,46 @@ Solve by logging in again
 
 **Errors:**
 * 404 // Not found
-	* Error Message: "This class does not exist" // The class ID supplied is invalid, or the student has not joined that class
+	* Error Message: This class does not exist // The class ID supplied is invalid, or the student has not joined that class
+
+### message_respond
+**Purpose:** Respond to forms in messages
+**Security Clearence:** All
+
+**Parameters:**
+* id // Integer, 5-digit identifier unique to each message
+* response // Array with all fields, one string/number to field:
+	```json
+	[
+		"open-ended response",
+		"1"
+	]
+	```
+	responds to
+	```json
+	[
+		{
+			"question": "Open Ended Question",
+			"type": "oe"
+		},
+		{
+			"question": "MCQ Question",
+			"type": "mcq",
+			"options": [
+				"Option 1",
+				"Option 2",
+				"Option 3"
+			]
+		}
+	]
+	```
+	Question numbers are 1:1. Option 1 refers to the 2nd item in the options array
+
+**Response:**
+* No specific responses
+
+**Errors:**
+* 400 // Bad Request
+	* Error Message: "Your JSON response does not match the schema" // Too many/too little answers, or tried submitting open-ended question type for MCQ question
+* 404 // Not Found
+	* Error Message: "This message does not exist" // Check the ```id``` parameter, or a student is accessing a privileged message
