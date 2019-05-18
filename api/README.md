@@ -34,7 +34,7 @@
 #### Invalid Session ID
 ```json
 {
-	"success": False,
+	"success": false,
 	"error_code": 401,
 	"error": "This session ID is invalid"
 }
