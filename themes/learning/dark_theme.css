@@ -15,10 +15,7 @@ main {
 	background-color: #eaeaea;
 }
 #topics, #content, #questions > div {
-	background-color: #606060;
-}
-#questions > div {
-	box-shadow: none;
+	background-color: #3f3f3f;
 }
 .md_input, ::placeholder {
 	color: #eaeaea;
@@ -28,4 +25,5 @@ main {
 }
 label {
 	color: #0b0e14;
+	border: none;
 }
