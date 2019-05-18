@@ -14,3 +14,12 @@ main {
 .course_generic {
 	background-color: #eaeaea;
 }
+#topics, #content, #questions > div {
+	background-color: #606060;
+}
+.md_input {
+	color: #eaeaea;
+}
+label {
+	color: #0b0e14;
+}
