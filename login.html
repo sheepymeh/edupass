@@ -107,8 +107,43 @@
 			<button>Sign in</button>
 		</form>
 	</main>
-	<script src='aws.js'></script>
-	<script src="amazon-cognito-identity.js"></script>
-	<script src='cookies.js'></script>
+	<script src='lambda.js'></script>
+	<script src='init.js'></script>
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+			const FORM = document.getElementsByTagName('form')[0];
+			FORM.addEventListener('submit', e => {
+				e.preventDefault();
+				LAMBDA.invoke({
+					FunctionName: 'edupass',
+					Payload: JSON.stringify({
+						user: {
+							logged_in: false
+						},
+						request: {
+							type: 'user_login',
+							username: FORM.username.value,
+							password: FORM.password.value
+						}
+					})
+				}, (err, data) => {
+					if (err) {
+						alert('An error occured, see console for details');
+						console.error(err);
+					}
+					else {
+						const RESPONSE = JSON.parse(data.Payload);
+						if (!RESPONSE.success) {
+							alert('An error occured, see console for details');
+							console.error(RESPONSE)
+							return;
+						}
+						COOKIE.set()
+					}
+				})
+
+			});
+		});
+	</script>
 </body>
 </html>

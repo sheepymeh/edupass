@@ -151,6 +151,7 @@
 			})
 		}, (err, data) => {
 			if (err) {
+				alert('An error occured, see console for details');
 				console.error(err);
 			}
 			else console.info(JSON.parse(data.Payload));

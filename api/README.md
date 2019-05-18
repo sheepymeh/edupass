@@ -2,9 +2,9 @@
 
 ## Logged In Componenets
 
-### Temporary Credentials
-**Username:** ```T0372813C```  
-**Session ID:** ```long_id_no_one_will_ever_guess```
+### Default Credentials
+**Username:** ```S0000001I```  
+**Password:** ```password```
 
 ### Request Format
 ```json
