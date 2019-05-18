@@ -8,19 +8,105 @@
 	<link href='https://fonts.googleapis.com/css?family=Roboto:400,400i,500,500i|Roboto+Condensed:400,700' rel='stylesheet'>
 	<link rel='stylesheet' type='text/css' href='../common.css'>
     <link rel='stylesheet' type='text/css' href='../layout.css'>
-    <div id='jeronisbadatthesign'>
-    <link rel='stylesheet' type='text/css' href='../themes/settings/dark_theme.css' id="theme">
-	</div>
+	<style>
+		form > div {
+			margin-top: 28px;
+		}
+	</style>
 </head>
 <body>
 	<nav>
-		<a href='themes.html' class='sidebar'><img src='../assets/icons/themes.svg'>Themes</a>				
-		<a href='student_info.html' class='sidebar'><img src='../assets/icons/info.svg'>Student Info</a>
 		<a href="../index.html" class='sidebar'><img src='../assets/icons/back-arrow.svg'>Back</a>
 	</nav>
 	<main>
-		<h1>Settings</h1>
-		<h2 style='font-weight:normal'>Make EduPass yours. Customize and edit your account through the tabs on the left.</h2>
+		<h1>Settings for <span id='settings-name'></span></h1>
+		<form id='form'>
+			<div>
+				<input name='email' type='email' class='md-input' placeholder=" ">
+				<div></div>
+				<span>E-mail Address</span>
+			</div>
+			<div>
+				<input name='phone' type='number' class='md-input' placeholder=" " min=80000000 max=99999999>
+				<div></div>
+				<span>Phone Number</span>
+			</div>
+			<div>
+				<input name='address' class='md-input' placeholder=" ">
+				<div></div>
+				<span>Address</span>
+			</div>
+			<div>
+				<input name='password' class='md-input' placeholder=" ">
+				<div></div>
+				<span>Password (Unchanged until you type)</span>
+			</div>
+			<div>
+				<span>Theme</span>
+				<input type="radio" name="theme" value="dark" id="dark"><label for="dark">Dark</label>
+				<input type="radio" name="theme" value="light" id="light"><label for="light">Light</label>
+			</div>
+		</form>
 	</main>
+	<script src='../lambda.js'></script>
+	<script src='../init.js'></script>
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+			LAMBDA.invoke({
+				FunctionName: 'edupass',
+				Payload: JSON.stringify({
+					user: {
+						logged_in: true,
+						session_id: COOKIE.get('sessid'),
+						username: COOKIE.get('username')
+					},
+					request: {
+						type: 'settings_get'
+					}
+				})
+			}, (err, data) => {
+				if (err) {
+					alert('An error occured, see console for details');
+					console.error(err);
+				}
+				else {
+					const RESPONSE = JSON.parse(data.Payload);
+					const FORM = document.getElementById('form');
+					FORM.email.value = RESPONSE.email;
+					FORM.phone.value = RESPONSE.phone;
+					FORM.address.value = RESPONSE.address;
+					FORM.theme.value = RESPONSE.theme;
+					const INPUTS = document.getElementsByTagName('input');
+					for (let i = INPUTS.length - 1; i >= 0; i -= 1) {
+						INPUTS[i].addEventListener('change', () => {
+							LAMBDA.invoke({
+								FunctionName: 'edupass',
+								Payload: JSON.stringify({
+									user: {
+										logged_in: true,
+										session_id: COOKIE.get('sessid'),
+										username: COOKIE.get('username')
+									},
+									request: {
+										type: 'settings_update',
+										key: INPUTS[i].name,
+										value: FORM[INPUTS[i].name].value
+									}
+								})
+							}, (err, data) => {
+								if (err) {
+									alert('An error occured, see console for details');
+									console.error(err);
+								}
+								else {
+									const RESPONSE = JSON.parse(data.Payload);
+								}
+							});
+						})
+					}
+				}
+			});
+		});
+	</script>
 </body>
 </html>

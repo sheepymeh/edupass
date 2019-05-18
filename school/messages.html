@@ -106,9 +106,6 @@
 			background-color: #ccc;
 		}
 	</style>
-	<div id='jeronisbadatthesign'>
-		<link rel='stylesheet' type='text/css' href='../themes/messages/dark_theme.css' id="theme">
-	</div>
 </head>
 <body>
 	<nav>
@@ -137,18 +134,6 @@
 	<script src='../lambda.js'></script>
 	<script src='../init.js'></script>
 	<script>
-		const MESSAGES_OBJECT = {
-			12345: {
-				title: 'A Certain Dumb Dumb',
-				time: 1557460095000,
-				poster: 'Misaka Mikoto'
-			},
-			12346: {
-				title: 'A Certain Scientific Railgun Book Review',
-				time: 1557461095000,
-				poster: 'Jeron'
-			}
-		};
 		document.addEventListener('DOMContentLoaded', () => {
 			LAMBDA.invoke({
 				FunctionName: 'edupass',
@@ -246,9 +231,14 @@
 												response: []
 											}
 											for (let i = 0; i < MESSAGE.form.length; i++) {
-												console.log(`q-${i}`);
-												if (!FORM[`q-${i}`].value) return;
-												if (FORM[`q-${i}`].value == '') return;
+												if (!FORM[`q-${i}`].value) {
+													alert('Please fill in all blanks');
+													return;
+												}
+												if (FORM[`q-${i}`].value == '') {
+													alert('Please fill in all blanks');
+													return;
+												}
 												responseObj.response.push(FORM[i].value);
 											}
 											LAMBDA.invoke({
@@ -317,6 +307,9 @@
 											}
 											FORM.appendChild(QUESTION_PARENT);
 										});
+										const FORM_BUTTON = document.createElement('button')
+										FORM_BUTTON.appendChild(document.createTextNode('Submit Form'));
+										FORM.appendChild(FORM_BUTTON);
 										FORM_HEADER.innerHTML = `Form <img src='../assets/icons/clock.svg'> ${formTime} minutes`;
 										FORM_PARENT.appendChild(FORM_HEADER);
 										FORM_PARENT.appendChild(FORM);

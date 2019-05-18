@@ -529,7 +529,7 @@ def library_books(dynamodb, username, library, library_code):
 				'ProjectionExpression': 'id, book_name, author, synopsis'
 			}
 		}
-	)['Responses']['books_nlb']
+	)['Responses']['books_' + library_code]
 	book_data_formatted = {}
 	for book in book_data:
 		book_data_formatted[book['id']['S']] = {

@@ -14,3 +14,6 @@ main {
 .course_generic {
 	background-color: #eaeaea;
 }
+.md-input, .md-input ~ span {
+    color: #fff;
+}
