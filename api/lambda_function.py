@@ -193,7 +193,7 @@ def records_get(dynamodb, username):
 def learning_list(dynamodb, username):
 	classes = dynamodb.scan(
 		TableName = 'learning',
-		ProjectionExpression = 'id, class_name, teacher',
+		ProjectionExpression = 'id, class_name, teacher, assignments',
 		FilterExpression = 'contains(members, :username)',
 		ExpressionAttributeValues = {
 			":username": {
@@ -207,17 +207,50 @@ def learning_list(dynamodb, username):
 		}
 	else:
 		classes = classes['Items']
-	return_dict = {}
+	return_dict = []
 	for i in classes:
-		return_dict[i['id']['S']] = {
+		assignments = []
+		for assignment in i['assignments']['M']:
+			assignments.append(i['assignments']['M'][assignment]['M']['name']['S'])
+		return_dict.append({
 			'teacher': i['teacher']['S'],
-			'name': i['class_name']['S']
-			}
+			'name': i['class_name']['S'],
+			'code': i['id']['S'],
+			'assignments': assignments
+		})
 	return return_dict
 
 def learning_list_topics(dynamodb, username, class_id):
+	topics = dynamodb.get_item(
+		TableName = 'learning',
+		Key = {
+			'id': {'S': str(class_id)}
+		},
+		ProjectionExpression = 'topics, members, class_name, teacher'
+	)
+	if 'Item' not in topics:
+		return {
+			'success': False,
+			'error_code': 404,
+			'error': 'This class does not exist'
+		}
+	topics = topics['Item']
+	if username not in topics['members']['SS']:
+		return {
+			'success': False,
+			'error_code': 404,
+			'error': 'This class does not exist'
+		}
+	topics_list = []
+	for topic in topics['topics']['M']:
+		topics_list.append({
+			'code': topic[1:],
+			'name': topics['topics']['M'][topic]['M']['name']
+		})
 	return {
-
+		'name': topics['class_name']['S'],
+		'teacher': topics['teacher']['S'],
+		'tags': topics_list
 	}
 
 def learning_get_topic(dynamodb, username, class_id, topic_id):

@@ -25,13 +25,13 @@
 ```json
 {
 	"success": bool,
-	"other_responses": "Response Value (request type specific)
+	"other_responses": "Response Value (request type specific)"
 }
 ```
 
 ### Shared Error Codes
 
-#### Invaled Session ID
+#### Invalid Session ID
 ```json
 {
 	"success": False,
@@ -59,6 +59,7 @@ _Note: should **not** be used in student environment anyways, just a debugging t
 	* Error Message: "Only teachers and administrators can post" // A student is trying to post
 
 ### message_list
+_Drop-in replacement for const MESSAGES_OBJECT in messages.html_
 **Purpose:** lists all messages available  
 **Security Clearance:** automatically hides privileged posts from students
 
@@ -88,6 +89,7 @@ _Note: should **not** be used in student environment anyways, just a debugging t
 * No specific errors
 
 ### message_view
+_Drop-in replacement for const MESSAGE in messages.html_
 **Purpose:** returns Markdown of specific message  
 **Security Clearance:** automatically hides privileged posts from students
 
@@ -136,104 +138,8 @@ _Note: should **not** be used in student environment anyways, just a debugging t
 * 404 // Not Found
 	* Error Message: "This message does not exist" // The message ID supplied does not exist, or a student is trying to access a privilged message
 
-### learning_list
-**Purpose:** lists all joined classes  
-**Security Clearance:** automatically shows only joined classes
-
-**Parameters:**
-* No specific parameters
-
-**Response:**
-```json
-{
-	"class_id": {
-		"teacher": "Teacher Username",
-		"name": "Class Name"
-	},
-	...
-}
-```
-* class_id // Integer, 5-digit class code unique to each class
-* teacher // String, username of hosting teacher
-* name // String, name of class
-
-**Errors:**
-* No specific errors
-
-### learning_show_assignments
-**Purpose:** lists assignments in a certain class  
-**Security Clearance:** automatically shows only assignments of joined classes
-
-**Parameters:**
-* class_id // Integer, 5-digit class code unique to each class
-<!-- * assignment_id // Integer, 6-digit class code unique to each assignment (globally assigned, not based on class) -->
-
-**Response:**
-```json
-{
-	"name": "Class Name",
-	"teacher": "Teacher Name",
-	"assignments": [
-		{
-			"code": "12345",
-			"name": "Hyper Easy Mole Concept Revision",
-			"due": {
-				"N": "1557796568966"
-			}
-		}
-	]
-}
-```
-* name // String, name of class
-* teacher // String, username of hosting teacher
-* assignments // Array, 1 assignment per object
-	* code // Integer, 6-digit 6-digit class code unique to each assignment (globally assigned, not attached to class)
-	* name // String, name of specific assignment
-	* due // Integer, unix epoch time (with milliseconds) of due date
-
-**Errors:**
-* 404 // Not found
-	* Error Message: "This class does not exist" // The class ID supplied is invalid, or the student has not joined that class
-
-### learning_show_assignments
-**Purpose:** shows details of one assignment
-**Security Clearance:** automatically shows only assignments of joined classes
-
-**Parameters:**
-* class_id // Integer, 5-digit class code unique to each class
-* assignment_id // Integer, 6-digit class code unique to each assignment (globally assigned, not attached to class)
-
-**Response:**
-```json
-{
-	"name": "Hyper Easy Mole Concept Revision",
-	"class": "4S3 Chemistry",
-	"questions": [
-		{
-			"question": "Which line corresponds to the reaction in higher temperature?",
-			"type": "mcq",
-			"marks": "1",
-			"options": [
-				"Blue Line",
-				"Pink Line"
-			],
-			"image": "https://www.edplace.com/userfiles/image/Rate%20of%20Reaction%202.jpg"
-		}
-	]
-}
-```
-* name // String, name of class
-* teacher // String, username of hosting teacher
-* assignments // Array, 1 assignment per object
-	* code // Integer, 6-digit 6-digit class code unique to each assignment (globally assigned, not attached to class)
-	* name // String, name of specific assignment
-	* due // Integer, unix epoch time (with milliseconds) of due date
-
-**Errors:**
-* 404 // Not found
-	* Error Message: This class does not exist // The class ID supplied is invalid, or the student has not joined that class
-
 ### message_respond
+_Currently unimplemented in messages.html_
 **Purpose:** Respond to forms in messages
 **Security Clearence:** All
 
@@ -274,3 +180,104 @@ _Note: should **not** be used in student environment anyways, just a debugging t
 	* Error Message: "Your JSON response does not match the schema" // Too many/too little answers, or tried submitting open-ended question type for MCQ question
 * 404 // Not Found
 	* Error Message: "This message does not exist" // Check the ```id``` parameter, or a student is accessing a privileged message
+
+### learning_list
+_**CONDENSED (different)** replacement for const MESSAGES_OBJECT in messages.html_
+**Purpose:** lists all joined classes  
+**Security Clearance:** automatically shows only joined classes
+
+**Parameters:**
+* No specific parameters
+
+**Response:**
+```json
+[
+	{
+		"code": "Class Code",
+		"teacher": "Teacher Username",
+		"name": "Class Name",
+		"assignments": ["Assignment Name", ...]
+	},
+	...
+]
+```
+* class_id // Integer, 5-digit class code unique to each class
+* teacher // String, username of hosting teacher
+* name // String, name of class
+
+**Errors:**
+* No specific errors
+
+### learning_show_assignments
+_Drop-in replacement for const CLASS in assignments.html_
+**Purpose:** lists assignments in a certain class  
+**Security Clearance:** automatically shows only assignments of joined classes
+
+**Parameters:**
+* class_id // Integer, 5-digit class code unique to each class
+
+**Response:**
+```json
+{
+	"name": "Class Name",
+	"teacher": "Teacher Name",
+	"assignments": [
+		{
+			"code": "12345",
+			"name": "Hyper Easy Mole Concept Revision",
+			"due": {
+				"N": "1557796568966"
+			}
+		}
+	]
+}
+```
+* name // String, name of class
+* teacher // String, username of hosting teacher
+* assignments // Array, 1 assignment per object
+	* code // Integer, 6-digit 6-digit class code unique to each assignment (globally assigned, not attached to class)
+	* name // String, name of specific assignment
+	* due // Integer, unix epoch time (with milliseconds) of due date
+
+**Errors:**
+* 404 // Not found
+	* Error Message: "This class does not exist" // The class ID supplied is invalid, or the student has not joined that class
+
+### learning_assignment
+_Drop-in replacement for const QUESTIONS in assignment.html_
+**Purpose:** shows details of one assignment
+**Security Clearance:** automatically shows only assignments of joined classes
+
+**Parameters:**
+* class_id // Integer, 5-digit class code unique to each class
+* assignment_id // Integer, 6-digit class code unique to each assignment (globally assigned, not attached to class)
+
+**Response:**
+```json
+{
+	"name": "Hyper Easy Mole Concept Revision",
+	"class": "4S3 Chemistry",
+	"questions": [
+		{
+			"question": "Which line corresponds to the reaction in higher temperature?",
+			"type": "mcq",
+			"marks": "1",
+			"options": [
+				"Blue Line",
+				"Pink Line"
+			],
+			"image": "https://www.edplace.com/userfiles/image/Rate%20of%20Reaction%202.jpg"
+		}
+	]
+}
+```
+* name // String, name of class
+* teacher // String, username of hosting teacher
+* assignments // Array, 1 assignment per object
+	* code // Integer, 6-digit 6-digit class code unique to each assignment (globally assigned, not attached to class)
+	* name // String, name of specific assignment
+	* due // Integer, unix epoch time (with milliseconds) of due date
+
+**Errors:**
+* 404 // Not found
+	* Error Message: This class does not exist // The class ID supplied is invalid, or the student has not joined that class

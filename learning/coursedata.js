@@ -1,17 +1,17 @@
 const coursedata=[
 		{
-			id:"123456",
+			id:"12345",
 			name:"4S3 Chemistry",
 			teacher:"AH SEN RUDY LEE CHONG TAI",
 			assignments:[
 			{
-					code: 12345,
+					code: 123456,
 					name: 'Hyper Easy Mole Concept Revision',
 					tags: ['Mole Concept', 'Revision'],
 					due: 1557796568966
 				},
 				{
-					code: 12346,
+					code: 123457,
 					name: 'Hyper Easy Reaction Kinetics Quiz',
 					tags: ['Reaction Kinetics'],
 					date: 1557796468966
