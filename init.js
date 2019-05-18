@@ -54,11 +54,17 @@ LAMBDA.invoke({
 	}
 	else {
 		const RESPONSE = JSON.parse(data.Payload);
-		if (RESPONSE.theme == 'light' && set) document.head.removeChild(LINK);
+		if (RESPONSE.theme == 'light' && set) {
+			document.head.removeChild(LINK);
+			COOKIE.delete('theme');
+		}
 		if (RESPONSE.theme != 'light') {
 			COOKIE.set('theme', RESPONSE.theme, 7776000);
-			LINK.href = `../themes/${window.location.href.split('/').slice(-2)[0]}/${RESPONSE.theme}_theme.css`;
-			document.head.appendChild(LINK);
+			if (RESPONSE.theme != COOKIE.get('theme')) {
+				if (set) document.head.removeChild(LINK);
+				LINK.href = `../themes/${window.location.href.split('/').slice(-2)[0]}/${RESPONSE.theme}_theme.css`;
+				document.head.appendChild(LINK);
+			}
 		}
 	}
 });

@@ -25,7 +25,11 @@
 			clear: both;
 		}
 		#questions img {
-			float: right;
+			width: 100%;
+			max-width: 700px;
+			display: block;
+			margin: -8px 0 8px 0;
+			border-radius: 6px;
 		}
 		p {
 			margin-top: 0;
@@ -98,6 +102,11 @@
 						const QUESTION = document.createElement('p');
 						QUESTION.appendChild(document.createTextNode(question.question));
 						QUESTION_PARENT.appendChild(QUESTION);
+						if (question.image) {
+							const QUESTION_IMAGE = document.createElement('img');
+							QUESTION_IMAGE.src = question.image;
+							QUESTION_PARENT.appendChild(QUESTION_IMAGE);
+						}
 						switch (question.type) {
 							case 'mcq':
 								question.options.forEach((option, optIndex) => {
@@ -119,6 +128,7 @@
 								const INPUT = document.createElement('input');
 								INPUT.classList.add('md-input');
 								INPUT.placeholder = ' ';
+								INPUT.style.color = 'inherit';
 								const INPUT_AFTER = document.createElement('div');
 								const INPUT_PLACEHOLDER = document.createElement('span');
 								INPUT_PLACEHOLDER.appendChild(document.createTextNode(`Your answer for question ${qnIndex + 1}`));

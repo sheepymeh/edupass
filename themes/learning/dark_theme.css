@@ -17,7 +17,7 @@ main {
 #topics, #content, #questions > div {
 	background-color: #3f3f3f;
 }
-.md_input, .md-input ~ span {
+.md-input, .md-input ~ span {
 	color: #eaeaea;
 }
 #container > section {
