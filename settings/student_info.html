@@ -8,6 +8,33 @@
 	<link href='https://fonts.googleapis.com/css?family=Roboto:400,400i,500,500i|Roboto+Condensed:400,700' rel='stylesheet'>
 	<link rel='stylesheet' type='text/css' href='../common.css'>
     <link rel='stylesheet' type='text/css' href='../layout.css'>
+    <style>
+        main table {
+            border: 2px solid black;
+            border-collapse: collapse;
+            margin-top: 12px;
+        }
+        main table tr, td {
+            padding: 20px;
+        }
+        #edit_button {
+            font-weight: 500;
+	        background-color: #D32F2F;
+         	color: #fff;
+        	cursor: pointer;
+        	border: none;
+            outline: none;
+	        padding: 8px 24px;
+        	margin: 3px 0;
+         	display: inline-block;
+         	box-shadow: 0 1px 2px rgba(0, 0, 0, .5);
+        	font: inherit;
+        	border-radius: 4px;
+        	font-size: 20px;
+            text-decoration: none;
+            margin-top: 12px;
+        }
+    </style>
     <div id='jeronisbadatthesign'>
     <link rel='stylesheet' type='text/css' href='../themes/settings/dark_theme.css' id="theme">
 	</div>
@@ -19,7 +46,31 @@
 		<a href="../index.html" class='sidebar'><img src='../assets/icons/back-arrow.svg'>Back</a>
 	</nav>
 	<main>
-		
+        <h1>Student Info</h1>
+        <h2 style='font-weight: normal'>Edit your credentials and information.</h2>
+        <table>
+            <tr>
+                <td>Name: </td>
+                <td>Chili Cheese Fries</td>
+            </tr>
+            <tr>
+                <td>School: </td>
+                <td>Montfort Secondary School</td>
+            </tr>
+            <tr>
+                <td>Class: </td>
+                <td>2A</td>
+            </tr>
+            <tr>
+                <td>IC Number: </td>
+                <td>T0123456Z</td>
+            </tr>
+            <tr>
+                <td>Email: </td>
+                <td>misaka_mikoto@gmail.com</td>
+            </tr>
+        </table>
+        <a href='edit_info.html' id='edit_button'>Edit</a>
 	</main>
 </body>
 </html>
