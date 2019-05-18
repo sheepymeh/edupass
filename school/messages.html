@@ -134,7 +134,28 @@
 		</div>
 	</main>
 	<script src='https://cdn.jsdelivr.net/npm/showdown@1.9.0/dist/showdown.min.js'></script>
+	<script src='../lambda.js'></script>
+	<script src='../init.js'></script>
 	<script>
+		LAMBDA.invoke({
+			FunctionName: 'edupass',
+			Payload: JSON.stringify({
+				user: {
+					logged_in: true,
+					session_id: 'long_id_no_one_will_ever_guess',
+					username: 'T0372813C'
+				},
+				request: {
+					type: 'message_list'
+				}
+			})
+		}, (err, data) => {
+			if (err) {
+				console.error(err);
+			}
+			else console.info(JSON.parse(data.Payload));
+		})
+		
 		// some fetching
 		const MESSAGES_OBJECT = {
 			12345: {

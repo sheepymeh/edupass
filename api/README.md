@@ -58,6 +58,23 @@ _Should **not** be used in student environment anyways, just a debugging tool_
 * 401 // Unauthorized
 	* Error Message: "Only teachers and administrators can post" // A student is trying to post
 
+**Sample Request:**
+```json
+{
+  "user": {
+    "logged_in": "true",
+    "session_id": "long_id_no_one_will_ever_guess",
+    "username": "T0372813C"
+  },
+  "request": {
+    "type": "message_new",
+    "title": "A Certain Dumb Dumb: A Certain Miagical Index Fan Fiction",
+    "markdown": "# jeron is big weebment",
+    "student": false
+  }
+}
+```
+
 ### message_list
 _Drop-in replacement for const MESSAGES_OBJECT in messages.html_
 **Purpose:** lists all messages available  
@@ -87,6 +104,20 @@ _Drop-in replacement for const MESSAGES_OBJECT in messages.html_
 
 **Errors:**
 * No specific errors
+
+**Sample Request:**
+```json
+{
+  "user": {
+    "logged_in": "true",
+    "session_id": "long_id_no_one_will_ever_guess",
+    "username": "T0372813C"
+  },
+  "request": {
+    "type": "message_list"
+  }
+}
+```
 
 ### message_view
 _Drop-in replacement for const MESSAGE in messages.html_
@@ -138,6 +169,21 @@ _Drop-in replacement for const MESSAGE in messages.html_
 * 404 // Not Found
 	* Error Message: "This message does not exist" // The message ID supplied does not exist, or a student is trying to access a privilged message
 
+```json
+{
+  "user": {
+    "logged_in": "true",
+    "session_id": "long_id_no_one_will_ever_guess",
+    "username": "T0372813C"
+  },
+  "request": {
+    "type": "learning_get_topic",
+    "class_id": "12345",
+    "topic_id": "T123456"
+  }
+}
+```
+
 ### message_respond
 _Currently unimplemented in messages.html_
 **Purpose:** Respond to forms in messages
@@ -181,6 +227,25 @@ _Currently unimplemented in messages.html_
 * 404 // Not Found
 	* Error Message: "This message does not exist" // Check the ```id``` parameter, or a student is accessing a privileged message
 
+**Sample Request:**
+```json
+{
+  "user": {
+    "logged_in": "true",
+    "session_id": "long_id_no_one_will_ever_guess",
+    "username": "T0372813C"
+  },
+  "request": {
+    "type": "message_respond",
+    "id": 43322,
+    "response": [
+      "open-ended response",
+      "2"
+    ]
+  }
+}
+```
+
 ### learning_list
 _**CONDENSED (different)** replacement for const MESSAGES_OBJECT in messages.html_
 **Purpose:** lists all joined classes  
@@ -207,6 +272,20 @@ _**CONDENSED (different)** replacement for const MESSAGES_OBJECT in messages.htm
 
 **Errors:**
 * No specific errors
+
+**Sample Response:**
+```json
+{
+  "user": {
+    "logged_in": "true",
+    "session_id": "long_id_no_one_will_ever_guess",
+    "username": "T0372813C"
+  },
+  "request": {
+    "type": "learning_list"
+  }
+}
+```
 
 ### learning_show_assignments
 _Drop-in replacement for const CLASS in assignments.html_
@@ -242,6 +321,22 @@ _Drop-in replacement for const CLASS in assignments.html_
 **Errors:**
 * 404 // Not found
 	* Error Message: "This class does not exist" // The class ID supplied is invalid, or the student has not joined that class
+
+**Sample Request:**
+```json
+{
+  "user": {
+    "logged_in": "true",
+    "session_id": "long_id_no_one_will_ever_guess",
+    "username": "T0372813C"
+  },
+  "request": {
+    "type": "learning_show_assignments",
+    "class_id": "12345",
+    "assignment_id": "12346"
+  }
+}
+```
 
 ### learning_assignment
 _Drop-in replacement for const QUESTIONS in assignment.html_
@@ -282,12 +377,42 @@ _Drop-in replacement for const QUESTIONS in assignment.html_
 * 404 // Not found
 	* Error Message: This class does not exist // The class ID supplied is invalid, or the student has not joined that class
 
+**Sample Request:**
+```json
+{
+  "user": {
+    "logged_in": "true",
+    "session_id": "long_id_no_one_will_ever_guess",
+    "username": "T0372813C"
+  },
+  "request": {
+    "type": "learning_assignment",
+    "class_id": "12345",
+    "assignment_id": "12345"
+  }
+}
+```
+
 ### library_index
 **Purpose:** returns school code of student
 **Security Clearance:** all
 
 **Response:**
 * school_code // Integer, school code
+
+**Sample Request:**
+```json
+{
+  "user": {
+    "logged_in": "true",
+    "session_id": "long_id_no_one_will_ever_guess",
+    "username": "T0372813C"
+  },
+  "request": {
+    "type": "library_index"
+  }
+}
+```
 
 ### library_recommendations
 Not implemented due to time constraints

@@ -3,14 +3,45 @@ import boto3
 from botocore.exceptions import ClientError, ParamValidationError
 
 def user_login(dynamodb, username, password):
-	return {
-
-	}
-
-def user_create(dynamodb, username, password, name, gender, birthdate, address):
-	return {
-
-	}
+	settings = dynamodb.get_item(
+		TableName = 'users',
+		Key = {
+			'username': {'S': username}
+		},
+		ProjectionExpression = 'password'
+	)
+	if 'Item' not in settings:
+		return {
+			'success': 'False',
+			'error_code': 401,
+			'error': 'This username does not exist'
+		}
+	from passlib.hash import pbkdf2_sha256
+	if pbkdf2_sha256.verify(password, settings['Item']['password']['S']):
+		from secrets import token_urlsafe
+		sessid = token_urlsafe(24)
+		dynamodb.update_item(
+			TableName = 'users',
+			Key = {
+				'username': {'S': username}
+			},
+			UpdateExpression = "ADD session_ids :value",
+			ExpressionAttributeValues = {
+				":value": {
+					'SS': [sessid]
+				}
+			}
+		)
+		return {
+			'success': True,
+			'session_id': sessid
+		}
+	else:
+		return {
+			'success': 'False',
+			'error_code': 401,
+			'error': 'The password is incorrect'
+		}
 
 def message_new(dynamodb, username, title, markdown, rights, student_readable):
 	if rights != 'teacher' and rights != 'admin':
@@ -20,7 +51,7 @@ def message_new(dynamodb, username, title, markdown, rights, student_readable):
 			'error': 'Only teachers and administrators can post'
 		}
 	import time
-	from random import SystemRandom
+	from secrets import SystemRandom
 	try:
 		dynamodb.put_item(
 			TableName = 'messages',
@@ -227,7 +258,8 @@ def learning_list_topics(dynamodb, username, class_id):
 			'id': {'S': str(class_id)}
 		},
 		ProjectionExpression = 'topics, members, class_name, teacher'
-	)
+	) 
+	
 	if 'Item' not in topics:
 		return {
 			'success': False,
@@ -254,9 +286,39 @@ def learning_list_topics(dynamodb, username, class_id):
 	}
 
 def learning_get_topic(dynamodb, username, class_id, topic_id):
-	return {
-
+	getTopic= dynamodb.get_item(
+		TableName='learning',
+		Key = {
+			'id': {'S': str(class_id)} 		
+		}, 
+		ProjectionExpression='topics'
+	)
+	if 'Item' not in getTopic:
+		return {
+			'success': False,
+			'error_code': 404,
+			'error': 'This class does not exist'
+		}
+	getTopic= getTopic['Item']['topics']['M'][topic_id]
+	topicReturn={
+		"name":getTopic['M']['name'],
+		"posts":[]
 	}
+	for post in getTopic['M']['posts']['L']:
+		attachments=[]
+		for attachment in post['M']['attachments']['L']:
+			attachments.append({
+				"name":attachment['M']['name']['S'],
+				"link":attachment['M']['link']['S']
+			})
+
+		topicReturn['posts'].append({
+			"title":post['M']['title']['S'],
+			"description":post['M']['description']['S'],
+			"timestamp":post['M']['timestamp']['N'],
+			"attachments":attachments
+			})
+	return topicReturn
 
 def learning_show_assignments(dynamodb, username, class_id):
 	assignments = dynamodb.get_item(
@@ -337,9 +399,65 @@ def learning_assignment(dynamodb, username, class_id, assignment_id):
 	return return_dict
 
 def learning_assignment_submit(dynamodb, username, assignment_id, answers):
-	# reference message_respond
-	return {
+	import time
+	assignment = dynamodb.get_item(
+		TableName = 'learning',
+		Key = {
+			'id': {'S': str(assignment_id)}
+		},
+		ProjectionExpression = 'members, assignments.A' + str(assignment_id) + '.questions'
+	)
+	if 'Item' not in assignment:
+		return {
+			'success': False,
+			'error_code': 404,
+			'error': 'This assignment does not exist'
+		}
+	else:
+		assignment = assignment['Item']
+	if username not in assignment['members']['SS']:
+		return {
+			'success': False,
+			'error_code': 404,
+			'error': 'This assignment does not exist'
+		}
+	error_dict = {
+		'success': False,
+		'error_code': 400,
+		'error': 'Your JSON response does not match the schema'
+	}
+	if len(answers) != len(assignment['assignments']['M']['A' + str(assignment_id)]['M']['questions']['L']):
+		return error_dict
 
+	answer_array = []
+	for i in range(0, len(answers)):
+		if assignment['assignments']['M']['A' + str(assignment_id)]['M']['questions']['L'][i]['M']['type']['S'] == 'mcq':
+			if int(answers[i]) >= len(assignment['assignments']['M']['A' + str(assignment_id)]['M']['questions']['L'][i]['M']['options']['L']):
+				return error_dict
+		answer_array.append({
+			'N' if assignment['assignments']['M']['A' + str(assignment_id)]['M']['questions']['L'][i]['M']['type']['S'] == 'mcq' else 'S': str(answers[i])
+		})
+	dynamodb.update_item(
+		TableName = 'learning',
+		Key = {
+			'id': {'S': str(assignment_id)}
+		},
+		UpdateExpression = 'SET assignment_submissions.#AID.#UID = :response',
+		ExpressionAttributeNames = {
+			'#AID': 'A' + str(assignment_id),
+			'#UID': username
+		},
+		ExpressionAttributeValues = {
+			":response": {
+				"M": {
+					"submission_time": {"N": str(round(time.time() * 1000))},
+					"answers": {"L": answer_array}
+				}
+			}
+		}
+	)
+	return {
+		'success': True
 	}
 
 def library_index(dynamodb, username):
@@ -425,23 +543,89 @@ def library_books(dynamodb, username, library, library_code):
 	return return_list
 
 def settings_get(dynamodb, username):
+	settings = dynamodb.get_item(
+		TableName = 'users',
+		Key = {
+			'username': {'S': username}
+		},
+		ProjectionExpression = 'address, email, phone, theme, full_name'
+	)['Item']
 	return {
-
+		'success': True,
+		'address': settings['address']['S'],
+		'email': settings['email']['S'],
+		'phone': settings['phone']['N'],
+		'theme': settings['theme']['S'],
+		'name': settings['full_name']['S'],
 	}
 
-def settings_update(dynamodb, username):
+def settings_update(dynamodb, username, key, value):
+	if key not in {'address', 'email', 'phone', 'theme', 'password'}:
+		return {
+			'success': False,
+			'error_code': 400,
+			'error': 'Only address, email, phone, theme, and password can be edited'
+		}
+	if key == 'password':
+		if len(value) < 8:
+			return {
+				'success': False,
+				'error_code': 400,
+				'error': 'Your must be at least 8 characters long'
+			}
+		from passlib.hash import pbkdf2_sha256
+		value = pbkdf2_sha256.hash(value, rounds = 25000, salt_size = 16)
+	if key == 'theme' and value not in {'light', 'dark'}:
+		return {
+			'success': False,
+			'error_code': 400,
+			'error': 'Only light and dark themes are available'
+		}
+	if key == 'phone':
+		if not value.isdigit():
+			return {
+				'success': False,
+				'error_code': 400,
+				'error': 'Only numbers are allowed for phone numbers'
+			}
+		if int(value) < 80000000 or int(value) > 99999999:
+			return {
+				'success': False,
+				'error_code': 400,
+				'error': 'Only 8-digit mobile phone numbers are allowed'
+			}
+	if key == 'email':
+		import re
+		if not re.match(r"[^@]+@[^@]+\.[^@]+", value):
+			return {
+				'success': False,
+				'error_code': 400,
+				'error': 'Invalid email format'
+			}
+	dynamodb.update_item(
+		TableName = 'users',
+		Key = {
+			'username': {'S': username}
+		},
+		UpdateExpression = "SET #KEY = :value",
+		ExpressionAttributeNames = {
+			'#KEY': key
+		},
+		ExpressionAttributeValues = {
+			":value": {
+				"N" if key == 'phone' else 'S': value
+			}
+		}
+	)
 	return {
-
+		'success': True
 	}
-
+	
 def lambda_handler(param, context):
 	dynamodb = boto3.client('dynamodb')
 	if param['user']['logged_in'] == False:
-		# from passlib.hash import pbkdf2_sha256
 		if param['request']['type'] == 'user_login':
 			return user_login(dynamodb, param['request']['username'], param['request']['password'])
-		elif param['request']['type'] == 'user_create':
-			return user_create(dynamodb, param['request']['username'], param['request']['password'], param['request']['name'], param['request']['gender'], param['request']['birthdate'], param['request']['address'])
 		else:
 			return {
 				'success': False,
@@ -489,20 +673,18 @@ def lambda_handler(param, context):
 				return learning_assignment_submit(dynamodb, param['user']['username'], param['request']['id'], param['request']['answers'])
 			elif param['request']['type'] == 'library_index':
 				return library_index(dynamodb, param['user']['username'])
-			elif param['request']['type'] == 'library_fines':
-				return library_fines(dynamodb, param['user']['username'])
 			elif param['request']['type'] == 'library_books':
 				return library_books(dynamodb, param['user']['username'], param['request']['library'], param['request']['library_code'])
 			elif param['request']['type'] == 'settings_get':
 				return settings_get(dynamodb, param['user']['username'])
 			elif param['request']['type'] == 'settings_update':
-				return settings_update(dynamodb, param['user']['username'])
+				return settings_update(dynamodb, param['user']['username'], param['request']['key'], param['request']['value'])
 			else:
 				return {
 					'success': False,
 					'error': 404
 				}
-		if 'Item' not in user_data:
+		else:
 			return {
 				'success': False,
 				'error_code': 401,
