@@ -35,6 +35,38 @@
             margin-top: 12px;
         }
     </style>
+    <script src='../lambda.js'></script>
+    <!-- i just decided to give up heres proof of my pathetic effort 
+        <script type='text/javascript'>
+        document.addEventListener('DOMContentLoaded', () => {
+            LAMBDA.invoke({
+	            FunctionName: 'edupass',
+	            Payload: JSON.stringify({
+		            user: {
+			            logged_in: true,
+			            session_id: COOKIE.get('sessid'),
+			            username: COOKIE.get('username')
+		            },
+		            request: {
+			            type: ''
+		            }
+	            })
+            }, (err, data) => {
+	            if (err) {
+		            alert('An error occured, see console for details');
+		            console.error(err);
+	            }
+	            else {
+		            const RESPONSE = JSON.parse(data.Payload);
+	            }
+        });
+            const NAME = document.getElementById('name');
+            const GENDER = document.getElementById('gender');
+            const ADDRESS = document.getElementById('address');
+            const IC_NUMBER = document.getElementById('icnum');
+            const EMAIL = document.getElementById('email');
+        });
+    </script>-->
     <div id='jeronisbadatthesign'>
     <link rel='stylesheet' type='text/css' href='../themes/settings/dark_theme.css' id="theme">
 	</div>
@@ -50,23 +82,23 @@
         <h2 style='font-weight: normal'>Edit your credentials and information.</h2>
         <table>
             <tr>
-                <td>Name: </td>
+                <td id='name'>Name: </td>
                 <td>Chili Cheese Fries</td>
             </tr>
             <tr>
-                <td>School: </td>
-                <td>Montfort Secondary School</td>
+                <td id='gender'>Gender: </td>
+                <td>Male</td>
             </tr>
             <tr>
-                <td>Class: </td>
-                <td>2A</td>
+                <td id='address'>Address: </td>
+                <td>Pioneer LMAO</td>
             </tr>
             <tr>
-                <td>IC Number: </td>
+                <td id='icnum'>IC Number: </td>
                 <td>T0123456Z</td>
             </tr>
             <tr>
-                <td>Email: </td>
+                <td id='email'>Email: </td>
                 <td>misaka_mikoto@gmail.com</td>
             </tr>
         </table>
