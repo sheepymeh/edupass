@@ -79,26 +79,32 @@ def message_new(dynamodb, username, title, markdown, rights, student_readable):
 
 def message_list(dynamodb, rights):
 	if rights == 'teacher' or rights=='admin':
-		messages= dynamodb.scan(
+		messages = dynamodb.scan(
 			TableName='messages',
 			ProjectionExpression='id, poster, posttime, title'
 		)['Items']
 	else:
-		messages= dynamodb.scan(
+		messages = dynamodb.scan(
 			TableName = 'messages',
-			FilterExpression = 'student = 1',
-			ProjectionExpression = 'id, poster, posttime, title'
+			FilterExpression = 'student = :true',
+			ProjectionExpression = 'id, poster, posttime, title',
+			ExpressionAttributeValues = {
+				":true": {
+					"BOOL": True
+				}
+			}
 		)['Items']
-	return_dict = {
-		'success': True
-	}
+	return_dict = {}
 	for message in messages:
 		return_dict[message['id']['N']] = {
 			'title': message['title']['S'],
 			'time': message['posttime']['N'],
-			'user': message['poster']['S']
-			}
-	return return_dict
+			'poster': message['poster']['S']
+		}
+	return {
+		'success': True,
+		'messages': return_dict
+	}
 
 def message_view(dynamodb, username, user_rights, id):
 	try:
@@ -118,7 +124,7 @@ def message_view(dynamodb, username, user_rights, id):
 		else:
 			message = message['Item']
 
-		if message['student']['BOOL'] and user_rights != 'teacher' and user_rights != 'admin':
+		if not message['student']['BOOL'] and user_rights != 'teacher' and user_rights != 'admin':
 			return {
 				'success': False,
 				'error_code': 404,
@@ -174,7 +180,7 @@ def message_respond(dynamodb, username, user_rights, id, response):
 	else:
 		message = message['Item']
 
-	if message['student']['BOOL'] and user_rights != 'teacher' and user_rights != 'admin':
+	if not message['student']['BOOL'] and user_rights != 'teacher' and user_rights != 'admin':
 		return {
 			'success': False,
 			'error_code': 404,

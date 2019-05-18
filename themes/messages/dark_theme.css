@@ -34,7 +34,7 @@ input[type='radio'] + label {
     color: #515151;
 }
 .bubble-link {
-    color: #515151;
+    color: #eee;
 }
 summary img {
     filter:invert(100%);
@@ -42,4 +42,7 @@ summary img {
 .competition {
     border: 1px solid #d8d8d8;
     background-color: #212121;
+}
+.md-input, .md-input ~ span {
+    color: #fff;
 }
