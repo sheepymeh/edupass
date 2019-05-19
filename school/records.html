@@ -57,6 +57,38 @@
 			<div id='comptitions-parent'></div>
 			<div id='aptitude-chart-parent'><canvas id='aptitude-chart'></canvas></div>
 		</section>
+		<section id='attendance'>
+			<h2>Attendance Records</h2>
+			<table id='attendance-table'>
+				<tr>
+					<th>Date</th>
+					<th>Reason</th>
+					<th>Status</th>
+				</tr>
+			</table>
+		</section>
+		<section id='discipline'>
+			<h2>Discipline Records</h2>
+			<table id='discipline-table'>
+				<tr>
+					<th>Date</th>
+					<th>Offence</th>
+					<th>Punishment</th>
+					<th>Teacher</th>
+				</tr>
+			</table>
+		</section>
+		<section id='via'>
+			<h2>VIA Records</h2>
+			<table id='via-table'>
+				<tr>
+					<th>Date</th>
+					<th>Activity</th>
+					<th>Beneficiary</th>
+					<th>Hours</th>
+				</tr>
+			</table>
+		</section>
 	</main>
 	<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 	<script src='../lambda.js'></script>
@@ -97,13 +129,11 @@
 						PARENT.appendChild(BADGE);
 						PARENT.appendChild(NAME);
 						COMPETITIONS_PARENT.appendChild(PARENT);
-						console.log(competition.tags);
 						for (const TAG of Object.keys(competition.tags)) {
 							if (tags[TAG]) tags[TAG] += parseInt(competition.tags[TAG]);
 							else tags[TAG] = parseInt(competition.tags[TAG]);
 						}
 					});
-					console.log(tags);
 					let backgroundColors = [];
 					let hoverBackgroundColors = [];
 					for (let i = Object.keys(tags).length - 1; i >= 0; i -= 1) {
@@ -145,6 +175,44 @@
 								bodyFontSize: 20
 							}
 						}
+					});
+					const ATTENDANCE_TABLE = document.getElementById('attendance-table');
+					RESPONSE.attendance.forEach(record => {
+						console.log(record);
+						const ROW = ATTENDANCE_TABLE.insertRow();
+						const DATE_TD = ROW.insertCell();
+						const DATE = new Date(parseInt(record.date));
+						DATE_TD.appendChild(document.createTextNode(`${DATE.getDate()}/${DATE.getMonth() + 1}/${DATE.getFullYear()}`));
+						const REASON_TD = ROW.insertCell();
+						REASON_TD.appendChild(document.createTextNode(record.reason));
+						const ABSENT_TD = ROW.insertCell();
+						ABSENT_TD.appendChild(document.createTextNode('ABSENT'));
+					});
+					const DISCIPLINE_TABLE = document.getElementById('discipline-table');
+					RESPONSE.discipline.forEach(record => {
+						const ROW = DISCIPLINE_TABLE.insertRow();
+						const DATE_TD = ROW.insertCell();
+						const DATE = new Date(parseInt(record.date));
+						DATE_TD.appendChild(document.createTextNode(`${DATE.getDate()}/${DATE.getMonth() + 1}/${DATE.getFullYear()}`));
+						const OFFENCE_TD = ROW.insertCell();
+						OFFENCE_TD.appendChild(document.createTextNode(record.offence));
+						const PUNISHMENT_TD = ROW.insertCell();
+						PUNISHMENT_TD.appendChild(document.createTextNode(record.punishment));
+						const TEACHER_TD = ROW.insertCell();
+						TEACHER_TD.appendChild(document.createTextNode(record.teacher));
+					});
+					const VIA_TABLE = document.getElementById('via-table');
+					RESPONSE.via.forEach(record => {
+						const ROW = VIA_TABLE.insertRow();
+						const DATE_TD = ROW.insertCell();
+						const DATE = new Date(parseInt(record.date));
+						DATE_TD.appendChild(document.createTextNode(`${DATE.getDate()}/${DATE.getMonth() + 1}/${DATE.getFullYear()}`));
+						const ACTIVITY_TD = ROW.insertCell();
+						ACTIVITY_TD.appendChild(document.createTextNode(record.activity));
+						const BENEFICIARY_TD = ROW.insertCell();
+						BENEFICIARY_TD.appendChild(document.createTextNode(record.beneficiary));
+						const HOURS_TD = ROW.insertCell();
+						HOURS_TD.appendChild(document.createTextNode(`${record.hours} hours`));
 					});
 				}
 			});
