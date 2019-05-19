@@ -56,6 +56,7 @@ LAMBDA.invoke({
 		const RESPONSE = JSON.parse(data.Payload);
 		if (RESPONSE.theme == 'light' && set) {
 			document.head.removeChild(LINK);
+			set = false;
 			COOKIE.delete('theme');
 		}
 		if (RESPONSE.theme != 'light') {

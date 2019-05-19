@@ -46,3 +46,24 @@ summary img {
 .md-input, .md-input ~ span {
     color: #fff;
 }
+main {
+	background-color: #292b2d;
+	color: #d8d8d8;
+}
+.sidebar {
+	background-color: #eaeaea;
+}
+#content {
+    color: #0b0e14;
+    background-color: #292b2d;
+}
+.index_button {
+    background-color: #d8d8d8;
+}
+.md-input, .md-input ~ span {
+    color: #fff;
+    background-color: #eaeaea;
+}
+td {
+    color: #212121;
+}
