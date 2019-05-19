@@ -224,18 +224,17 @@
 									});
 								});
 							});
+							if(BOOKS.length === 0){
+								const ROW = TABLE.insertRow();
+								const PLACEHOLDER = ROW.insertCell();
+								PLACEHOLDER.appendChild(document.createTextNode('You did not borrow any books, time to head down to the library!'));
+							}
 							BODY.appendChild(TABLE);
 						}
 					});
 				}
 			});
 		});
-		const info = (id) => {
-			// help plox
-			const body = document.getElementById("content");
-			let res = body.innerHTML;
-			res = `${res}<div class = ></div>`;
-		}
 	</script>
 </body>
 </html>
