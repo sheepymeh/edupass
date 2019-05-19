@@ -158,7 +158,6 @@
 					const MESSAGE_VIEWER = document.getElementById('message');
 
 					for (const MESSAGE of Object.keys(MESSAGES_OBJECT.messages)) {
-						console.log(MESSAGE);
 						const PARENT = document.createElement('div');
 						const TITLE = document.createElement('div');
 						const TIME = document.createElement('div');
@@ -261,7 +260,6 @@
 												}
 												else {
 													const RESPONSE = JSON.parse(data.Payload);
-													console.log(RESPONSE.success);
 												}
 											});
 										});
@@ -307,6 +305,11 @@
 											}
 											FORM.appendChild(QUESTION_PARENT);
 										});
+										if (MESSAGE.responses) {
+											for (let i = 0; i < MESSAGE.responses.length; i++) {
+												FORM[`q-${i}`].value = MESSAGE.responses[i]
+											}
+										}
 										const FORM_BUTTON = document.createElement('button')
 										FORM_BUTTON.appendChild(document.createTextNode('Submit Form'));
 										FORM.appendChild(FORM_BUTTON);

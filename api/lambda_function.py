@@ -113,7 +113,7 @@ def message_view(dynamodb, username, user_rights, id):
 			Key = {
 				'id': {'N': str(id)}
 			},
-			ProjectionExpression = 'markdown, student, form, attachments'
+			ProjectionExpression = 'markdown, student, form, attachments, responses.' + username
 		)
 		if 'Item' not in message:
 			return {
@@ -133,7 +133,8 @@ def message_view(dynamodb, username, user_rights, id):
 
 		return_dict = {
 			'success': True,
-			'text': message['markdown']['S']
+			'text': message['markdown']['S'],
+			'responses': []
 		}
 
 		if 'attachments' in message:
@@ -154,6 +155,9 @@ def message_view(dynamodb, username, user_rights, id):
 				if (form['M']['type']['S'] == 'mcq'):
 					form_dict['options'] = form['M']['options']['SS']
 				return_dict['form'].append(form_dict)
+		
+		for response in message['responses']['M'][username]['L']:
+			return_dict['responses'].append(list(response.items())[0][1])
 
 		return return_dict
 	except ClientError as e:
