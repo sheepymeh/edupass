@@ -110,7 +110,22 @@
 		    top: 10px;
         } */
 	</style>
-	<link rel='stylesheet' type='text/css' href='../themes/library/dark_theme.css'>
+</head>
+<body>
+	<nav id='nav'>
+		<a href='books.html'><img src='../assets/icons/library2.svg'>Books</a>
+		<a href='recommendations.html'><img src='../assets/icons/library2.svg'>Recommended</a>
+		<a href='fines.html'><img src='../assets/icons/dollar-symbol.svg'>Fines</a>
+		<a href="index.html"><img src='../assets/icons/back-arrow.svg'>Back</a>
+	</nav>
+	<main>
+		<h1>Borrowed Books</h1>
+		<div id = "content">
+
+		</div>
+	</main>
+	<script src='../lambda.js'></script>
+	<script src='../init.js'></script>
 	<script>
 		let TYPE;
 		switch (window.location.hash.substr(1)) {
@@ -129,74 +144,91 @@
 			default:
 				location.href = 'index.html';
 		}
-		// Fetch from database based on TYPE
-		const DATA = [
-			{
-				due: new Date(Date.UTC(2019, 0, 3)),
-				name: "A Certain Magical Index: Volume 22",
-				sypnosis: "Kamijou Touma is a student living in Academy City, a highly advanced place in terms of technology. Despite being gauged as a level zero esper (no powers), he possesses on his right hand the Imagine Breaker, an ability that negates any power whatsoever. Touma finds a young girl named Index who is trying to run away from Necessarius, a powerful magic organization that she is member of. Blessed with the skill of memorizing any sort of information, she holds 103,000 forbidden magical books within her head. As science and magic cross paths, Touma must face several dangers amid espers and magicians who appear in the exciting scientific town.",
-				author: "Kazuma Kamachi"
-			},
-			{
-				due: new Date(Date.UTC(2019, 10, 4)),
-				name: "《你的名字。》",
-				sypnosis: "Mitsuha Miyamizu, a high school girl, yearns to live the life of a boy in the bustling city of Tokyo—a dream that stands in stark contrast to her present life in the countryside. Meanwhile in the city, Taki Tachibana lives a busy life as a high school student while juggling his part-time job and hopes for a future in architecture. One day, Mitsuha awakens in a room that is not her own and suddenly finds herself living the dream life in Tokyo—but in Taki's body! Elsewhere, Taki finds himself living Mitsuha's life in the humble countryside. In pursuit of an answer to this strange phenomenon, they begin to search for one another. Kimi no Na wa. revolves around Mitsuha and Taki's actions, which begin to have a dramatic impact on each other's lives, weaving them into a fabric held together by fate and circumstance",
-				author: "Makoto Shinkai"
-			},
-			{
-				due: new Date(Date.UTC(2019, 11, 5)),
-				name: "SMO Sample Questions: A Compendium",
-				sypnosis: "123",
-				author: "123"
-			},
-			{
-				due: new Date(Date.UTC(2019, 11, 5)),
-				name: "The Theory Of Everything",
-				sypnosis: "123",
-				author: "123"
-			}
-		];
 		const TIME_NOW = new Date();
 		document.addEventListener('DOMContentLoaded', () => {
 			for (let link of document.getElementsByTagName('nav')[0].getElementsByTagName('a')) link.href += `#${TYPE.short}`;
 			document.getElementsByTagName('h1')[0].appendChild(document.createTextNode(` (${TYPE.long})`));
 			const BODY = document.getElementById("content");
 			const TABLE = document.createElement('table');
-			DATA.forEach(book => {
-				const S = book.due;
-				const ROW = TABLE.insertRow();
-				if (S < TIME_NOW) ROW.classList.add('overdue');
-				const DUE_CELL = ROW.insertCell();
-				DUE_CELL.appendChild(document.createTextNode(`${S.getUTCDate()}/${S.getUTCMonth() + 1}/${S.getUTCFullYear()}`));
-				const NAME_CELL = ROW.insertCell();
-				NAME_CELL.appendChild(document.createTextNode(book.name));
-				const TOOLTIP = document.createElement('div');
-				TOOLTIP.classList.add('tooltip');
-				const T_AUTHORH = document.createElement('caption');
-				T_AUTHORH.appendChild(document.createTextNode('AUTHOR'));
-				const T_AUTHOR = document.createElement('div');
-				T_AUTHOR.appendChild(document.createTextNode(book.author));
-				const T_SYNOPSISH = document.createElement('caption');
-				T_SYNOPSISH.appendChild(document.createTextNode('SYNOPSIS'));
-				const T_SYNOPSIS = document.createElement('div');
-				T_SYNOPSIS.classList.add('synopsis');
-				T_SYNOPSIS.appendChild(document.createTextNode(book.sypnosis));
-				TOOLTIP.appendChild(T_AUTHORH);
-				TOOLTIP.appendChild(T_AUTHOR);
-				TOOLTIP.appendChild(T_SYNOPSISH);
-				TOOLTIP.appendChild(T_SYNOPSIS);
-				NAME_CELL.appendChild(TOOLTIP);
-				ROW.addEventListener('mouseover', () => {
-					ROW.classList.add('hover');
-					if (TOOLTIP.getBoundingClientRect().bottom > (window.innerHeight - 16)) 
-							TOOLTIP.classList.add('show-top');
-					ROW.addEventListener('mouseout', () => {
-						ROW.classList.remove('hover');
-						TOOLTIP.classList.remove('show-top');
+			LAMBDA.invoke({
+				FunctionName: 'edupass',
+				Payload: JSON.stringify({
+					user: {
+						logged_in: true,
+						session_id: COOKIE.get('sessid'),
+						username: COOKIE.get('username')
+					},
+					request: {
+						type: 'library_index'
+					}
+				})
+			}, (err, data) => {
+				if (err) {
+					alert('An error occured, see console for details');
+					console.error(err);
+				}
+				else {
+					TYPE.code = TYPE.short == 'nlb' ? 'nlb' : JSON.parse(data.Payload).school_code;
+					LAMBDA.invoke({
+						FunctionName: 'edupass',
+						Payload: JSON.stringify({
+							user: {
+								logged_in: true,
+								session_id: COOKIE.get('sessid'),
+								username: COOKIE.get('username')
+							},
+							request: {
+								type: 'library_books',
+								library: TYPE.short,
+								library_code: TYPE.code
+							}
+						})
+					}, (err, data) => {
+						if (err) {
+							alert('An error occured, see console for details');
+							console.error(err);
+						}
+						else {
+							const BOOKS = JSON.parse(data.Payload);
+							BOOKS.forEach(book => {
+								const S = new Date(parseInt(book.due));
+								const ROW = TABLE.insertRow();
+								if (S < TIME_NOW) ROW.classList.add('overdue');
+								const DUE_CELL = ROW.insertCell();
+								DUE_CELL.appendChild(document.createTextNode(`${S.getUTCDate()}/${S.getUTCMonth() + 1}/${S.getUTCFullYear()}`));
+								const NAME_CELL = ROW.insertCell();
+								NAME_CELL.appendChild(document.createTextNode(book.name));
+								const TOOLTIP = document.createElement('div');
+								TOOLTIP.classList.add('tooltip');
+								const T_AUTHORH = document.createElement('caption');
+								T_AUTHORH.appendChild(document.createTextNode('AUTHOR'));
+								const T_AUTHOR = document.createElement('div');
+								T_AUTHOR.appendChild(document.createTextNode(book.author));
+								const T_SYNOPSISH = document.createElement('caption');
+								T_SYNOPSISH.appendChild(document.createTextNode('SYNOPSIS'));
+								const T_SYNOPSIS = document.createElement('div');
+								T_SYNOPSIS.classList.add('synopsis');
+								T_SYNOPSIS.appendChild(document.createTextNode(book.synopsis));
+								TOOLTIP.appendChild(T_AUTHORH);
+								TOOLTIP.appendChild(T_AUTHOR);
+								TOOLTIP.appendChild(T_SYNOPSISH);
+								TOOLTIP.appendChild(T_SYNOPSIS);
+								NAME_CELL.appendChild(TOOLTIP);
+								ROW.addEventListener('mouseover', () => {
+									ROW.classList.add('hover');
+									if (TOOLTIP.getBoundingClientRect().bottom > (window.innerHeight - 16)) 
+											TOOLTIP.classList.add('show-top');
+									ROW.addEventListener('mouseout', () => {
+										ROW.classList.remove('hover');
+										TOOLTIP.classList.remove('show-top');
+									});
+								});
+							});
+							BODY.appendChild(TABLE);
+						}
 					});
-				});
+				}
 			});
-			BODY.appendChild(TABLE);
 		});
 		const info = (id) => {
 			// help plox
@@ -205,19 +237,5 @@
 			res = `${res}<div class = ></div>`;
 		}
 	</script>
-</head>
-<body>
-	<nav id='nav'>
-		<a href='books.html'><img src='../assets/icons/library2.svg'>Books</a>
-		<a href='recommendations.html'><img src='../assets/icons/library2.svg'>Recommended</a>
-		<a href='fines.html'><img src='../assets/icons/dollar-symbol.svg'>Fines</a>
-		<a href="index.html"><img src='../assets/icons/back-arrow.svg'>Return</a>
-	</nav>
-	<main>
-		<h1>Borrowed Books</h1>
-		<div id = "content">
-
-		</div>
-	</main>
 </body>
 </html>

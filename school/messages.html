@@ -78,7 +78,7 @@
 		#message {
 			padding: 6px;	
 		}
-		#message h1 {
+		#message div:first-child h1 {
 			font-size: 28px;
 		}
 		#message > div:first-child {
@@ -106,9 +106,6 @@
 			background-color: #ccc;
 		}
 	</style>
-	<div id='jeronisbadatthesign'>
-		<link rel='stylesheet' type='text/css' href='../themes/messages/dark_theme.css' id="theme">
-	</div>
 </head>
 <body>
 	<nav>
@@ -137,184 +134,207 @@
 	<script src='../lambda.js'></script>
 	<script src='../init.js'></script>
 	<script>
-		LAMBDA.invoke({
-			FunctionName: 'edupass',
-			Payload: JSON.stringify({
-				user: {
-					logged_in: true,
-					session_id: COOKIE.get('sessid'),
-					username: COOKIE.get('username')
-				},
-				request: {
-					type: 'message_list'
-				}
-			})
-		}, (err, data) => {
-			if (err) {
-				alert('An error occured, see console for details');
-				console.error(err);
-			}
-			else {
-				const RESPONSE = JSON.parse(data.Payload);
-			}
-		})
-		
-		// some fetching
-		const MESSAGES_OBJECT = {
-			12345: {
-				title: 'A Certain Dumb Dumb',
-				time: 1557460095000,
-				poster: 'Misaka Mikoto'
-			},
-			12346: {
-				title: 'A Certain Scientific Railgun Book Review',
-				time: 1557461095000,
-				poster: 'Jeron'
-			}
-		};
 		document.addEventListener('DOMContentLoaded', () => {
-			const MESSAGES_LIST = document.getElementById('list');
-			const MESSAGE_VIEWER = document.getElementById('message');
-
-			for (const MESSAGE of Object.keys(MESSAGES_OBJECT)) {
-				const PARENT = document.createElement('div');
-				const TITLE = document.createElement('div');
-				const TIME = document.createElement('div');
-				const POSTER = document.createElement('div');
-				const TIMESTAMP = new Date(MESSAGES_OBJECT[MESSAGE].time);
-				TITLE.appendChild(document.createTextNode(MESSAGES_OBJECT[MESSAGE].title));
-				TIME.appendChild(document.createTextNode(`${TIMESTAMP.getDate()}/${TIMESTAMP.getMonth() + 1}/${TIMESTAMP.getFullYear()}`));
-				POSTER.appendChild(document.createTextNode(MESSAGES_OBJECT[MESSAGE].poster));
-				PARENT.appendChild(TITLE);
-				PARENT.appendChild(TIME);
-				PARENT.appendChild(POSTER);
-				PARENT.dataset.id = MESSAGE;
-				MESSAGES_LIST.appendChild(PARENT);
-			}
-
-			MESSAGES_LIST.addEventListener('click', e => {
-				e.preventDefault();
-				if (e.target !== e.currentTarget) {
-					if (document.getElementById('selected')) document.getElementById('selected').removeAttribute('id');
-					let element = e.target;
-					while (element.parentElement !== MESSAGES_LIST) element = element.parentElement;
-					element.id = 'selected';
-					const MESSAGE_ID = element.dataset.id;
-					// set "MESSAGE" to markdown of message
-					const MESSAGE = {
-						text: `insert markdown`,
-						form: [
-							{
-								question: 'Open Ended Question',
-								type: 'oe'
-							},
-							{
-								question: 'MCQ Question',
-								type: 'mcq',
-								options: [
-									'Option 1',
-									'Option 2',
-									'Option 3',
-									'Option 4',
-									'Option 5'
-								]
-							}
-						],
-						attachments: [
-							{
-								name: 'A Certain Magical Index Volume 10000.epub',
-								link: 'link/to/s3'
-							},
-							{
-								name: 'Lange Schwarze Socken.jpg',
-								link: 'link/to/s3'
-							}
-						]
-					};
-					const TIMESTAMP = new Date(MESSAGES_OBJECT[MESSAGE_ID].time);
-					while (MESSAGE_VIEWER.hasChildNodes()) MESSAGE_VIEWER.removeChild(MESSAGE_VIEWER.lastChild);
-					const MESSAGE_HEADER = document.createElement('div');
-					const MESSAGE_TITLE = document.createElement('h1');
-					const MESSAGE_TIME_POSTER = document.createElement('div');
-					MESSAGE_TITLE.appendChild(document.createTextNode(MESSAGES_OBJECT[MESSAGE_ID].title));
-					MESSAGE_TIME_POSTER.appendChild(document.createTextNode(`Posted at ${TIMESTAMP.getDate()}/${TIMESTAMP.getMonth() + 1}/${TIMESTAMP.getFullYear()}, by ${MESSAGES_OBJECT[MESSAGE_ID].poster}`));
-					MESSAGE_HEADER.appendChild(MESSAGE_TITLE);
-					MESSAGE_HEADER.appendChild(MESSAGE_TIME_POSTER);
-					MESSAGE_VIEWER.appendChild(MESSAGE_HEADER);
-
-					const MD_TO_HTML = new showdown.Converter({
-						prefixHeaderId: 'message-header-',
-						strikethrough: true,
-						tables: true
-					});
-					MESSAGE_VIEWER.innerHTML += MD_TO_HTML.makeHtml(MESSAGE.text);
-
-					if (MESSAGE.form) {
-						const FORM_PARENT = document.createElement('details');
-						const FORM_HEADER = document.createElement('summary');
-						const FORM = document.createElement('form');
-						FORM_PARENT.appendChild(FORM);
-						let formTime = 0;
-						MESSAGE.form.forEach((question, qnIndex) => {
-							const QUESTION_PARENT = document.createElement('div');
-							const QUESTION = document.createElement('p');
-							QUESTION.appendChild(document.createTextNode(question.question));
-							QUESTION_PARENT.appendChild(QUESTION);
-							switch (question.type) {
-								case 'mcq':
-									formTime += 1;
-									question.options.forEach((option, optIndex) => {
-										const OPTION_INPUT = document.createElement('input');
-										OPTION_INPUT.type = 'radio';
-										OPTION_INPUT.name = qnIndex;
-										OPTION_INPUT.id = `q${qnIndex}-${optIndex}`;
-										OPTION_INPUT.value = option;
-
-										const OPTION_LABEL = document.createElement('label');
-										OPTION_LABEL.setAttribute('for', `q${qnIndex}-${optIndex}`);
-										OPTION_LABEL.appendChild(document.createTextNode(option));
-
-										QUESTION_PARENT.appendChild(OPTION_INPUT);
-										QUESTION_PARENT.appendChild(OPTION_LABEL);
-									});
-									break;
-								case 'oe':
-									formTime += 2;
-									const INPUT = document.createElement('input');
-									INPUT.classList.add('md-input');
-									INPUT.placeholder = ' ';
-									const INPUT_AFTER = document.createElement('div');
-									const INPUT_PLACEHOLDER = document.createElement('span');
-									INPUT_PLACEHOLDER.appendChild(document.createTextNode(`Your answer for question ${qnIndex + 1}`));
-
-									QUESTION_PARENT.appendChild(INPUT);
-									QUESTION_PARENT.appendChild(INPUT_AFTER);
-									QUESTION_PARENT.appendChild(INPUT_PLACEHOLDER);
-									break;
-							}
-							FORM.appendChild(QUESTION_PARENT);
-						});
-						FORM_HEADER.innerHTML = `Form <img src='../assets/icons/clock.svg'> ${formTime} minutes`;
-						FORM_PARENT.appendChild(FORM_HEADER);
-						FORM_PARENT.appendChild(FORM);
-						MESSAGE_VIEWER.appendChild(FORM_PARENT);
+			LAMBDA.invoke({
+				FunctionName: 'edupass',
+				Payload: JSON.stringify({
+					user: {
+						logged_in: true,
+						session_id: COOKIE.get('sessid'),
+						username: COOKIE.get('username')
+					},
+					request: {
+						type: 'message_list'
 					}
-					if (MESSAGE.attachments) {
-						const ATTACHMENTS_PARENT = document.createElement('details');
-						const ATTACHMENTS_HEADER = document.createElement('summary');
-						ATTACHMENTS_HEADER.appendChild(document.createTextNode(`${MESSAGE.attachments.length} attachment${MESSAGE.attachments.length == 1 ? '' : 's'}`));
-						ATTACHMENTS_PARENT.appendChild(ATTACHMENTS_HEADER);
-						MESSAGE.attachments.forEach(attachment => {
-							const ATTACHMENT = document.createElement('a');
-							ATTACHMENT.href = attachment.link;
-							ATTACHMENT.appendChild(document.createTextNode(attachment.name));
-							ATTACHMENT.classList.add('bubble-link');
-							ATTACHMENTS_PARENT.appendChild(ATTACHMENT);
-						});
-						MESSAGE_VIEWER.appendChild(ATTACHMENTS_PARENT);
-					}
+				})
+			}, (err, data) => {
+				if (err) {
+					alert('An error occured, see console for details');
+					console.error(err);
 				}
-				e.stopPropagation();
+				else {
+					const MESSAGES_OBJECT = JSON.parse(data.Payload);
+					const MESSAGES_LIST = document.getElementById('list');
+					const MESSAGE_VIEWER = document.getElementById('message');
+
+					for (const MESSAGE of Object.keys(MESSAGES_OBJECT.messages)) {
+						console.log(MESSAGE);
+						const PARENT = document.createElement('div');
+						const TITLE = document.createElement('div');
+						const TIME = document.createElement('div');
+						const POSTER = document.createElement('div');
+						const TIMESTAMP = new Date(parseInt(MESSAGES_OBJECT.messages[MESSAGE].time));
+						TITLE.appendChild(document.createTextNode(MESSAGES_OBJECT.messages[MESSAGE].title));
+						TIME.appendChild(document.createTextNode(`${TIMESTAMP.getDate()}/${TIMESTAMP.getMonth() + 1}/${TIMESTAMP.getFullYear()}`));
+						POSTER.appendChild(document.createTextNode(MESSAGES_OBJECT.messages[MESSAGE].poster));
+						PARENT.appendChild(TITLE);
+						PARENT.appendChild(TIME);
+						PARENT.appendChild(POSTER);
+						PARENT.dataset.id = MESSAGE;
+						MESSAGES_LIST.appendChild(PARENT);
+					}
+
+					MESSAGES_LIST.addEventListener('click', e => {
+						e.preventDefault();
+						if (e.target !== e.currentTarget) {
+							if (document.getElementById('selected')) document.getElementById('selected').removeAttribute('id');
+							let element = e.target;
+							while (element.parentElement !== MESSAGES_LIST) element = element.parentElement;
+							element.id = 'selected';
+							const MESSAGE_ID = element.dataset.id;
+							LAMBDA.invoke({
+								FunctionName: 'edupass',
+								Payload: JSON.stringify({
+									user: {
+										logged_in: true,
+										session_id: COOKIE.get('sessid'),
+										username: COOKIE.get('username')
+									},
+									request: {
+										type: 'message_view',
+										id: MESSAGE_ID
+									}
+								})
+							}, (err, data) => {
+								if (err) {
+									alert('An error occured, see console for details');
+									console.error(err);
+								}
+								else {
+									const MESSAGE = JSON.parse(data.Payload);
+									const TIMESTAMP = new Date(parseInt(MESSAGES_OBJECT.messages[MESSAGE_ID].time));
+									while (MESSAGE_VIEWER.hasChildNodes()) MESSAGE_VIEWER.removeChild(MESSAGE_VIEWER.lastChild);
+									const MESSAGE_HEADER = document.createElement('div');
+									const MESSAGE_TITLE = document.createElement('h1');
+									const MESSAGE_TIME_POSTER = document.createElement('div');
+									MESSAGE_TITLE.appendChild(document.createTextNode(MESSAGES_OBJECT.messages[MESSAGE_ID].title));
+									MESSAGE_TIME_POSTER.appendChild(document.createTextNode(`Posted at ${TIMESTAMP.getDate()}/${TIMESTAMP.getMonth() + 1}/${TIMESTAMP.getFullYear()}, by ${MESSAGES_OBJECT.messages[MESSAGE_ID].poster}`));
+									MESSAGE_HEADER.appendChild(MESSAGE_TITLE);
+									MESSAGE_HEADER.appendChild(MESSAGE_TIME_POSTER);
+									MESSAGE_VIEWER.appendChild(MESSAGE_HEADER);
+
+									const MD_TO_HTML = new showdown.Converter({
+										prefixHeaderId: 'message-header-',
+										strikethrough: true,
+										tables: true
+									});
+									MESSAGE_VIEWER.innerHTML += MD_TO_HTML.makeHtml(MESSAGE.text);
+
+									if (MESSAGE.form) {
+										const FORM_PARENT = document.createElement('details');
+										const FORM_HEADER = document.createElement('summary');
+										const FORM = document.createElement('form');
+										FORM.addEventListener('submit', e => {
+											e.preventDefault();
+											let responseObj = {
+												id: MESSAGE_ID,
+												response: []
+											}
+											for (let i = 0; i < MESSAGE.form.length; i++) {
+												if (!FORM[`q-${i}`].value) {
+													alert('Please fill in all blanks');
+													return;
+												}
+												if (FORM[`q-${i}`].value == '') {
+													alert('Please fill in all blanks');
+													return;
+												}
+												responseObj.response.push(FORM[`q-${i}`].value);
+											}
+											LAMBDA.invoke({
+												FunctionName: 'edupass',
+												Payload: JSON.stringify({
+													user: {
+														logged_in: true,
+														session_id: COOKIE.get('sessid'),
+														username: COOKIE.get('username')
+													},
+													request: {
+														type: 'message_respond',
+														...responseObj
+													}
+												})
+											}, (err, data) => {
+												if (err) {
+													alert('An error occured, see console for details');
+													console.error(err);
+												}
+												else {
+													const RESPONSE = JSON.parse(data.Payload);
+													console.log(RESPONSE.success);
+												}
+											});
+										});
+										FORM_PARENT.appendChild(FORM);
+										let formTime = 0;
+										MESSAGE.form.forEach((question, qnIndex) => {
+											const QUESTION_PARENT = document.createElement('div');
+											const QUESTION = document.createElement('p');
+											QUESTION.appendChild(document.createTextNode(question.question));
+											QUESTION_PARENT.appendChild(QUESTION);
+											switch (question.type) {
+												case 'mcq':
+													formTime += 1;
+													question.options.forEach((option, optIndex) => {
+														const OPTION_INPUT = document.createElement('input');
+														OPTION_INPUT.type = 'radio';
+														OPTION_INPUT.name = `q-${qnIndex}`;
+														OPTION_INPUT.id = `q${qnIndex}-${optIndex}`;
+														OPTION_INPUT.value = optIndex;
+
+														const OPTION_LABEL = document.createElement('label');
+														OPTION_LABEL.setAttribute('for', `q${qnIndex}-${optIndex}`);
+														OPTION_LABEL.appendChild(document.createTextNode(option));
+
+														QUESTION_PARENT.appendChild(OPTION_INPUT);
+														QUESTION_PARENT.appendChild(OPTION_LABEL);
+													});
+													break;
+												case 'oe':
+													formTime += 2;
+													const INPUT = document.createElement('input');
+													INPUT.classList.add('md-input');
+													INPUT.placeholder = ' ';
+													INPUT.name = `q-${qnIndex}`;
+													const INPUT_AFTER = document.createElement('div');
+													const INPUT_PLACEHOLDER = document.createElement('span');
+													INPUT_PLACEHOLDER.appendChild(document.createTextNode(`Your answer for question ${qnIndex + 1}`));
+
+													QUESTION_PARENT.appendChild(INPUT);
+													QUESTION_PARENT.appendChild(INPUT_AFTER);
+													QUESTION_PARENT.appendChild(INPUT_PLACEHOLDER);
+													break;
+											}
+											FORM.appendChild(QUESTION_PARENT);
+										});
+										const FORM_BUTTON = document.createElement('button')
+										FORM_BUTTON.appendChild(document.createTextNode('Submit Form'));
+										FORM.appendChild(FORM_BUTTON);
+										FORM_HEADER.innerHTML = `Form <img src='../assets/icons/clock.svg'> ${formTime} minutes`;
+										FORM_PARENT.appendChild(FORM_HEADER);
+										FORM_PARENT.appendChild(FORM);
+										MESSAGE_VIEWER.appendChild(FORM_PARENT);
+									}
+									if (MESSAGE.attachments) {
+										const ATTACHMENTS_PARENT = document.createElement('details');
+										const ATTACHMENTS_HEADER = document.createElement('summary');
+										ATTACHMENTS_HEADER.appendChild(document.createTextNode(`${MESSAGE.attachments.length} attachment${MESSAGE.attachments.length == 1 ? '' : 's'}`));
+										ATTACHMENTS_PARENT.appendChild(ATTACHMENTS_HEADER);
+										MESSAGE.attachments.forEach(attachment => {
+											const ATTACHMENT = document.createElement('a');
+											ATTACHMENT.href = attachment.link;
+											ATTACHMENT.appendChild(document.createTextNode(attachment.name));
+											ATTACHMENT.classList.add('bubble-link');
+											ATTACHMENTS_PARENT.appendChild(ATTACHMENT);
+										});
+										MESSAGE_VIEWER.appendChild(ATTACHMENTS_PARENT);
+									}
+								}
+							});
+						}
+						e.stopPropagation();
+					});
+				}
 			});
 		});
 	</script>

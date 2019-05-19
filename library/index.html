@@ -33,27 +33,52 @@
 			transform: scale(1.12);
 		}
 	</style>
-	<link rel='stylesheet' type='text/css' href='../themes/library/dark_theme.css'>
 </head>
 <body>
 	<nav>
 		<a href="../index.html"><img src='../assets/icons/back-arrow.svg'>Back</a>
 	</nav>
 	<main>
-		<h1 style="padding-left: 12px">Library accounts</h1>
+		<h1 style="padding-left: 12px">Library Accounts</h1>
 		<a href = "books.html#school" class="index_button">
 			<div style="text-align:center; width:200px;">
-				<!--this image isnt cropped properly-->
-				<img src = "logos/0806.png" style = "height: 200px;">
+				<img id='school-logo' src = "logos/0806.png" style = "height: 200px;">
 			</div>
 			<div style="text-align:center">School Library</div>
 		</a>
 		<a href = "books.html#nlb" class="index_button">
 			<div style="text-align: center">
-				<img src = "logos/nlb-logo.png"/>
+				<img src = "nlb-logo.png"/>
 			</div>
 			<div style="text-align: center">NLB</div>
 		</a>
 	</main>
+	<script src='../lambda.js'></script>
+	<script src='../init.js'></script>
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+			LAMBDA.invoke({
+				FunctionName: 'edupass',
+				Payload: JSON.stringify({
+					user: {
+						logged_in: true,
+						session_id: COOKIE.get('sessid'),
+						username: COOKIE.get('username')
+					},
+					request: {
+						type: 'library_index'
+					}
+				})
+			}, (err, data) => {
+				if (err) {
+					alert('An error occured, see console for details');
+					console.error(err);
+				}
+				else {
+					document.getElementById('school-logo').src = `https://s3-ap-southeast-1.amazonaws.com/edupass/library/${JSON.parse(data.Payload).school_code}.png`;
+				}
+			});
+		});
+	</script>
 </body>
 </html>

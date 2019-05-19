@@ -86,12 +86,11 @@
 			border-radius: 18px;
 		}
 	</style>
-	<link rel='stylesheet' type='text/css' href='../themes/learning/dark_theme.css'>
 </head>
 <body>
 	<nav>
-		<a href='class.html'><img src='../assets/icons/icon.svg'>Classwork</a>
-		<a href='assignments.html'><img src='../assets/icons/icon.svg'>Assignments</a>
+		<a href='class.html'><img src='../assets/icons/classwork.svg'>Classwork</a>
+		<a href='assignments.html'><img src='../assets/icons/assignments.svg'>Assignments</a>
 		<a href="index.html"><img src='../assets/icons/back-arrow.svg'>Back</a>
 	</nav>
 	<main>
@@ -146,7 +145,8 @@
 						// });
 
 						const DUE = document.createElement('div');
-						DUE.appendChild(document.createTextNode(new Date(assignment.due).getDate()));
+						const DUE_TIMESTAMP = new Date(parseInt(assignment.due));
+						DUE.appendChild(document.createTextNode(`Due on ${DUE_TIMESTAMP.getDate()}/${DUE_TIMESTAMP.getMonth() + 1}/${DUE_TIMESTAMP.getFullYear()}`));
 						PARENT.appendChild(LEFT);
 						PARENT.appendChild(DUE);
 						ASSIGNMENTS_ELEM.appendChild(PARENT);
