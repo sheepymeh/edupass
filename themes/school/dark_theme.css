@@ -33,9 +33,6 @@ main {
 input[type='radio'] + label {
     color: #515151;
 }
-.bubble-link {
-    color: #eee;
-}
 summary img {
     filter:invert(100%);
 }
