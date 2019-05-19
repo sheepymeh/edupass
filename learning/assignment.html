@@ -144,6 +144,13 @@
 					const QUESTIONS_SUBMIT = document.createElement('button');
 					QUESTIONS_SUBMIT.appendChild(document.createTextNode('Submit Assignment'));
 					QUESTIONS_PARENT.appendChild(QUESTIONS_SUBMIT);
+					console.log(RESPONSE.answers);
+					if (RESPONSE.answers) {
+						for (let i = 0; i < RESPONSE.answers.length; i++) {
+							console.log(i);
+							QUESTIONS_PARENT[`q-${i}`].value = RESPONSE.answers[i]
+						}
+					}
 					QUESTIONS_PARENT.addEventListener('submit', e => {
 						e.preventDefault();
 						let responseObj = {
@@ -182,7 +189,7 @@
 							}
 							else {
 								const RESPONSE = JSON.parse(data.Payload);
-								console.log(RESPONSE.success);
+								location.href = `class.html${window.location.hash.substr(0, 6)}`;
 							}
 						});
 					});

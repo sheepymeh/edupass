@@ -414,7 +414,7 @@ def learning_assignment(dynamodb, username, class_id, assignment_id):
 			Key = {
 				'id': {'S': str(class_id)}
 			},
-			ProjectionExpression = 'members, class_name, assignments.A' + str(assignment_id)
+			ProjectionExpression = 'members, class_name, assignments.A' + str(assignment_id) + ', assignment_submissions.A' + str(assignment_id) + '.' + username
 		)
 	if 'Item' not in assignments:
 		return {
@@ -432,7 +432,8 @@ def learning_assignment(dynamodb, username, class_id, assignment_id):
 	return_dict = {
 		'name': assignments['assignments']['M']['A' + str(assignment_id)]['M']['name']['S'],
 		'class': assignments['class_name']['S'],
-		'questions': []
+		'questions': [],
+		'answers': []
 	}
 	for question in assignments['assignments']['M']['A' + str(assignment_id)]['M']['questions']['L']:
 		assignment_dict = {
@@ -447,6 +448,9 @@ def learning_assignment(dynamodb, username, class_id, assignment_id):
 		if 'image' in question['M']:
 			assignment_dict['image'] = question['M']['image']['S']
 		return_dict['questions'].append(assignment_dict)
+
+	for answer in assignments['assignment_submissions']['M']['A' + str(assignment_id)]['M'][username]['M']['answers']['L']:
+		return_dict['answers'].append(list(answer.items())[0][1])
 	return return_dict
 
 def learning_assignment_submit(dynamodb, username, class_id, assignment_id, answers):
