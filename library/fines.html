@@ -104,6 +104,7 @@
 						else {
 							JSON.parse(data.Payload).forEach(book => {
 								const S = new Date(parseInt(book.due));
+								if (S > TIME_NOW) return;
 								const fine = (S - TIME_NOW)/- 86400000 * 0.15;
 								// fine of 15 cents per day
 								if(fine > 0){
