@@ -145,7 +145,8 @@
 						// });
 
 						const DUE = document.createElement('div');
-						DUE.appendChild(document.createTextNode(new Date(assignment.due).getDate()));
+						const DUE_TIMESTAMP = new Date(parseInt(assignment.due));
+						DUE.appendChild(document.createTextNode(`Due on ${DUE_TIMESTAMP.getDate()}/${DUE_TIMESTAMP.getMonth() + 1}/${DUE_TIMESTAMP.getFullYear()}`));
 						PARENT.appendChild(LEFT);
 						PARENT.appendChild(DUE);
 						ASSIGNMENTS_ELEM.appendChild(PARENT);

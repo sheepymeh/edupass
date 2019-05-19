@@ -223,9 +223,56 @@ def message_respond(dynamodb, username, user_rights, id, response):
 	}
 
 def records_get(dynamodb, username):
-	return {
-
+	records = dynamodb.get_item(
+		TableName = 'users',
+		Key = {
+			'username': {'S': username}
+		},
+		ProjectionExpression = 'attendance, discipline, via, badges'
+	)['Item']
+	return_obj = {
+		'success': True,
+		'attendance': [],
+		'discipline': [],
+		'via': [],
+		'badges': []
 	}
+	for i in records['attendance']['L']:
+		return_obj['attendance'].append({
+			'date': i['M']['date']['N'],
+			'reason': i['M']['reason']['S']
+		})
+	for i in records['via']['L']:
+		return_obj['via'].append({
+			'date': i['M']['date']['N'],
+			'activity': i['M']['activity']['S'],
+			'beneficiary': i['M']['beneficiary']['S'],
+			'hours': i['M']['hours']['N']
+		})
+	for i in records['discipline']['L']:
+		return_obj['discipline'].append({
+			'date': i['M']['date']['N'],
+			'offence': i['M']['offence']['S'],
+			'punishment': i['M']['punishment']['S'],
+			'teacher': i['M']['teacher']['S']
+		})
+	for i in records['badges']['L']:
+		badge = {
+			'award': i['M']['award']['S'],
+			'name': i['M']['name']['S'],
+			'badge': i['M']['badge']['S'],
+			'tags': [],
+			'cert': {
+				'link': i['M']['cert']['M']['link']['S'],
+				'name': i['M']['cert']['M']['name']['S'],
+			},
+			'year': i['M']['year']['N']
+		}
+		for tag in i['M']['tags']['M'].keys():
+			badge['tags'].append({tag: i['M']['tags']['M'][tag]['N']})
+		return_obj['badges'].append(badge)
+
+	return return_obj
 
 def learning_list(dynamodb, username):
 	classes = dynamodb.scan(
@@ -402,12 +449,12 @@ def learning_assignment(dynamodb, username, class_id, assignment_id):
 		return_dict['questions'].append(assignment_dict)
 	return return_dict
 
-def learning_assignment_submit(dynamodb, username, assignment_id, answers):
+def learning_assignment_submit(dynamodb, username, class_id, assignment_id, answers):
 	import time
 	assignment = dynamodb.get_item(
 		TableName = 'learning',
 		Key = {
-			'id': {'S': str(assignment_id)}
+			'id': {'S': str(class_id)}
 		},
 		ProjectionExpression = 'members, assignments.A' + str(assignment_id) + '.questions'
 	)
@@ -444,7 +491,7 @@ def learning_assignment_submit(dynamodb, username, assignment_id, answers):
 	dynamodb.update_item(
 		TableName = 'learning',
 		Key = {
-			'id': {'S': str(assignment_id)}
+			'id': {'S': str(class_id)}
 		},
 		UpdateExpression = 'SET assignment_submissions.#AID.#UID = :response',
 		ExpressionAttributeNames = {
@@ -674,7 +721,7 @@ def lambda_handler(param, context):
 			elif param['request']['type'] == 'learning_assignment':
 				return learning_assignment(dynamodb, param['user']['username'], param['request']['class_id'], param['request']['assignment_id'])
 			elif param['request']['type'] == 'learning_assignment_submit':
-				return learning_assignment_submit(dynamodb, param['user']['username'], param['request']['id'], param['request']['answers'])
+				return learning_assignment_submit(dynamodb, param['user']['username'], param['request']['class_id'], param['request']['assignment_id'], param['request']['answers'])
 			elif param['request']['type'] == 'library_index':
 				return library_index(dynamodb, param['user']['username'])
 			elif param['request']['type'] == 'library_books':

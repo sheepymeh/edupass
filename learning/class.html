@@ -168,7 +168,7 @@
 										const ITEM = document.createElement('section');
 										const DATE = document.createElement('caption');
 										const TIMESTAMP = new Date(parseInt(item.timestamp));
-										DATE.appendChild(document.createTextNode(`${TIMESTAMP.getDate()}/${TIMESTAMP.getMonth()}`));
+										DATE.appendChild(document.createTextNode(`${TIMESTAMP.getDate()}/${TIMESTAMP.getMonth() + 1}`));
 										const TITLE = document.createElement('h2');
 										TITLE.appendChild(document.createTextNode(item.title));
 										const DESCRIPTION = document.createElement('div');

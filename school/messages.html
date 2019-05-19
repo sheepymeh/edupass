@@ -239,7 +239,7 @@
 													alert('Please fill in all blanks');
 													return;
 												}
-												responseObj.response.push(FORM[i].value);
+												responseObj.response.push(FORM[`q-${i}`].value);
 											}
 											LAMBDA.invoke({
 												FunctionName: 'edupass',

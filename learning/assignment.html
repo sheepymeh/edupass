@@ -57,7 +57,7 @@
 			<h1></h1>
 			<h2></h2>
 		</header>
-		<div id='questions'></div>
+		<form id='questions'></form>
 	</main>
 	<script src='../lambda.js'></script>
 	<script src='../init.js'></script>
@@ -112,9 +112,9 @@
 								question.options.forEach((option, optIndex) => {
 									const OPTION_INPUT = document.createElement('input');
 									OPTION_INPUT.type = 'radio';
-									OPTION_INPUT.name = qnIndex;
+									OPTION_INPUT.name = `q-${qnIndex}`;
 									OPTION_INPUT.id = `q${qnIndex}-${optIndex}`;
-									OPTION_INPUT.value = option;
+									OPTION_INPUT.value = optIndex;
 
 									const OPTION_LABEL = document.createElement('label');
 									OPTION_LABEL.setAttribute('for', `q${qnIndex}-${optIndex}`);
@@ -129,6 +129,7 @@
 								INPUT.classList.add('md-input');
 								INPUT.placeholder = ' ';
 								INPUT.style.color = 'inherit';
+								INPUT.name = `q-${qnIndex}`;
 								const INPUT_AFTER = document.createElement('div');
 								const INPUT_PLACEHOLDER = document.createElement('span');
 								INPUT_PLACEHOLDER.appendChild(document.createTextNode(`Your answer for question ${qnIndex + 1}`));
@@ -139,6 +140,51 @@
 								break;
 						}
 						QUESTIONS_PARENT.appendChild(QUESTION_PARENT);
+					});
+					const QUESTIONS_SUBMIT = document.createElement('button');
+					QUESTIONS_SUBMIT.appendChild(document.createTextNode('Submit Assignment'));
+					QUESTIONS_PARENT.appendChild(QUESTIONS_SUBMIT);
+					QUESTIONS_PARENT.addEventListener('submit', e => {
+						e.preventDefault();
+						let responseObj = {
+							class_id: window.location.hash.substr(1, 5),
+							assignment_id: window.location.hash.substr(7),
+							answers: []
+						}
+						for (let i = 0; i < RESPONSE.questions.length; i++) {
+							if (!QUESTIONS_PARENT[`q-${i}`].value) {
+								alert('Please fill in all blanks');
+								return;
+							}
+							if (QUESTIONS_PARENT[`q-${i}`].value == '') {
+								alert('Please fill in all blanks');
+								return;
+							}
+							responseObj.answers.push(QUESTIONS_PARENT[`q-${i}`].value);
+						}
+						LAMBDA.invoke({
+							FunctionName: 'edupass',
+							Payload: JSON.stringify({
+								user: {
+									logged_in: true,
+									session_id: COOKIE.get('sessid'),
+									username: COOKIE.get('username')
+								},
+								request: {
+									type: 'learning_assignment_submit',
+									...responseObj
+								}
+							})
+						}, (err, data) => {
+							if (err) {
+								alert('An error occured, see console for details');
+								console.error(err);
+							}
+							else {
+								const RESPONSE = JSON.parse(data.Payload);
+								console.log(RESPONSE.success);
+							}
+						});
 					});
 				}
 			});
