@@ -61,6 +61,15 @@
 		.competition div {
 			flex-grow: 1;
 		}
+		.competition-tooltip span {
+			display: inline-block;
+			background-color: #0f0;
+			border-radius: 24px;
+			padding: 0 12px;
+			margin-right: 12px;
+			margin-bottom: 6px;
+			text-transform: capitalize;
+		}
 		#aptitude-chart-parent {
 			width: calc(100% - 500px);
 			float: left;
@@ -173,14 +182,27 @@
 						const TOOLTIP = document.createElement('div');
 						const TOOLTIP_TITLE = document.createElement('h3');
 						TOOLTIP_TITLE.appendChild(document.createTextNode(competition.name));
+						const TOOLTIP_POSITION = document.createElement('div');
+						TOOLTIP_POSITION.appendChild(document.createTextNode(`Attained Position: ${competition.award}`));
 						const TOOLTIP_YEAR = document.createElement('div');
 						TOOLTIP_YEAR.appendChild(document.createTextNode(`Year Attended: ${competition.year}`));
 						const TOOLTIP_CERT = document.createElement('a');
 						TOOLTIP_CERT.classList.add('bubble-link');
 						TOOLTIP_CERT.appendChild(document.createTextNode(competition.cert.name));
 						TOOLTIP_CERT.href = competition.cert.link;
+						TOOLTIP_TAGS = document.createElement('div');
+						TOOLTIP_TAGS.appendChild(document.createTextNode('Tags: '));
+						console.log(competition.tags);
+						for (tag of Object.keys(competition.tags)) {
+							const TOOLTIP_TAG = document.createElement('span');
+							TOOLTIP_TAG.appendChild(document.createTextNode(`${tag} +${competition.tags[tag]}`));
+							TOOLTIP_TAGS.appendChild(TOOLTIP_TAG);
+						}
+
 						TOOLTIP.appendChild(TOOLTIP_TITLE);
+						TOOLTIP.appendChild(TOOLTIP_POSITION);
 						TOOLTIP.appendChild(TOOLTIP_YEAR);
+						TOOLTIP.appendChild(TOOLTIP_TAGS);
 						TOOLTIP.appendChild(TOOLTIP_CERT);
 						PARENT.classList.add('competition');
 						TOOLTIP.classList.add('competition-tooltip');
@@ -227,15 +249,16 @@
 								position: 'right',
 								labels: {
 									fontSize: 20,
-									fontFamily: "Roboto, sans-serif"
-								}
+									fontFamily: "Roboto, sans-serif",
+									fontColor: set ? '#ffffff' : '#212121'
+								},
 							},
 							title: {
 								display: true,
 								fontSize: 36,
 								fontFamily: "'Roboto Condensed', 'Roboto', sans-serif",
 								text: 'Your Aptitude',
-								color: 'ffffff',
+								fontColor: set ? '#ffffff' : '#212121'
 							},
 							tooltips: {
 								bodyFontFamily: "Roboto, sans-serif",
