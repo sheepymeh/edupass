@@ -261,7 +261,7 @@ def records_get(dynamodb, username):
 			'award': i['M']['award']['S'],
 			'name': i['M']['name']['S'],
 			'badge': i['M']['badge']['S'],
-			'tags': [],
+			'tags': {},
 			'cert': {
 				'link': i['M']['cert']['M']['link']['S'],
 				'name': i['M']['cert']['M']['name']['S'],
@@ -269,7 +269,7 @@ def records_get(dynamodb, username):
 			'year': i['M']['year']['N']
 		}
 		for tag in i['M']['tags']['M'].keys():
-			badge['tags'].append({tag: i['M']['tags']['M'][tag]['N']})
+			badge['tags'][tag] = i['M']['tags']['M'][tag]['N']
 		return_obj['badges'].append(badge)
 
 	return return_obj

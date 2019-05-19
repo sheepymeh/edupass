@@ -59,112 +59,93 @@
 		</section>
 	</main>
 	<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+	<script src='../lambda.js'></script>
+	<script src='../init.js'></script>
 	<script>
-		const COMPETITIONS = [
-			{
-				name: 'Build On, Singapore',
-				badge: 'alastor.jpg',
-				tags: {
-					science: 2,
-					infocomm: 2,
-					innovation: 2
-				}
-			},
-			{
-				name: 'Singapore Math Olympiad 2019',
-				badge: 'alastor.jpg',
-				tags: {
-					science: 2,
-					math: 2
-				}
-			},
-			{
-				name: 'SGCC 2019',
-				badge: 'alastor.jpg',
-				tags: {
-					science: 2,
-					infocomm: 2,
-					innovation: 2
-				}
-			},
-			{
-				name: 'Singapore Math Olympiad 2018',
-				badge: 'alastor.jpg',
-				tags: {
-					science: 2,
-					math: 2
-				}
-			},
-			{
-				name: 'Pie Baking Competition 2018',
-				badge: 'alastor.jpg',
-				tags: {
-					uselessness: 50
-				}
-			}
-		];
 		let tags = {};
 		document.addEventListener('DOMContentLoaded', () => {
-			const COMPETITIONS_PARENT = document.getElementById('comptitions-parent');
-			COMPETITIONS.forEach(competition => {
-				const PARENT = document.createElement('div');
-				const BADGE = document.createElement('img');
-				const NAME = document.createElement('div');
-				PARENT.classList.add('competition');
-
-				// change to s3 in future
-				BADGE.src = `../assets/icons/${competition.badge}`;
-				BADGE.width = 50;
-				NAME.appendChild(document.createTextNode(competition.name));
-				PARENT.appendChild(BADGE);
-				PARENT.appendChild(NAME);
-				COMPETITIONS_PARENT.appendChild(PARENT);
-
-				for (const TAG of Object.keys(competition.tags)) {
-					if (tags[TAG]) tags[TAG] += competition.tags[TAG];
-					else tags[TAG] = competition.tags[TAG];
-				}
-			});
-			let backgroundColors = [];
-			let hoverBackgroundColors = [];
-			for (let i = Object.keys(tags).length - 1; i >= 0; i -= 1) {
-				const HS = `hsl(${360 * Math.random()}, ${50 + 30 * Math.random()}%,`;
-				const L = 70 + 20 * Math.random();
-				backgroundColors.push(`${HS} ${L}%)`);
-				hoverBackgroundColors.push(`${HS} ${L - 10}%`);
-			}
-			const CHART = new Chart('aptitude-chart', {
-				type: 'doughnut',
-				data: {
-					labels: Object.keys(tags),
-					datasets: [{
-						label: 'Aptitude',
-						data: Object.values(tags),
-						backgroundColor: backgroundColors,
-						hoverBackgroundColor: hoverBackgroundColors
-					}]
-				},
-				options: {
-					cutoutPercentage: 60,
-					legend: {
-						boxWidth: 30,
-						position: 'right',
-						labels: {
-							fontSize: 20,
-							fontFamily: "Roboto, sans-serif"
-						}
+			LAMBDA.invoke({
+				FunctionName: 'edupass',
+				Payload: JSON.stringify({
+					user: {
+						logged_in: true,
+						session_id: COOKIE.get('sessid'),
+						username: COOKIE.get('username')
 					},
-					title: {
-						display: true,
-						fontSize: 36,
-						fontFamily: "'Roboto Condensed', 'Roboto', sans-serif",
-						text: 'Your Aptitude',
-						color: 'ffffff',
-					},
-					tooltips: {
-						bodyFontFamily: "Roboto, sans-serif",
-						bodyFontSize: 20
+					request: {
+						type: 'records_get'
 					}
+				})
+			}, (err, data) => {
+				if (err) {
+					alert('An error occured, see console for details');
+					console.error(err);
+				}
+				else {
+					const RESPONSE = JSON.parse(data.Payload);
+					const COMPETITIONS_PARENT = document.getElementById('comptitions-parent');
+					RESPONSE['badges'].forEach(competition => {
+						const PARENT = document.createElement('div');
+						const BADGE = document.createElement('img');
+						const NAME = document.createElement('div');
+						PARENT.classList.add('competition');
+
+						// change to s3 in future
+						BADGE.src = competition.badge;
+						BADGE.width = 50;
+						NAME.appendChild(document.createTextNode(competition.name));
+						PARENT.appendChild(BADGE);
+						PARENT.appendChild(NAME);
+						COMPETITIONS_PARENT.appendChild(PARENT);
+						console.log(competition.tags);
+						for (const TAG of Object.keys(competition.tags)) {
+							if (tags[TAG]) tags[TAG] += parseInt(competition.tags[TAG]);
+							else tags[TAG] = parseInt(competition.tags[TAG]);
+						}
+					});
+					console.log(tags);
+					let backgroundColors = [];
+					let hoverBackgroundColors = [];
+					for (let i = Object.keys(tags).length - 1; i >= 0; i -= 1) {
+						const HS = `hsl(${360 * Math.random()}, ${50 + 30 * Math.random()}%,`;
+						const L = 70 + 20 * Math.random();
+						backgroundColors.push(`${HS} ${L}%)`);
+						hoverBackgroundColors.push(`${HS} ${L - 10}%`);
+					}
+					const CHART = new Chart('aptitude-chart', {
+						type: 'doughnut',
+						data: {
+							labels: Object.keys(tags),
+							datasets: [{
+								label: 'Aptitude',
+								data: Object.values(tags),
+								backgroundColor: backgroundColors,
+								hoverBackgroundColor: hoverBackgroundColors
+							}]
+						},
+						options: {
+							cutoutPercentage: 60,
+							legend: {
+								boxWidth: 30,
+								position: 'right',
+								labels: {
+									fontSize: 20,
+									fontFamily: "Roboto, sans-serif"
+								}
+							},
+							title: {
+								display: true,
+								fontSize: 36,
+								fontFamily: "'Roboto Condensed', 'Roboto', sans-serif",
+								text: 'Your Aptitude',
+								color: 'ffffff',
+							},
+							tooltips: {
+								bodyFontFamily: "Roboto, sans-serif",
+								bodyFontSize: 20
+							}
+						}
+					});
 				}
 			});
 		});
