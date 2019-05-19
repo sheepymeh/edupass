@@ -64,6 +64,8 @@
 	<script>
 		if (window.location.hash.substr(1).length != 12) window.history.back();
 		document.addEventListener('DOMContentLoaded', () => {
+			for (const LINK of document.getElementsByTagName('nav')[0].getElementsByTagName('a')) 
+					if (LINK !== LINK.parentNode.lastElementChild) LINK.href += window.location.hash.substr(0, 6);
 			LAMBDA.invoke({
 				FunctionName: 'edupass',
 				Payload: JSON.stringify({
