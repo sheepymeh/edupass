@@ -155,9 +155,9 @@ def message_view(dynamodb, username, user_rights, id):
 				if (form['M']['type']['S'] == 'mcq'):
 					form_dict['options'] = form['M']['options']['SS']
 				return_dict['form'].append(form_dict)
-		
-		for response in message['responses']['M'][username]['L']:
-			return_dict['responses'].append(list(response.items())[0][1])
+			if 'username' in message['responses']['M']:
+				for response in message['responses']['M'][username]['L']:
+					return_dict['responses'].append(list(response.items())[0][1])
 
 		return return_dict
 	except ClientError as e:
@@ -453,8 +453,9 @@ def learning_assignment(dynamodb, username, class_id, assignment_id):
 			assignment_dict['image'] = question['M']['image']['S']
 		return_dict['questions'].append(assignment_dict)
 
-	for answer in assignments['assignment_submissions']['M']['A' + str(assignment_id)]['M'][username]['M']['answers']['L']:
-		return_dict['answers'].append(list(answer.items())[0][1])
+	if username in assignments['assignment_submissions']['M']['A' + str(assignment_id)]['M']:
+		for answer in assignments['assignment_submissions']['M']['A' + str(assignment_id)]['M'][username]['M']['answers']['L']:
+			return_dict['answers'].append(list(answer.items())[0][1])
 	return return_dict
 
 def learning_assignment_submit(dynamodb, username, class_id, assignment_id, answers):
